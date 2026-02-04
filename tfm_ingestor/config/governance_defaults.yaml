@@ -1,0 +1,12 @@
+catalog:
+  title: "Open Data Demo (TFM)"
+  description: "Catalogo de ejemplo para TFM (Movilidad + Eventos)."
+  publisher_name: "UCLM (Demo)"
+  contact_email: "opendata-demo@uclm.es"
+  spatial: "ES-CLM"
+  language: "es"
+  license_default: "CC-BY-4.0"
+
+dataset_defaults:
+  accrual_periodicity: "daily"
+

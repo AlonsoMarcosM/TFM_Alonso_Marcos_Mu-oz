@@ -1,0 +1,15 @@
+schema_to_layer:
+  bronze: "Bronze"
+  silver: "Silver"
+  gold: "Gold"
+
+schema_to_domain:
+  bronze: "OpenData_Bronze"
+  silver: "OpenData_Silver"
+  gold: "OpenData_Gold"
+
+# Tags (OpenMetadata Tag FQN): <classification>.<tag>
+table_tags_by_prefix:
+  bici_: ["dcat_theme.transport", "dcat_keyword.bici"]
+  eventos_: ["dcat_theme.society", "dcat_keyword.eventos"]
+

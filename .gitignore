@@ -1,4 +1,31 @@
-# Local folders that must never be published
-openmetadata_codigo/
-OpenMetadata_documentacion/
-TFM/
+# --- Private/local folders that must never be published ---
+/openmetadata_codigo/
+/OpenMetadata_documentacion/
+/TFM/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.eggs/
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.env
+
+# --- IDEs ---
+.vscode/
+.idea/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- Logs / data ---
+*.log
+logs/
+data_local/
