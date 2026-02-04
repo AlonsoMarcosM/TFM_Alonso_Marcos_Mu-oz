@@ -1,0 +1,4 @@
+# Local folders that must never be published
+openmetadata_codigo/
+OpenMetadata_documentacion/
+TFM/
