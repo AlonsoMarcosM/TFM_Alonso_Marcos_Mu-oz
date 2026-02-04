@@ -2,6 +2,8 @@
 
 Objetivo: levantar OpenMetadata en Kubernetes local de la forma mas simple posible (PoC para TFM).
 
+Nota (portfolio): aunque aqui se describe Docker Desktop + Kubernetes local, la idea es mantener el despliegue lo mas portable posible para poder replicarlo en un VPS o cloud (por ejemplo, un Kubernetes ligero tipo k3s o un cluster gestionado).
+
 ## Requisitos
 
 - Docker Desktop con Kubernetes activado
@@ -45,4 +47,3 @@ kubectl get pods
 kubectl get svc
 kubectl logs deployment/openmetadata --tail=100
 ```
-

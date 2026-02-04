@@ -7,6 +7,8 @@ Trabajo Fin de Master (6 ECTS).
 
 Idea guia: **lo minimo que funciona**, bien explicado y reproducible. Sin meterse en escalabilidad/resiliencia/seguridad (se documenta como trabajo futuro).
 
+Nota (portfolio): se intenta que la solucion sea **replicable** y facilmente **desplegable en un VPS o cloud** (no es requisito imprescindible, pero guia la arquitectura).
+
 ## Alcance (MVP)
 
 Lo que SI:

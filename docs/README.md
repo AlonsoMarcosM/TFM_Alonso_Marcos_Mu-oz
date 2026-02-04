@@ -7,4 +7,4 @@
 - `custom_properties_openmetadata.md`: custom properties (DCAT-like) y como crearlas (API).
 - `tfm_ingestor.md`: ejecucion del script de enriquecimiento + tests.
 - `planificacion_kanban.md`: enfoque de planificacion/seguimiento (Kanban).
-
+- `../AGENTS.md`: principios para mantener el repo replicable y (si se quiere) desplegable en VPS/cloud.
