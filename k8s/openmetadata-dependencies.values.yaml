@@ -1,0 +1,9 @@
+# Overrides para entorno local (kind / Docker Desktop Kubernetes)
+# Objetivo: stack minimo y estable para PoC (sin Airflow interno).
+
+airflow:
+  enabled: false
+
+opensearch:
+  # En local de 1 nodo no necesitamos replicas multiples.
+  replicas: 1

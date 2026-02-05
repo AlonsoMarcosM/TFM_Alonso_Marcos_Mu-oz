@@ -22,10 +22,21 @@ Ficheros de ejemplo:
 
 Prerequisito en OpenMetadata:
 - Crear las custom properties usadas por la PoC (ver `docs/custom_properties_openmetadata.md`).
-- Crear los tags usados en `tfm_ingestor/config/mapping_rules.yaml` (si no existen, la asignacion de tags fallara).
+- Crear los tags usados en `tfm_ingestor/config/mapping_rules.yaml`.
+
+Automatizacion recomendada (desde la raiz):
+
+```powershell
+# Requiere OpenMetadata levantado y accesible por port-forward
+$job = Start-Job -ScriptBlock { kubectl port-forward deployment/openmetadata 8585:8585 }
+Start-Sleep -Seconds 3
+$token = python .\scripts\infra\generate_om_jwt.py --ttl-hours 2
+python .\scripts\infra\bootstrap_governance.py --base-url http://localhost:8585/api/v1 --token $token
+Stop-Job $job; Remove-Job $job -Force
+```
 
 Autenticacion (ejemplo):
-- Exportar un token JWT en `OPENMETADATA_JWT_TOKEN`
+- Exportar un token JWT en `OPENMETADATA_JWT_TOKEN` (obtenido desde OpenMetadata, p.ej. desde perfil/usuario admin o API de login segun version)
 - Base URL en `OPENMETADATA_BASE_URL` (por defecto `http://localhost:8585/api/v1`)
 
 ## Ejecucion
@@ -45,5 +56,14 @@ python -m tfm_ingestor
 ## Tests
 
 ```powershell
-python -m pytest
+$env:PYTEST_DISABLE_PLUGIN_AUTOLOAD="1"
+python -m pytest tfm_ingestor/tests
+```
+
+## Flujo completo en un comando
+
+Si quieres ejecutar todo el flujo (infra + ingesta tecnica + bootstrap gobierno + dry-run):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_full_flow.ps1
 ```

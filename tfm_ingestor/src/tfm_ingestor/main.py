@@ -121,11 +121,25 @@ def cli(argv: list[str] | None = None) -> int:
 
     api = OpenMetadataApi(base_url=args.base_url, jwt_token=args.token)
 
-    fields = "tags,extension,schema"
-    try:
-        tables = api.list_tables(limit=args.limit, fields=fields)
-    except OpenMetadataApiError as e:
-        raise SystemExit(f"ERROR: cannot list tables from OpenMetadata: {e}") from e
+    field_candidates = [
+        "tags,extension,databaseSchema",
+        "tags,extension,schema",
+        "tags,extension",
+    ]
+    tables: list[dict[str, Any]] | None = None
+    last_error: OpenMetadataApiError | None = None
+    for fields in field_candidates:
+        try:
+            tables = api.list_tables(limit=args.limit, fields=fields)
+            break
+        except OpenMetadataApiError as e:
+            last_error = e
+            if "Invalid field name" in str(e):
+                continue
+            raise SystemExit(f"ERROR: cannot list tables from OpenMetadata: {e}") from e
+
+    if tables is None:
+        raise SystemExit(f"ERROR: cannot list tables from OpenMetadata: {last_error}")
 
     planned: list[dict[str, Any]] = []
     applied = 0
@@ -168,9 +182,15 @@ def cli(argv: list[str] | None = None) -> int:
             if domain_ref is None:
                 dom = api.get_domain_by_name(domain_name=spec.domain_name)
                 if dom is None:
-                    dom = api.create_domain(name=spec.domain_name, description="TFM demo domain")
-                domain_ref = _domain_ref(dom)
-                domain_cache[spec.domain_name] = domain_ref
+                    if not args.dry_run:
+                        dom = api.create_domain(
+                            name=spec.domain_name,
+                            description="TFM demo domain",
+                            domain_type="Source-aligned",
+                        )
+                if dom is not None:
+                    domain_ref = _domain_ref(dom)
+                    domain_cache[spec.domain_name] = domain_ref
 
         ops = _build_patch_ops(
             table=t,

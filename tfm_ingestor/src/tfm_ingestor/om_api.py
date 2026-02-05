@@ -89,8 +89,19 @@ class OpenMetadataApi:
                 return None
             raise
 
-    def create_domain(self, *, name: str, description: str | None = None) -> dict[str, Any]:
+    def create_domain(
+        self,
+        *,
+        name: str,
+        description: str | None = None,
+        domain_type: str = "Source-aligned",
+    ) -> dict[str, Any]:
         body: dict[str, Any] = {"name": name}
         if description:
             body["description"] = description
-        return self._request("POST", "/domains", json=body)
+        return self._request(
+            "POST",
+            "/domains",
+            params={"domainType": domain_type},
+            json=body,
+        )

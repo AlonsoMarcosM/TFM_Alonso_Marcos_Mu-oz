@@ -41,3 +41,16 @@ Claves (todas tipo `string`):
 
 Nota: en OpenMetadata, la gestion de tipos y custom properties puede variar segun version; si tu instancia no acepta este flujo, ajusta el endpoint/metodo segun la documentacion oficial de tu version.
 
+## Automatizacion recomendada
+
+En este repositorio se incluye un script que crea:
+- Clasificaciones/tags DCAT de la PoC
+- Custom properties de tabla requeridas por `tfm_ingestor`
+
+```powershell
+$job = Start-Job -ScriptBlock { kubectl port-forward deployment/openmetadata 8585:8585 }
+Start-Sleep -Seconds 3
+$token = python .\scripts\infra\generate_om_jwt.py --ttl-hours 2
+python .\scripts\infra\bootstrap_governance.py --base-url http://localhost:8585/api/v1 --token $token
+Stop-Job $job; Remove-Job $job -Force
+```

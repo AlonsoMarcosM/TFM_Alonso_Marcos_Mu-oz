@@ -13,7 +13,7 @@ No es requisito imprescindible, pero guia las decisiones de arquitectura.
 
 - Infra declarativa y portable:
   - Kubernetes + Helm como via "canon" para OpenMetadata.
-  - Docker Compose para la fuente dummy (local), sin acoplarla a rutas/hosts especificos.
+  - PostgreSQL dummy dentro del mismo cluster Kubernetes (stack unico).
 - Config por YAML/env vars (sin hardcode):
   - URLs, tokens, credenciales -> variables de entorno/secretos.
 - Idempotencia:
@@ -28,7 +28,5 @@ No es requisito imprescindible, pero guia las decisiones de arquitectura.
 
 ## Higiene Git (critico)
 
-- Nunca subir documentacion/codigo corporativo:
-  - `openmetadata_codigo/`, `OpenMetadata_documentacion/`, `TFM/` deben permanecer ignoradas por Git.
+- Nunca subir carpetas locales no publicables.
 - Antes de cualquier `push`: ejecutar `pytest` y revisar `git status --ignored`.
-

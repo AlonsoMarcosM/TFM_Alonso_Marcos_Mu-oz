@@ -1,7 +1,6 @@
-# --- Private/local folders that must never be published ---
-/openmetadata_codigo/
-/OpenMetadata_documentacion/
+# --- Local private folders ---
 /TFM/
+/private_local/
 
 # --- Python ---
 __pycache__/
@@ -29,3 +28,6 @@ Thumbs.db
 *.log
 logs/
 data_local/
+
+# --- Local tooling / downloads ---
+.tools/

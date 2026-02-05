@@ -1,0 +1,8 @@
+# Overrides de OpenMetadata para entorno local/TFM.
+# En esta PoC la ingesta tecnica se ejecuta desde un workflow externo (CLI),
+# por lo que no usamos Airflow embebido de openmetadata-dependencies.
+
+openmetadata:
+  config:
+    pipelineServiceClientConfig:
+      enabled: false

@@ -1,69 +1,91 @@
-# TFM — OpenMetadata + DCAT-AP-ES (PoC simple, consistente y gratuita)
+﻿# TFM - OpenMetadata + DCAT-AP-ES (PoC reproducible)
 
-Trabajo Fin de Master (6 ECTS).
+Repositorio del Trabajo Fin de Master:
 
-**Titulo (ES):** Diseno y configuracion de un modelo de metadatos en OpenMetadata conforme al estandar DCAT-AP para la interoperabilidad de catalogos de datos.  
-**Titulo (EN):** Design and Configuration of a Metadata Model in OpenMetadata According to the DCAT-AP Standard for Data Catalog Interoperability.
+- Titulo (ES): Diseno y configuracion de un modelo de metadatos en OpenMetadata conforme al estandar DCAT-AP para la interoperabilidad de catalogos de datos.
+- Titulo (EN): Design and Configuration of a Metadata Model in OpenMetadata According to the DCAT-AP Standard for Data Catalog Interoperability.
 
-Idea guia: **lo minimo que funciona**, bien explicado y reproducible. Sin meterse en escalabilidad/resiliencia/seguridad (se documenta como trabajo futuro).
+## Que demuestra este proyecto (portfolio)
 
-Nota (portfolio): se intenta que la solucion sea **replicable** y facilmente **desplegable en un VPS o cloud** (no es requisito imprescindible, pero guia la arquitectura).
+- Despliegue reproducible de una plataforma de catalogo de datos con Kubernetes + Helm.
+- Modelado de gobierno de datos alineado con DCAT-AP-ES sobre OpenMetadata.
+- Automatizacion de metadatos por API REST (Python), con enfoque idempotente.
+- Calidad tecnica minima exigible: configuracion declarativa, scripts operativos y tests de reglas.
 
-## Alcance (MVP)
+En resumen: una PoC pequena pero realista, pensada para ejecutar hoy en local y escalar despues a VPS/cloud.
 
-Lo que SI:
-- Despliegue de OpenMetadata en Kubernetes local (Docker Desktop + Helm).
-- Fuente tecnica dummy en PostgreSQL con esquemas `bronze/silver/gold` y datos inventados.
-- Ingesta tecnica con conector oficial PostgreSQL (crea Service/Database/Schemas/Tables/Columns).
-- Modelo de gobierno en OpenMetadata alineado con conceptos DCAT-AP-ES (dominios, owners, tags, custom properties).
-- Enriquecimiento automatico via API REST de OpenMetadata (script Python `tfm_ingestor`), con reglas simples e idempotentes.
-- Tests minimos con `pytest` para que cambios en reglas/mapeo no rompan el flujo.
+## Alcance MVP (6 ECTS)
 
-Lo que NO (trabajo futuro):
-- HA, hardening, RBAC avanzado, SSO/LDAP, cifrado, backups, escalado, observabilidad avanzada, etc.
+Incluye:
+- OpenMetadata en Kubernetes local.
+- PostgreSQL dummy con capas `bronze/silver/gold`.
+- Ingesta tecnica oficial (Service/Database/Schemas/Tables/Columns).
+- Enriquecimiento de gobierno (tags + custom properties + domains) via `tfm_ingestor`.
 
-## Idea clave (para evitar confusiones)
+No incluye (trabajo futuro):
+- HA, hardening, SSO/LDAP, RBAC avanzado, backup, escalado, observabilidad avanzada.
 
-OpenMetadata **no ingesta DCAT-AP-ES de forma nativa** como "conector DCAT/CKAN" completo.
-DCAT se **representa** mediante el metamodelo de OpenMetadata + gobierno (domains/tags/owners) + **custom properties**.
+## Idea clave del TFM
 
-Flujo:
-1) Ingesta tecnica (conector DB) -> entidades tecnicas automaticas.
-2) Enriquecimiento (API OpenMetadata) -> metadatos de gobierno "DCAT-like".
+OpenMetadata no ingesta DCAT-AP-ES "nativo" como conector completo.
+En esta PoC, DCAT se representa mediante:
+- metamodelo OpenMetadata,
+- custom properties,
+- tags/domains/owners.
+
+## Arquitectura (alto nivel)
+
+```mermaid
+flowchart LR
+  A[PostgreSQL demo<br/>bronze/silver/gold] -->|metadata ingest| B[OpenMetadata]
+  B --> C[Entidades tecnicas<br/>service/db/schema/table/column]
+  D[tfm_ingestor<br/>Python API] -->|PATCH| B
+  B --> E[Metadatos de gobierno<br/>DCAT-like]
+```
+
+Mas diagramas Mermaid para memoria y anexos:
+- `docs/diagramas_mermaid.md`
+
+## Ejecucion rapida
+
+Desde la raiz del repo:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_full_flow.ps1
+```
+
+Este comando ejecuta, en orden:
+1. despliegue `postgres-demo` dentro de Kubernetes
+2. despliegue OpenMetadata en Kubernetes
+3. conexion + ingesta tecnica de PostgreSQL
+4. bootstrap de tags/custom properties
+5. `python -m tfm_ingestor --dry-run`
+
+Guia unica recomendada para no dispersarse:
+- `docs/guia_centralizada.md`
 
 ## Estructura del repositorio
 
-- `docs/`: documentacion tecnica (publicable).
-- `sql/`: DDL + datos de ejemplo para PostgreSQL (fuente dummy).
-- `docker-compose.yml`: arranque local de PostgreSQL (demo).
-- `tfm_ingestor/`: script Python (CLI) para enriquecer metadatos via API OpenMetadata + tests.
+- `docs/`: documentacion tecnica y anexos de instalacion.
+- `k8s/`: values Helm para despliegue local.
+- `scripts/infra/`: scripts de operacion (infra, ingest, governance, dry-run).
+- `sql/`: esquema + datos dummy de PostgreSQL.
+- `tfm_ingestor/`: modulo Python de enriquecimiento y tests.
 
-Carpetas **privadas/locales** (NO publicables) que se mantienen en el repo pero **ignoradas por Git**:
-- `openmetadata_codigo/`
-- `OpenMetadata_documentacion/`
-- `TFM/`
+## Seguridad y privacidad del repo
 
-Si alguna vez se llegaran a "trackear" por error, hay que sacarlas del indice antes de hacer `push`:
-`git rm -r --cached openmetadata_codigo OpenMetadata_documentacion TFM`
+Carpetas locales no publicables se mantienen fuera del control de versiones.
 
-## Quickstart (resumen)
+Verificacion rapida:
+```powershell
+git status --ignored --short
+```
 
-1) Desplegar OpenMetadata en Kubernetes local:
-   - Ver `docs/openmetadata_k8s.md`
+## Documentacion principal
 
-2) Levantar PostgreSQL dummy:
-   - `docker compose up -d`
-   - Ver `docs/postgres_demo.md`
-
-3) Conectar PostgreSQL en OpenMetadata (UI) y ejecutar la ingesta tecnica:
-   - Ver `docs/ingesta_tecnica_postgres.md`
-
-4) Enriquecer metadatos de gobierno (API):
-   - Ver `docs/tfm_ingestor.md`
-
-Indice de documentacion: `docs/README.md`
-
-## Referencias
-
-- DCAT-AP-ES (norma principal del trabajo).
-- OpenMetadata (despliegue en Kubernetes con Helm).
+- `docs/guia_centralizada.md`
+- `docs/README.md`
+- `docs/anexos_instalacion/README.md`
+- `docs/openmetadata_k8s.md`
+- `docs/ingesta_tecnica_postgres.md`
+- `docs/tfm_ingestor.md`
