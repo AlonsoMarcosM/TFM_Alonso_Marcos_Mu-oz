@@ -1,6 +1,7 @@
 # --- Local private folders ---
 /TFM/
 /private_local/
+/docs_private/
 
 # --- Python ---
 __pycache__/
