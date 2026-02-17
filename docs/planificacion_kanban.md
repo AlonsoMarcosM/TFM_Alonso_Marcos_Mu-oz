@@ -1,13 +1,14 @@
 # Planificacion del TFM (enfoque agil ligero)
 
-Enfoque: **Kanban** + hitos academicos. Adecuado para un TFM individual con alcance acotado.
+Enfoque: **Kanban** + hitos academicos. Adecuado para un TFM individual con alcance acotado y orientado a portfolio.
 
 ## Metodologia
 
 - Metodo principal: Kanban (flujo continuo).
 - WIP: maximo 2-3 tareas simultaneas.
 - Revisiones: semanal (actualizar tablero antes de cada reunion/hito).
-- Herramienta sugerida: Microsoft Planner (o Excel en OneDrive).
+- Herramienta sugerida: GitHub Projects (v2) para trazabilidad dentro del repositorio.
+- Objetivos oficiales + alcance real: `docs/tfm_oficial_objetivos_decisiones.md`.
 
 ## Tablero Kanban (columnas)
 
@@ -26,9 +27,67 @@ Enfoque: **Kanban** + hitos academicos. Adecuado para un TFM individual con alca
 - Documentacion
 - Riesgo
 
-## Estructura sugerida en OneDrive (repositorio maestro del TFM)
+## Orden canonico de fases (fuente para GitHub Projects)
 
-Propuesta (organizacion de evidencias y redaccion):
+Este es el orden total acordado para el TFM:
+
+1. `01_Planificacion`
+2. `02_Modelo_DCAT-AP`
+3. `03_OpenMetadata_Config`
+4. `04_Pipeline_Ingesta`
+5. `05_Validacion`
+6. `06_Memoria`
+
+## Backlog maestro por fase
+
+### 01_Planificacion
+
+- Definir alcance, objetivos y no-objetivos del TFM.
+- Definir tablero Kanban, WIP y criterios DoR/DoD.
+- Configurar GitHub Project con vistas y campos.
+- Definir metricas semanales e hitos academicos.
+- Registrar riesgos iniciales y mitigaciones.
+
+### 02_Modelo_DCAT-AP
+
+- Analizar clases DCAT-AP-ES para la PoC (`Catalog`, `Dataset`, `Distribution`, `DataService`).
+- Cerrar decisiones de mapeo DCAT-AP-ES -> OpenMetadata.
+- Definir set minimo de propiedades DCAT-like.
+- Documentar limitaciones y riesgo controlado (dataset DCAT vs tabla SQL).
+
+### 03_OpenMetadata_Config
+
+- Validar prerrequisitos del entorno (`docker`, `kubectl`, `kind`, `helm`, `python`).
+- Desplegar stack OpenMetadata + dependencias en Kubernetes.
+- Verificar estado de pods/servicios y acceso a UI.
+- Crear tags y custom properties base para gobierno.
+
+### 04_Pipeline_Ingesta
+
+- Desplegar PostgreSQL dummy (`bronze/silver/gold`).
+- Ejecutar ingesta tecnica oficial hacia OpenMetadata.
+- Ajustar `governance_defaults.yaml` y `mapping_rules.yaml`.
+- Ejecutar `tfm_ingestor --dry-run` y despues aplicacion real.
+- Implementar harvesting desde CKAN (prioridad MITECO, fallback datos.gob.es) con limite configurable (MVP: 10 datasets).
+- Exportar/federar el catalogo a DCAT-AP (JSON-LD) usando un subconjunto minimo alineado con propiedades obligatorias DCAT-AP-ES.
+
+### 05_Validacion
+
+- Validar entidades tecnicas creadas (service/db/schema/table/column).
+- Verificar enrichment (tags, domains, custom properties).
+- Comprobar idempotencia en segunda ejecucion.
+- Validar harvesting (CKAN -> custom properties/tags) y export DCAT (JSON-LD) con ejemplos reales.
+- Ejecutar `pytest` y revisar higiene Git antes de push.
+- Evaluar beneficios y limitaciones (interoperabilidad, automatizacion, mantenimiento).
+
+### 06_Memoria
+
+- Consolidar anexos tecnicos reproducibles.
+- Consolidar diagramas y figuras para defensa.
+- Redactar resultados, limitaciones y trabajo futuro.
+- Cerrar hitos y registrar avance final.
+
+## Estructura sugerida de evidencias
 
 - `01_Planificacion` (roadmap, tablero, actas)
 - `02_Modelo_DCAT-AP` (analisis del estandar)
@@ -41,4 +100,4 @@ Propuesta (organizacion de evidencias y redaccion):
 
 - Numero de tareas completadas por semana
 - Porcentaje de avance por hito
-
+- Numero de bloqueos abiertos por semana

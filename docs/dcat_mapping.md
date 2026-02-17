@@ -1,8 +1,34 @@
 # Mapeo DCAT-AP-ES -> OpenMetadata (version simple)
 
+Nota de alineacion: DCAT-AP-ES es un perfil nacional basado en DCAT-AP.  
+En esta PoC usamos un subconjunto "DCAT-like" (compatible en espiritu con DCAT-AP) para acotar alcance y riesgo.
+
 DCAT-AP-ES (referencia) define principalmente: **Catalogo**, **Dataset**, **Distribucion** y **Servicio de datos**.
 
 OpenMetadata no representa DCAT 1:1; el objetivo del TFM es **alinear conceptos** usando el metamodelo de OM + gobierno + custom properties.
+
+## Propiedades obligatorias DCAT-AP-ES (minimo viable)
+
+Estas propiedades se toman como **minimo obligatorio** por entidad (perfil ES), y son la base del mapping:
+
+- **Catalogo**
+  - `dct:title`, `dct:description`, `dct:publisher`
+  - `foaf:homepage`, `dcat:themeTaxonomy`
+  - `dct:issued`, `dct:modified`
+  - `dct:language`, `dct:license`, `dct:spatial`
+
+- **Dataset**
+  - `dct:title`, `dct:description`, `dct:publisher`, `dcat:theme`
+
+- **Distribucion**
+  - `dcat:accessURL` (obligatorio)
+  - Nota: `dct:license` se modela a nivel de Distribucion (no de Dataset) en DCAT-AP-ES.
+
+## Cobertura en esta PoC
+
+- **Catalogo**: se exporta desde `governance_defaults.yaml` (titulo, descripcion, publisher, homepage, themeTaxonomy, issued/modified, language, license, spatial).
+- **Dataset**: se toma de `Table.displayName`/`description`, publisher/contact por defaults o CKAN, y `dcat:theme` desde tags `dcat_theme.*`.
+- **Distribucion**: se usa la primera resource CKAN para `dcat:accessURL`/`downloadURL`, y `dct:license` desde custom property.
 
 ## Decisiones de modelado (PoC)
 
@@ -27,4 +53,3 @@ OpenMetadata no representa DCAT 1:1; el objetivo del TFM es **alinear conceptos*
 - DCAT "dataset" != SQL "tabla" por definicion.
   - En catalogos empresariales, el dataset suele materializarse como entidad tecnica gobernable (table/view),
     y el resto de elementos (distribucion/servicio) se modelan como enlaces o metadatos adicionales.
-

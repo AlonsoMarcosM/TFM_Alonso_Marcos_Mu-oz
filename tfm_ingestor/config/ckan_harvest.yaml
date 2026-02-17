@@ -1,0 +1,45 @@
+ckan:
+  # Base URL of the CKAN portal (prioridad)
+  base_url: "https://catalogo.datosabiertos.miteco.gob.es/catalogo"
+  # Portales secundarios (fallback si el principal falla)
+  fallback_base_urls:
+    - "https://datos.gob.es/es/catalogo"
+  # Search query (CKAN package_search 'q')
+  query: ""
+  rows: 50
+  start: 0
+  # Max datasets total a recuperar (limite global, MVP)
+  max_datasets: 10
+  # Which CKAN resource index to use as "Distribution" in the MVP (0 = first)
+  resource_index: 0
+
+mapping:
+  # Map CKAN dataset name OR id -> OpenMetadata Table fullyQualifiedName
+  #
+  # Ejemplo (ajusta a tus tablas reales):
+  # dataset_to_table_fqn:
+  #   bici-uso: "postgres_demo_service.opendata_demo.bronze.bici_uso_raw"
+  dataset_to_table_fqn:
+    ejemplo_dataset: "postgres_demo_service.opendata_demo.bronze.bici_uso_raw"
+
+  # Optional: map CKAN tag/group names to OpenMetadata tag FQNs
+  keyword_to_tag_fqn:
+    bici: "dcat_keyword.bici"
+    eventos: "dcat_keyword.eventos"
+  theme_to_tag_fqn:
+    transport: "dcat_theme.transport"
+    society: "dcat_theme.society"
+
+# Optional: map CKAN extras keys -> OpenMetadata custom property names
+extras_to_custom_properties:
+  spatial: "dct_spatial"
+  language: "dct_language"
+  accrual_periodicity: "dct_accrual_periodicity"
+  temporal: "dct_temporal"
+  issued: "dct_issued"
+  modified: "dct_modified"
+
+behavior:
+  # If true, writes CKAN notes/title to OM table description/displayName when present.
+  write_description: true
+  write_display_name: true

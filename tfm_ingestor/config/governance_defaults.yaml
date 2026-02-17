@@ -3,10 +3,14 @@ catalog:
   description: "Catalogo de ejemplo para TFM (Movilidad + Eventos)."
   publisher_name: "UCLM (Demo)"
   contact_email: "opendata-demo@uclm.es"
+  homepage: "https://www.uclm.es"
+  theme_taxonomy: "http://publications.europa.eu/resource/authority/data-theme"
+  issued: "2026-02-05"
+  modified: "2026-02-05"
   spatial: "ES-CLM"
   language: "es"
   license_default: "CC-BY-4.0"
 
 dataset_defaults:
   accrual_periodicity: "daily"
-
+  theme_default: "other"

@@ -27,3 +27,8 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.pytest.ini_options]
+# Some environments block access to the default OS temp dir and/or .pytest_cache.
+# Use a repo-local temp directory and disable cacheprovider for reproducible runs.
+addopts = "-p no:cacheprovider --basetemp=tmp_pytest"
+testpaths = ["tests"]

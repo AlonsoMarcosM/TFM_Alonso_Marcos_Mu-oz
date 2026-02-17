@@ -3,106 +3,23 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 from pathlib import Path
 from typing import Any
 
-from tfm_ingestor.config import load_defaults, load_rules
-from tfm_ingestor.mapping import build_governance_spec, merge_tag_fqns
+from tfm_ingestor.config import load_ckan_harvest, load_defaults, load_rules
+from tfm_ingestor.dcat_export import export_catalog
+from tfm_ingestor.harvest_ckan import run_harvest
+from tfm_ingestor.mapping import build_governance_spec
 from tfm_ingestor.om_api import OpenMetadataApi, OpenMetadataApiError, OmRef
-
-
-def _tag_labels(tag_fqns: list[str]) -> list[dict[str, Any]]:
-    # OpenMetadata TagLabel (simplified)
-    return [{"tagFQN": fqn, "labelType": "Manual", "state": "Confirmed"} for fqn in tag_fqns]
-
-
-def _existing_tag_fqns(table: dict[str, Any]) -> list[str]:
-    tags = table.get("tags") or []
-    out: list[str] = []
-    for t in tags:
-        if isinstance(t, dict) and t.get("tagFQN"):
-            out.append(str(t["tagFQN"]))
-    return out
-
-
-def _existing_custom_properties(table: dict[str, Any]) -> dict[str, str]:
-    ext = table.get("extension") or {}
-    if not isinstance(ext, dict):
-        return {}
-    cp = ext.get("customProperties") or {}
-    if not isinstance(cp, dict):
-        return {}
-    # Keep only scalar values for the PoC
-    out: dict[str, str] = {}
-    for k, v in cp.items():
-        if v is None:
-            continue
-        out[str(k)] = str(v)
-    return out
+from tfm_ingestor.patch_ops import build_table_patch_ops
 
 
 def _domain_ref(domain: dict[str, Any]) -> OmRef:
     return OmRef(id=str(domain["id"]), type="domain", name=str(domain["name"]))
 
 
-def _build_patch_ops(
-    *,
-    table: dict[str, Any],
-    desired_tag_fqns: list[str],
-    desired_custom_properties: dict[str, str],
-    desired_domain_ref: OmRef | None,
-) -> list[dict[str, Any]]:
-    ops: list[dict[str, Any]] = []
-
-    # Tags (union)
-    existing_fqns = _existing_tag_fqns(table)
-    merged_fqns = merge_tag_fqns(existing_fqns, desired_tag_fqns)
-    if merged_fqns != existing_fqns:
-        ops.append({"op": "add" if not table.get("tags") else "replace", "path": "/tags", "value": _tag_labels(merged_fqns)})
-
-    # Custom properties (merge, override desired keys)
-    existing_cp = _existing_custom_properties(table)
-    merged_cp = dict(existing_cp)
-    merged_cp.update(desired_custom_properties)
-
-    ext = table.get("extension")
-    if not isinstance(ext, dict) or not ext:
-        value: dict[str, Any] = {"customProperties": merged_cp}
-        if desired_domain_ref:
-            value["domain"] = {
-                "id": desired_domain_ref.id,
-                "type": desired_domain_ref.type,
-                "name": desired_domain_ref.name,
-            }
-        ops.append({"op": "add", "path": "/extension", "value": value})
-    else:
-        if merged_cp != existing_cp:
-            if "customProperties" not in ext:
-                ops.append({"op": "add", "path": "/extension/customProperties", "value": merged_cp})
-            else:
-                ops.append({"op": "replace", "path": "/extension/customProperties", "value": merged_cp})
-
-    # Domain (best-effort; depends on OM version/entity shape)
-    if desired_domain_ref:
-        desired_domain_value = {"id": desired_domain_ref.id, "type": desired_domain_ref.type, "name": desired_domain_ref.name}
-        current_domain = None
-        current_domain_id = None
-        if isinstance(ext, dict):
-            current_domain = ext.get("domain")
-        if isinstance(current_domain, dict):
-            current_domain_id = current_domain.get("id")
-        if current_domain_id != desired_domain_ref.id and current_domain != desired_domain_value:
-            if not isinstance(ext, dict) or not ext:
-                # extension already handled above; domain will be included on next run
-                pass
-            else:
-                op = "add" if "domain" not in ext else "replace"
-                ops.append({"op": op, "path": "/extension/domain", "value": desired_domain_value})
-
-    return ops
-
-
-def cli(argv: list[str] | None = None) -> int:
+def cli_enrich(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="TFM: enrich OpenMetadata assets with DCAT-like governance metadata")
     repo_root = Path(__file__).resolve().parents[3]
     default_defaults = repo_root / "tfm_ingestor" / "config" / "governance_defaults.yaml"
@@ -192,7 +109,7 @@ def cli(argv: list[str] | None = None) -> int:
                     domain_ref = _domain_ref(dom)
                     domain_cache[spec.domain_name] = domain_ref
 
-        ops = _build_patch_ops(
+        ops = build_table_patch_ops(
             table=t,
             desired_tag_fqns=spec.tag_fqns,
             desired_custom_properties=spec.custom_properties,
@@ -214,6 +131,114 @@ def cli(argv: list[str] | None = None) -> int:
 
     print(json.dumps({"dry_run": bool(args.dry_run), "planned": planned, "applied": applied}, indent=2))
     return 0
+
+
+def cli_harvest_ckan(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="TFM: harvest datasets from CKAN and enrich OpenMetadata tables")
+    repo_root = Path(__file__).resolve().parents[3]
+    default_defaults = repo_root / "tfm_ingestor" / "config" / "governance_defaults.yaml"
+    default_cfg = repo_root / "tfm_ingestor" / "config" / "ckan_harvest.yaml"
+
+    parser.add_argument("--config", default=str(default_cfg), help="CKAN harvest YAML config")
+    parser.add_argument("--defaults", default=str(default_defaults), help="Defaults YAML path (catalog)")
+    parser.add_argument("--base-url", default=os.getenv("OPENMETADATA_BASE_URL", "http://localhost:8585/api/v1"), help="OpenMetadata base URL (api/v1)")
+    parser.add_argument("--token", default=os.getenv("OPENMETADATA_JWT_TOKEN"), help="OpenMetadata JWT token")
+    parser.add_argument("--limit-tables", type=int, default=1000, help="Max tables to read from OM")
+    parser.add_argument("--dry-run", action="store_true", help="Print plan, do not PATCH anything")
+    parser.add_argument("--max-datasets", type=int, default=None, help="Limit number of CKAN datasets fetched")
+    parser.add_argument("--datasets-in", default=None, help="Read CKAN datasets from a JSON file (offline mode)")
+    parser.add_argument("--datasets-out", default=None, help="Write harvested CKAN datasets to a JSON file")
+    parser.add_argument("--ckan-api-key", default=os.getenv("CKAN_API_KEY"), help="CKAN API key (optional)")
+    args = parser.parse_args(argv)
+
+    defaults = load_defaults(args.defaults)
+    ckan_cfg = load_ckan_harvest(args.config)
+
+    datasets_input = None
+    if args.datasets_in:
+        # Accept UTF-8 with BOM (common on Windows)
+        with open(args.datasets_in, "r", encoding="utf-8-sig") as f:
+            datasets_input = json.load(f)
+        if not isinstance(datasets_input, list):
+            raise SystemExit("ERROR: --datasets-in must be a JSON array of CKAN datasets")
+
+    api = OpenMetadataApi(base_url=args.base_url, jwt_token=args.token)
+
+    try:
+        result = run_harvest(
+            ckan_cfg=ckan_cfg,
+            defaults=defaults,
+            om_api=api,
+            dry_run=bool(args.dry_run),
+            limit_tables=int(args.limit_tables),
+            datasets_input=datasets_input,
+            write_datasets_path=args.datasets_out,
+            ckan_api_key=args.ckan_api_key,
+            max_datasets=args.max_datasets,
+        )
+    except (OpenMetadataApiError, ValueError) as exc:
+        raise SystemExit(f"ERROR: {exc}") from exc
+
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    return 0
+
+
+def cli_export_dcat(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="TFM: export OpenMetadata catalog to DCAT-AP JSON-LD (MVP)")
+    repo_root = Path(__file__).resolve().parents[3]
+    default_defaults = repo_root / "tfm_ingestor" / "config" / "governance_defaults.yaml"
+    default_rules = repo_root / "tfm_ingestor" / "config" / "mapping_rules.yaml"
+
+    parser.add_argument("--defaults", default=str(default_defaults), help="Defaults YAML path (catalog)")
+    parser.add_argument("--rules", default=str(default_rules), help="Rules YAML path (used to filter schemas)")
+    parser.add_argument("--base-url", default=os.getenv("OPENMETADATA_BASE_URL", "http://localhost:8585/api/v1"), help="OpenMetadata base URL (api/v1)")
+    parser.add_argument("--token", default=os.getenv("OPENMETADATA_JWT_TOKEN"), help="OpenMetadata JWT token")
+    parser.add_argument("--limit", type=int, default=1000, help="Max tables to read from OM")
+    parser.add_argument("--tables-in", default=None, help="Read OpenMetadata tables from a JSON file (offline mode)")
+    parser.add_argument("--output", default="dcat_catalog.jsonld", help="Output JSON-LD path")
+    args = parser.parse_args(argv)
+
+    defaults = load_defaults(args.defaults)
+    rules = load_rules(args.rules)
+
+    tables_input = None
+    if args.tables_in:
+        # Accept UTF-8 with BOM (common on Windows)
+        with open(args.tables_in, "r", encoding="utf-8-sig") as f:
+            tables_input = json.load(f)
+        if not isinstance(tables_input, list):
+            raise SystemExit("ERROR: --tables-in must be a JSON array of OpenMetadata tables")
+
+    api = None if tables_input is not None else OpenMetadataApi(base_url=args.base_url, jwt_token=args.token)
+    result = export_catalog(
+        defaults=defaults,
+        rules=rules,
+        om_api=api,
+        limit_tables=int(args.limit),
+        tables_input=tables_input,
+        output_path=str(args.output) if args.output else None,
+    )
+
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    return 0
+
+
+def cli(argv: list[str] | None = None) -> int:
+    """
+    Dispatch CLI.
+
+    Backwards compatible:
+    - default behavior is `enrich` (previous CLI)
+    - new commands:
+      - harvest-ckan
+      - export-dcat
+    """
+    args = list(argv) if argv is not None else sys.argv[1:]
+    if args and args[0] == "harvest-ckan":
+        return cli_harvest_ckan(args[1:])
+    if args and args[0] == "export-dcat":
+        return cli_export_dcat(args[1:])
+    return cli_enrich(args)
 
 
 if __name__ == "__main__":

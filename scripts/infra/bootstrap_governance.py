@@ -104,12 +104,20 @@ def main() -> int:
         ("dcat_keyword", "eventos", "DCAT keyword: eventos"),
     ]
     required_custom_properties = [
+        ("dct_identifier", "DCAT identifier (dct:identifier)"),
         ("dcat_publisher_name", "DCAT publisher name"),
         ("dcat_contact_email", "DCAT contact email"),
+        ("dcat_landing_page", "DCAT landing page URL (dcat:landingPage)"),
         ("dct_spatial", "DCAT spatial coverage"),
         ("dct_language", "DCAT language"),
         ("dct_license", "DCAT license"),
+        ("dct_issued", "DCAT issued date (dct:issued)"),
+        ("dct_modified", "DCAT modified date (dct:modified)"),
+        ("dct_temporal", "DCAT temporal coverage (dct:temporal)"),
         ("dct_accrual_periodicity", "DCAT accrual periodicity"),
+        ("dcat_access_url", "DCAT distribution access URL (dcat:accessURL)"),
+        ("dcat_download_url", "DCAT distribution download URL (dcat:downloadURL)"),
+        ("dcat_endpoint_url", "DCAT data service endpoint URL (dcat:endpointURL)"),
         ("tfm_layer", "TFM logical layer (Bronze/Silver/Gold)"),
     ]
 

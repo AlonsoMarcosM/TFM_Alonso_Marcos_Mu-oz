@@ -7,6 +7,9 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.pytest_tmp/
+tmp_pytest/
+tfm_ingestor/tmp_pytest/
 .ruff_cache/
 .mypy_cache/
 .eggs/

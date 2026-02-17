@@ -6,11 +6,12 @@ kubectl config current-context
 Write-Host "`nReleases Helm:"
 $helmCmd = Get-Command helm -ErrorAction SilentlyContinue
 if ($helmCmd) {
-  & $helmCmd.Source ls -a
+  # Helm v4 no soporta `-a` (era shorthand antiguo). Por defecto lista releases en cualquier estado.
+  & $helmCmd.Source ls -A
 } else {
   $localHelm = Join-Path (Resolve-Path ".").Path ".tools\helm-v3.14.4\windows-amd64\helm.exe"
   if (Test-Path $localHelm) {
-    & $localHelm ls -a
+    & $localHelm ls -A
   } else {
     Write-Host "Helm no encontrado en PATH ni en .tools."
   }

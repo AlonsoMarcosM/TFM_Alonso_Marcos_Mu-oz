@@ -29,8 +29,9 @@ python -m tfm_ingestor --dry-run
 ## Documentacion (orden recomendado)
 
 1. `README.md` (vision general + portfolio)
-2. `docs/guia_centralizada.md` (esta guia operativa)
-3. `docs/anexos_instalacion/README.md` (evidencia paso a paso para memoria)
+2. `docs/tfm_oficial_objetivos_decisiones.md` (enunciado oficial + alcance real + decisiones)
+3. `docs/guia_centralizada.md` (esta guia operativa)
+4. `docs/anexos_instalacion/README.md` (evidencia paso a paso para memoria)
 
 Solo si necesitas detalle:
 - `docs/openmetadata_k8s.md`

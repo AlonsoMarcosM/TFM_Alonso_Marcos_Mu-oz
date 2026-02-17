@@ -1,4 +1,4 @@
-﻿# TFM - OpenMetadata + DCAT-AP-ES (PoC reproducible)
+# TFM - OpenMetadata + DCAT-AP (perfil DCAT-AP-ES) - PoC reproducible
 
 Repositorio del Trabajo Fin de Master:
 
@@ -8,7 +8,7 @@ Repositorio del Trabajo Fin de Master:
 ## Que demuestra este proyecto (portfolio)
 
 - Despliegue reproducible de una plataforma de catalogo de datos con Kubernetes + Helm.
-- Modelado de gobierno de datos alineado con DCAT-AP-ES sobre OpenMetadata.
+- Modelado de gobierno de datos alineado con DCAT-AP (usando DCAT-AP-ES como perfil concreto en la PoC) sobre OpenMetadata.
 - Automatizacion de metadatos por API REST (Python), con enfoque idempotente.
 - Calidad tecnica minima exigible: configuracion declarativa, scripts operativos y tests de reglas.
 
@@ -27,7 +27,7 @@ No incluye (trabajo futuro):
 
 ## Idea clave del TFM
 
-OpenMetadata no ingesta DCAT-AP-ES "nativo" como conector completo.
+OpenMetadata no ingesta DCAT-AP "nativo" como conector completo (y lo mismo aplica a perfiles como DCAT-AP-ES).
 En esta PoC, DCAT se representa mediante:
 - metamodelo OpenMetadata,
 - custom properties,
@@ -84,8 +84,10 @@ git status --ignored --short
 ## Documentacion principal
 
 - `docs/guia_centralizada.md`
+- `docs/tfm_oficial_objetivos_decisiones.md`
 - `docs/README.md`
 - `docs/anexos_instalacion/README.md`
 - `docs/openmetadata_k8s.md`
 - `docs/ingesta_tecnica_postgres.md`
 - `docs/tfm_ingestor.md`
+- `docs/github_projects_mvp.md`

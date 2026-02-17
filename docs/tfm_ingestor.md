@@ -53,6 +53,37 @@ Aplicar cambios:
 python -m tfm_ingestor
 ```
 
+## Harvesting desde CKAN (MVP)
+
+Objetivo: sincronizar metadatos desde un portal CKAN y aplicarlos sobre tablas existentes en OpenMetadata
+via custom properties/tags (idempotente).
+
+Config:
+- Edita `tfm_ingestor/config/ckan_harvest.yaml` (mapping dataset -> table FQN).
+- Por defecto usa CKAN MITECO como primario y datos.gob.es como fallback.
+- `max_datasets` limita el numero total de datasets (MVP: 10).
+  - Se puede sobrescribir en CLI con `--max-datasets`.
+
+Dry-run:
+
+```powershell
+python -m tfm_ingestor harvest-ckan --dry-run
+```
+
+Aplicar:
+
+```powershell
+python -m tfm_ingestor harvest-ckan
+```
+
+## Export DCAT-AP (JSON-LD) (MVP)
+
+Objetivo: exportar un catalogo en JSON-LD compatible con DCAT-AP (subset PoC).
+
+```powershell
+python -m tfm_ingestor export-dcat --output dcat_catalog.jsonld
+```
+
 ## Tests
 
 ```powershell

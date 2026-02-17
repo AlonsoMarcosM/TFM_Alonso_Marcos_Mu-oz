@@ -3,12 +3,20 @@
 ## 1) Crear custom properties (tipo `string`) en entidad `table`
 
 Claves usadas por la PoC:
+- `dct_identifier`
 - `dcat_publisher_name`
 - `dcat_contact_email`
+- `dcat_landing_page`
 - `dct_spatial`
 - `dct_language`
 - `dct_license`
+- `dct_issued`
+- `dct_modified`
+- `dct_temporal`
 - `dct_accrual_periodicity`
+- `dcat_access_url`
+- `dcat_download_url`
+- `dcat_endpoint_url`
 - `tfm_layer`
 
 Detalle del procedimiento:
