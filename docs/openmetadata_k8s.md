@@ -1,4 +1,4 @@
-# Despliegue local de OpenMetadata en Kubernetes (Docker Desktop + Helm)
+﻿# Despliegue local de OpenMetadata en Kubernetes (Docker Desktop + Helm)
 
 Objetivo: levantar OpenMetadata en Kubernetes local de la forma mas simple posible (PoC para TFM).
 
@@ -12,15 +12,15 @@ Nota (portfolio): aunque aqui se describe Docker Desktop + Kubernetes local, la 
 
 ## Stack desplegado en esta PoC
 
-Desde la raiz del repo se levanta un stack unico:
+Desde la raiz del repo se levanta un stack ?nico:
 - Kubernetes (kind): `openmetadata`, `mysql`, `opensearch`, `postgres-demo`.
 - Airflow interno desactivado para simplificar (ingesta por pod temporal/CLI).
 
-## Instalacion (comandos base)
+## Instalación (comandos base)
 
 Notas:
 - Passwords de ejemplo: validos para una demo/TFM (hardening = trabajo futuro).
-- El stack incluye dependencias (MySQL/OpenSearch/Airflow) via chart `openmetadata-dependencies`.
+- El stack incluye dependencias (MySQL/OpenSearch/Airflow) vía chart `openmetadata-dependencies`.
 
 ```powershell
 # 1) Crear secretos (MySQL + Airflow) para el chart de dependencias
@@ -46,6 +46,24 @@ kubectl port-forward deployment/openmetadata 8585:8585
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\launch_infra.ps1
 ```
+
+## Persistencia portable del estado OpenMetadata
+
+Para que el estado sobreviva a `kind delete cluster` y viaje con la carpeta del proyecto:
+
+```powershell
+# 1) Exportar estado de MySQL a snapshot local
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\backup_openmetadata_state.ps1
+
+# 2) (opcional) borrar cluster conservando snapshot
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\delete_cluster_preserve_state.ps1
+
+# 3) recrear cluster; launch_infra restaura snapshot automaticamente si existe
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\launch_infra.ps1
+```
+
+Ruta snapshot:
+- `state/openmetadata/mysql/openmetadata_db.sql`
 
 ## Uso practico de Helm en este repositorio
 

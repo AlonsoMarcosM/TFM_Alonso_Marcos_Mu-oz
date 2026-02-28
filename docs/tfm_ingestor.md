@@ -1,6 +1,6 @@
-# `tfm_ingestor`: enriquecimiento de metadatos (gobierno) via API OpenMetadata
+﻿# `tfm_ingestor`: enriquecimiento de metadatos (gobierno) vía API OpenMetadata
 
-Objetivo: aplicar reglas simples e idempotentes sobre las entidades creadas por la ingesta tecnica (Postgres):
+Objetivo: aplicar reglas simples e idempotentes sobre las entidades creadas por la ingesta técnica (Postgres):
 - Domain por esquema (`bronze/silver/gold`)
 - Tags por convencion de nombres (prefijos)
 - Custom properties "DCAT-like" con defaults
@@ -8,13 +8,13 @@ Objetivo: aplicar reglas simples e idempotentes sobre las entidades creadas por 
 Comportamiento:
 - Si un Domain configurado no existe, el script intenta crearlo (PoC).
 
-## Instalacion (modo editable)
+## Instalación (modo editable)
 
 ```powershell
 python -m pip install -e tfm_ingestor[dev]
 ```
 
-## Configuracion
+## Configuración
 
 Ficheros de ejemplo:
 - `tfm_ingestor/config/governance_defaults.yaml`
@@ -24,7 +24,7 @@ Prerequisito en OpenMetadata:
 - Crear las custom properties usadas por la PoC (ver `docs/custom_properties_openmetadata.md`).
 - Crear los tags usados en `tfm_ingestor/config/mapping_rules.yaml`.
 
-Automatizacion recomendada (desde la raiz):
+Automatización recomendada (desde la raiz):
 
 ```powershell
 # Requiere OpenMetadata levantado y accesible por port-forward
@@ -35,17 +35,21 @@ python .\scripts\infra\bootstrap_governance.py --base-url http://localhost:8585/
 Stop-Job $job; Remove-Job $job -Force
 ```
 
-Autenticacion (ejemplo):
-- Exportar un token JWT en `OPENMETADATA_JWT_TOKEN` (obtenido desde OpenMetadata, p.ej. desde perfil/usuario admin o API de login segun version)
+Autenticación (ejemplo):
+- Exportar un token JWT en `OPENMETADATA_JWT_TOKEN` (obtenido desde OpenMetadata, p.ej. desde perfil/usuario admin o API de login segun versión)
 - Base URL en `OPENMETADATA_BASE_URL` (por defecto `http://localhost:8585/api/v1`)
 
-## Ejecucion
+## Ejecución
 
 Dry-run (no aplica cambios):
 
 ```powershell
 python -m tfm_ingestor --dry-run
 ```
+
+Importante:
+- En `--dry-run` no se crean Domains nuevos.
+- Los Domains (`schema_to_domain`) se crean/asignan al ejecutar sin `--dry-run`.
 
 Aplicar cambios:
 
@@ -56,7 +60,7 @@ python -m tfm_ingestor
 ## Harvesting desde CKAN (MVP)
 
 Objetivo: sincronizar metadatos desde un portal CKAN y aplicarlos sobre tablas existentes en OpenMetadata
-via custom properties/tags (idempotente).
+vía custom properties/tags (idempotente).
 
 Config:
 - Edita `tfm_ingestor/config/ckan_harvest.yaml` (mapping dataset -> table FQN).
@@ -78,7 +82,7 @@ python -m tfm_ingestor harvest-ckan
 
 ## Export DCAT-AP (JSON-LD) (MVP)
 
-Objetivo: exportar un catalogo en JSON-LD compatible con DCAT-AP (subset PoC).
+Objetivo: exportar un catálogo en JSON-LD compatible con DCAT-AP (subset PoC).
 
 ```powershell
 python -m tfm_ingestor export-dcat --output dcat_catalog.jsonld
@@ -93,7 +97,7 @@ python -m pytest tfm_ingestor/tests
 
 ## Flujo completo en un comando
 
-Si quieres ejecutar todo el flujo (infra + ingesta tecnica + bootstrap gobierno + dry-run):
+Si quieres ejecutar todo el flujo (infra + ingesta técnica + bootstrap gobierno + dry-run):
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_full_flow.ps1

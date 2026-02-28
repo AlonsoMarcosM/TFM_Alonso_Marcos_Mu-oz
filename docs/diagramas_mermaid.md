@@ -1,4 +1,4 @@
-# Diagramas Mermaid (memoria y portfolio)
+﻿# Diagramas Mermaid (memoria y portfolio)
 
 Este documento centraliza diagramas Mermaid reutilizables en:
 - README del repositorio
@@ -9,8 +9,8 @@ Este documento centraliza diagramas Mermaid reutilizables en:
 
 ```mermaid
 flowchart LR
-  A[PostgreSQL dummy<br/>bronze/silver/gold] -->|Ingesta tecnica| B[OpenMetadata]
-  B --> C[Entidades tecnicas<br/>Service/DB/Schema/Table/Column]
+  A[PostgreSQL dummy<br/>bronze/silver/gold] -->|Ingesta técnica| B[OpenMetadata]
+  B --> C[Entidades técnicas<br/>Service/DB/Schema/Table/Column]
   D[tfm_ingestor<br/>Python API] -->|Enriquecimiento| B
   B --> E[Metadatos de gobierno<br/>tags + domains + custom properties]
 ```

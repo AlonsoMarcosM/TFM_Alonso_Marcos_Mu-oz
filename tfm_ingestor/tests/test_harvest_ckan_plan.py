@@ -79,14 +79,12 @@ def test_build_plan_creates_patch_ops_for_mapped_dataset():
     assert "/description" in paths
     assert "/displayName" in paths
     assert "/tags" in paths
-    assert "/extension/customProperties" in paths or "/extension" in paths
+    assert "/extension" in paths
 
     merged_cp = None
     for op in ops:
-        if op["path"] == "/extension/customProperties":
-            merged_cp = op["value"]
         if op["path"] == "/extension" and isinstance(op.get("value"), dict):
-            merged_cp = op["value"].get("customProperties")
+            merged_cp = op["value"]
     assert isinstance(merged_cp, dict)
     assert merged_cp["dct_identifier"] == "ckan-1"
     assert merged_cp["dcat_landing_page"].endswith("/dataset/bici-uso")

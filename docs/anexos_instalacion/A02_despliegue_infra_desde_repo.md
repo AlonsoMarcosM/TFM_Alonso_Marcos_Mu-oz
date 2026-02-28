@@ -1,6 +1,6 @@
-# A02 - Despliegue de infraestructura desde el repositorio
+﻿# A02 - Despliegue de infraestructura desde el repositorio
 
-Este anexo deja toda la infraestructura arrancada desde un unico punto de entrada.
+Este anexo deja toda la infraestructura arrancada desde un ?nico punto de entrada.
 
 ## Opcion recomendada (automatizada)
 
@@ -21,12 +21,44 @@ Stack final esperado:
 - Docker: `tfm-om-control-plane`
 - Kubernetes: `postgres-demo`, `mysql`, `opensearch`, `openmetadata`
 
+## Persistencia de estado (sobrevive a `kind delete cluster`)
+
+El estado funcional de OpenMetadata (tags, dominios, owners, metadatos) se guarda en MySQL.
+Para llevarte ese estado con la carpeta del proyecto:
+
+- Snapshot SQL local (ruta relativa al repo):
+  - `state/openmetadata/mysql/openmetadata_db.sql`
+
+Comandos:
+
+```powershell
+# Guardar estado actual en carpeta del proyecto
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\backup_openmetadata_state.ps1
+
+# Borrar cluster conservando snapshot
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\delete_cluster_preserve_state.ps1
+
+# Levantar de nuevo y restaurar automaticamente si existe snapshot
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\launch_infra.ps1
+```
+
+Notas:
+- `launch_infra.ps1` restaura automáticamente el snapshot si existe.
+- Puedes desactivar restauracion con `-SkipStateRestore`.
+- `state/` esta en `.gitignore` (no se sube al remoto).
+
 ## Exposicion de OpenMetadata UI
 
 En una terminal aparte:
 
 ```powershell
-kubectl port-forward deployment/openmetadata 8585:8585
+kubectl port-forward svc/openmetadata 8585:8585
+```
+
+Si se corta al reiniciarse el pod, usa auto-reconexion:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\port_forward_openmetadata.ps1
 ```
 
 Acceso:
@@ -55,5 +87,5 @@ Estado validado en este entorno (04/02/2026):
 
 ## Comentario para VPS/cloud
 
-El flujo es portable: los mismos charts Helm y la misma logica aplican en un Kubernetes de VPS/cloud (k3s o gestionado).  
-Cambian principalmente: storage class, recursos y configuracion de red/ingress.
+El flujo es portable: los mismos charts Helm y la misma lógica aplican en un Kubernetes de VPS/cloud (k3s o gestionado).  
+Cambian principalmente: storage class, recursos y configuración de red/ingress.

@@ -1,4 +1,4 @@
-# A03 - Conectar PostgreSQL e ingesta tecnica en OpenMetadata
+﻿# A03 - Conectar PostgreSQL e ingesta técnica en OpenMetadata
 
 ## PostgreSQL dummy
 
@@ -16,10 +16,10 @@ Credenciales:
 
 1. `Settings -> Services -> Databases -> Add New Service`
 2. Tipo: `Postgres`
-3. Completar conexion con los datos anteriores
+3. Completar conexión con los datos anteriores
 4. Guardar
 
-## Ejecutar ingesta tecnica
+## Ejecutar ingesta técnica
 
 1. Crear `Ingestion Pipeline` sobre el servicio
 2. Ejecutar pipeline manualmente
@@ -31,8 +31,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\ingest_postgres.ps1
 ```
 
 Este script deja evidencia en consola de:
-- Creacion/verificacion del `DatabaseService`
-- Ejecucion de ingesta con pod temporal `om-postgres-ingest`
+- Creación/verificacion del `DatabaseService`
+- Ejecución de ingesta con pod temporal `om-postgres-ingest`
 - Resumen de tablas detectadas
 
 ## Resultado esperado

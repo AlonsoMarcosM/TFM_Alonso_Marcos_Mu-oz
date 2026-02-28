@@ -1,6 +1,6 @@
-# tfm_ingestor
+﻿# tfm_ingestor
 
-CLI pequena para enriquecer metadatos de gobierno en OpenMetadata via API REST.
+CLI pequeña para enriquecer metadatos de gobierno en OpenMetadata vía API REST.
 Incluye (MVP): harvesting desde CKAN y export DCAT-AP (JSON-LD).
 
-Documentacion de uso: `../docs/tfm_ingestor.md`.
+Documentación de uso: `../docs/tfm_ingestor.md`.

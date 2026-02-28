@@ -32,6 +32,7 @@ Thumbs.db
 *.log
 logs/
 data_local/
+state/
 
 # --- Local tooling / downloads ---
 .tools/

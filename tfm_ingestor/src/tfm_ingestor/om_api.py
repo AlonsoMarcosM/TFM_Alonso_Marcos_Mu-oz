@@ -96,12 +96,10 @@ class OpenMetadataApi:
         description: str | None = None,
         domain_type: str = "Source-aligned",
     ) -> dict[str, Any]:
-        body: dict[str, Any] = {"name": name}
-        if description:
-            body["description"] = description
-        return self._request(
-            "POST",
-            "/domains",
-            params={"domainType": domain_type},
-            json=body,
-        )
+        # OM 1.12.x expects `domainType` and `description` inside JSON body.
+        body: dict[str, Any] = {
+            "name": name,
+            "domainType": domain_type,
+            "description": description or f"Domain for {name}",
+        }
+        return self._request("POST", "/domains", json=body)

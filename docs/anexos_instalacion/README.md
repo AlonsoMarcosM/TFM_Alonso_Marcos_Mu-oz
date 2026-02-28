@@ -1,4 +1,4 @@
-# Anexos de instalacion (replicables)
+﻿# Anexos de instalacion (replicables)
 
 Estos anexos documentan el despliegue de la PoC para que pueda repetirse desde cero.
 
@@ -12,5 +12,5 @@ Objetivo de arquitectura:
 - Ejecutar todo desde la raiz del repo.
 - Mantener despliegue portable (local, VPS o cloud con Kubernetes).
 
-Atajo de ejecucion total:
+Atajo de ejecución total:
 - `powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_full_flow.ps1`

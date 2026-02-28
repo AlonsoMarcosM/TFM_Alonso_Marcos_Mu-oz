@@ -31,12 +31,10 @@ def test_build_catalog_jsonld_contains_catalog_and_datasets():
                 {"tagFQN": "dcat_theme.transport"},
             ],
             "extension": {
-                "customProperties": {
-                    "dct_identifier": "ckan-1",
-                    "dcat_access_url": "https://example.org/data.csv",
-                    "dcat_download_url": "https://example.org/data.csv",
-                    "dct_license": "CC-BY-4.0",
-                }
+                "dct_identifier": "ckan-1",
+                "dcat_access_url": "https://example.org/data.csv",
+                "dcat_download_url": "https://example.org/data.csv",
+                "dct_license": "CC-BY-4.0",
             },
         }
     ]

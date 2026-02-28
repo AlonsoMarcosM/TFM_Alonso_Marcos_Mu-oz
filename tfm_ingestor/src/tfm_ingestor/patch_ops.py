@@ -24,12 +24,9 @@ def existing_custom_properties(table: dict[str, Any]) -> dict[str, str]:
     ext = table.get("extension") or {}
     if not isinstance(ext, dict):
         return {}
-    cp = ext.get("customProperties") or {}
-    if not isinstance(cp, dict):
-        return {}
-    # Keep only scalar values for the PoC
+    # In OM 1.12.x table custom properties are stored directly in `extension`.
     out: dict[str, str] = {}
-    for k, v in cp.items():
+    for k, v in ext.items():
         if v is None:
             continue
         out[str(k)] = str(v)
@@ -86,38 +83,27 @@ def build_table_patch_ops(
     merged_cp.update(desired_custom_properties)
 
     ext = table.get("extension")
-    if not isinstance(ext, dict) or not ext:
-        value: dict[str, Any] = {"customProperties": merged_cp}
-        if desired_domain_ref:
-            value["domain"] = {
-                "id": desired_domain_ref.id,
-                "type": desired_domain_ref.type,
-                "name": desired_domain_ref.name,
-            }
-        ops.append({"op": "add", "path": "/extension", "value": value})
-    else:
-        if merged_cp != existing_cp:
-            if "customProperties" not in ext:
-                ops.append({"op": "add", "path": "/extension/customProperties", "value": merged_cp})
-            else:
-                ops.append({"op": "replace", "path": "/extension/customProperties", "value": merged_cp})
+    if merged_cp != existing_cp:
+        if not isinstance(ext, dict) or not ext:
+            ops.append({"op": "add", "path": "/extension", "value": merged_cp})
+        else:
+            ops.append({"op": "replace", "path": "/extension", "value": merged_cp})
 
-    # Domain (best-effort; depends on OM version/entity shape)
+    # Domains (OM 1.12.x uses `/domains` list on Table)
     if desired_domain_ref:
-        desired_domain_value = {"id": desired_domain_ref.id, "type": desired_domain_ref.type, "name": desired_domain_ref.name}
-        current_domain = None
-        current_domain_id = None
-        if isinstance(ext, dict):
-            current_domain = ext.get("domain")
-        if isinstance(current_domain, dict):
-            current_domain_id = current_domain.get("id")
-        if current_domain_id != desired_domain_ref.id and current_domain != desired_domain_value:
-            if not isinstance(ext, dict) or not ext:
-                # extension already handled above; domain will be included on next run
-                pass
-            else:
-                op = "add" if "domain" not in ext else "replace"
-                ops.append({"op": op, "path": "/extension/domain", "value": desired_domain_value})
+        desired_domain_value = {
+            "id": desired_domain_ref.id,
+            "type": desired_domain_ref.type,
+            "name": desired_domain_ref.name,
+        }
+        current_domains = table.get("domains") or []
+        current_ids = {
+            str(d.get("id"))
+            for d in current_domains
+            if isinstance(d, dict) and d.get("id")
+        }
+        if desired_domain_ref.id not in current_ids:
+            op = "add" if "domains" not in table else "replace"
+            ops.append({"op": op, "path": "/domains", "value": [desired_domain_value]})
 
     return ops
-

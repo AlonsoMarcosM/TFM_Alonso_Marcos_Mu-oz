@@ -1,6 +1,6 @@
-# Ingesta tecnica: conectar PostgreSQL a OpenMetadata
+﻿# Ingesta técnica: conectar PostgreSQL a OpenMetadata
 
-Objetivo: que el conector oficial cree/actualice automaticamente:
+Objetivo: que el conector oficial cree/actualice automáticamente:
 `DatabaseService -> Database -> Schemas -> Tables -> Columns`.
 
 ## Opcion recomendada (automatizada desde raiz del repo)
@@ -12,7 +12,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\ingest_postgres.ps1
 El script:
 1) Genera JWT temporal de OpenMetadata.
 2) Verifica/crea el servicio `postgres_demo_service`.
-3) Ejecuta la ingesta tecnica con un pod temporal `om-postgres-ingest`.
+3) Ejecuta la ingesta técnica con un pod temporal `om-postgres-ingest`.
 4) Muestra resumen de tablas detectadas y elimina el pod temporal.
 
 Nota: puede aparecer un warning de `pg_stat_statements` en logs. Para esta PoC no bloquea la ingesta de metadatos tecnicos.
@@ -21,7 +21,7 @@ Nota: puede aparecer un warning de `pg_stat_statements` en logs. Para esta PoC n
 
 1) Ir a `Settings -> Services -> Databases -> Add New Service`.
 2) Elegir `Postgres`.
-3) Rellenar la conexion:
+3) Rellenar la conexión:
    - Host: `postgres-demo.default.svc.cluster.local`
    - Port: `5432`
    - Username: `om_demo`
@@ -32,6 +32,6 @@ Nota: puede aparecer un warning de `pg_stat_statements` en logs. Para esta PoC n
 
 ## Resultado esperado
 
-Tras la ejecucion:
+Tras la ejecución:
 - Aparecen los schemas `bronze`, `silver`, `gold`.
 - Aparecen las tablas y columnas definidas en `sql/opendata_demo_init.sql`.

@@ -1,4 +1,4 @@
-# A04 - Custom properties, tags y dry-run del ingestor
+﻿# A04 - Custom properties, tags y dry-run del ingestor
 
 ## 1) Crear custom properties (tipo `string`) en entidad `table`
 
@@ -66,7 +66,7 @@ El resultado esperado es un JSON con:
 - `planned`: operaciones PATCH planificadas por tabla
 - `applied: 0`
 
-## 4) Aplicacion real (sin dry-run)
+## 4) Aplicación real (sin dry-run)
 
 ```powershell
 python -m tfm_ingestor

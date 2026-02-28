@@ -39,6 +39,8 @@ def cli_enrich(argv: list[str] | None = None) -> int:
     api = OpenMetadataApi(base_url=args.base_url, jwt_token=args.token)
 
     field_candidates = [
+        "tags,extension,domains,databaseSchema",
+        "tags,extension,domains,schema",
         "tags,extension,databaseSchema",
         "tags,extension,schema",
         "tags,extension",

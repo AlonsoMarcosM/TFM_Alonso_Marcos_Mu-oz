@@ -1,6 +1,7 @@
 ﻿param(
   [string]$ClusterName = "tfm-om",
-  [switch]$SkipOpenMetadata
+  [switch]$SkipOpenMetadata,
+  [switch]$SkipStateRestore
 )
 
 $ErrorActionPreference = "Stop"
@@ -119,6 +120,16 @@ Ensure-NoPendingRelease -helmPath $helm -releaseName "openmetadata-dependencies"
   -f "k8s/openmetadata-dependencies.values.yaml" `
   --wait --timeout 25m
 
+$snapshotPath = Join-Path $repoRoot "state\openmetadata\mysql\openmetadata_db.sql"
+if (-not $SkipStateRestore -and (Test-Path $snapshotPath)) {
+  Write-Host "`n[4.5/5] Restaurando estado OpenMetadata desde snapshot local..."
+  powershell -ExecutionPolicy Bypass -File ".\scripts\infra\restore_openmetadata_state.ps1" `
+    -SnapshotPath $snapshotPath `
+    -Namespace "default"
+} elseif (-not $SkipStateRestore) {
+  Write-Host "`n[4.5/5] No hay snapshot local de estado en: $snapshotPath"
+}
+
 if (-not $SkipOpenMetadata) {
   Write-Host "`n[5/5] Instalando OpenMetadata (Helm)..."
   Ensure-NoPendingRelease -helmPath $helm -releaseName "openmetadata"
@@ -131,4 +142,4 @@ Write-Host "`nEstado de pods:"
 kubectl get pods -o wide
 
 Write-Host "`nSiguiente comando (nueva terminal):"
-Write-Host "kubectl port-forward deployment/openmetadata 8585:8585"
+Write-Host "powershell -ExecutionPolicy Bypass -File .\scripts\infra\port_forward_openmetadata.ps1"

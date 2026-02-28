@@ -1,4 +1,4 @@
-# MVP GitHub Projects para planificacion del TFM
+﻿# MVP GitHub Projects para planificacion del TFM
 
 Objetivo: sustituir Microsoft Planner por un flujo reproducible en GitHub Projects (v2), creado por codigo.
 
@@ -7,7 +7,7 @@ Este MVP crea de forma idempotente:
 - campos single-select (`Estado TFM`, `Fase TFM`, `Tipo TFM`)
 - labels por tipo y fase
 - milestones por fase
-- issues base del roadmap (extraidas de la documentacion del repo)
+- issues base del roadmap (extraidas de la documentación del repo)
 - alta de issues en el Project y asignacion de campos
 - enlace del Project al repositorio para que aparezca en `/<owner>/<repo>/projects`
 
@@ -25,7 +25,7 @@ El roadmap se toma del orden canonico definido en:
 - Python 3.10+
 - Repositorio en GitHub con permisos para crear issues/milestones/projects
 - Token con permisos (elige 1 enfoque):
-  - PAT classic: scopes `repo`, `project`, `read:user` (y `read:org` solo si `--owner` es una organizacion)
+  - PAT classic: scopes `repo`, `project`, `read:user` (y `read:org` solo si `--owner` es una organización)
   - Fine-grained PAT:
     - Account permissions: `Projects` = Read and write
     - Repository permissions (para el repo objetivo): `Issues` = Read and write, `Metadata` = Read-only
@@ -45,7 +45,7 @@ Salida esperada:
 - preview de labels/milestones/issues
 - campos del proyecto que se crearian
 
-## 2) Aplicar en GitHub (creacion real)
+## 2) Aplicar en GitHub (creación real)
 
 Configura variables y ejecuta:
 
@@ -126,7 +126,7 @@ Campos editables:
 - `phases[].milestone`
 - `phases[].tasks[]`
 
-Despues vuelve a ejecutar:
+Después vuelve a ejecutar:
 
 ```powershell
 python .\scripts\planning\bootstrap_github_project.py --apply

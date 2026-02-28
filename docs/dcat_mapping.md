@@ -1,17 +1,17 @@
-# Mapeo DCAT-AP-ES -> OpenMetadata (version simple)
+﻿# Mapeo DCAT-AP-ES -> OpenMetadata (versión simple)
 
 Nota de alineacion: DCAT-AP-ES es un perfil nacional basado en DCAT-AP.  
 En esta PoC usamos un subconjunto "DCAT-like" (compatible en espiritu con DCAT-AP) para acotar alcance y riesgo.
 
-DCAT-AP-ES (referencia) define principalmente: **Catalogo**, **Dataset**, **Distribucion** y **Servicio de datos**.
+DCAT-AP-ES (referencia) define principalmente: **Catálogo**, **Dataset**, **Distribución** y **Servicio de datos**.
 
 OpenMetadata no representa DCAT 1:1; el objetivo del TFM es **alinear conceptos** usando el metamodelo de OM + gobierno + custom properties.
 
-## Propiedades obligatorias DCAT-AP-ES (minimo viable)
+## Propiedades obligatorias DCAT-AP-ES (mínimo viable)
 
-Estas propiedades se toman como **minimo obligatorio** por entidad (perfil ES), y son la base del mapping:
+Estas propiedades se toman como **mínimo obligatorio** por entidad (perfil ES), y son la base del mapping:
 
-- **Catalogo**
+- **Catálogo**
   - `dct:title`, `dct:description`, `dct:publisher`
   - `foaf:homepage`, `dcat:themeTaxonomy`
   - `dct:issued`, `dct:modified`
@@ -20,26 +20,27 @@ Estas propiedades se toman como **minimo obligatorio** por entidad (perfil ES), 
 - **Dataset**
   - `dct:title`, `dct:description`, `dct:publisher`, `dcat:theme`
 
-- **Distribucion**
+- **Distribución**
   - `dcat:accessURL` (obligatorio)
-  - Nota: `dct:license` se modela a nivel de Distribucion (no de Dataset) en DCAT-AP-ES.
+  - Nota: `dct:license` se modela a nivel de Distribución (no de Dataset) en DCAT-AP-ES.
 
 ## Cobertura en esta PoC
 
-- **Catalogo**: se exporta desde `governance_defaults.yaml` (titulo, descripcion, publisher, homepage, themeTaxonomy, issued/modified, language, license, spatial).
+- **Catálogo**: se exporta desde `governance_defaults.yaml` (titulo, descripción, publisher, homepage, themeTaxonomy, issued/modified, language, license, spatial).
 - **Dataset**: se toma de `Table.displayName`/`description`, publisher/contact por defaults o CKAN, y `dcat:theme` desde tags `dcat_theme.*`.
-- **Distribucion**: se usa la primera resource CKAN para `dcat:accessURL`/`downloadURL`, y `dct:license` desde custom property.
+- **Distribución**: se usa la primera resource CKAN para `dcat:accessURL`/`downloadURL`, y `dct:license` desde custom property.
 
 ## Decisiones de modelado (PoC)
 
 - **dcat:Catalog**
   - En OpenMetadata: se representa como **Domain** (y convenciones de tags/owners).
-  - Metadatos globales (publisher/contact/licencia por defecto): como **defaults** en configuracion del ingestor y/o custom properties en assets.
+  - Metadatos globales (publisher/contact/licencia por defecto): como **defaults** en configuración del ingestor y/o custom properties en assets.
+  - Nota práctica: OpenMetadata no tiene una entidad `Catalog` DCAT nativa 1:1; por eso los metadatos globales del catálogo se mantienen en `governance_defaults.yaml` y se proyectan sobre assets/export.
 
 - **dcat:Dataset**
-  - En OpenMetadata: se representa como **Table** (o View) porque es el "asset gobernable" que el conector crea automaticamente.
+  - En OpenMetadata: se representa como **Table** (o View) porque es el "asset gobernable" que el conector crea automáticamente.
   - `dct:title` / `dct:description`: se reflejan en `displayName` y `description`.
-  - Otros campos DCAT-like: via **custom properties** y **tags**.
+  - Otros campos DCAT-like: vía **custom properties** y **tags**.
 
 - **dcat:Distribution**
   - En OpenMetadata (PoC): como custom properties a nivel de Table (p.ej. `dcat_access_url`, `dcat_download_url`).
@@ -50,6 +51,6 @@ Estas propiedades se toman como **minimo obligatorio** por entidad (perfil ES), 
 
 ## Riesgo controlado (y como lo explicamos en la memoria)
 
-- DCAT "dataset" != SQL "tabla" por definicion.
-  - En catalogos empresariales, el dataset suele materializarse como entidad tecnica gobernable (table/view),
-    y el resto de elementos (distribucion/servicio) se modelan como enlaces o metadatos adicionales.
+- DCAT "dataset" != SQL "tabla" por definición.
+  - En catálogos empresariales, el dataset suele materializarse como entidad técnica gobernable (table/view),
+    y el resto de elementos (distribución/servicio) se modelan como enlaces o metadatos adicionales.

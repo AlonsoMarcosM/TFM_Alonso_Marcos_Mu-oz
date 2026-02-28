@@ -1,11 +1,11 @@
-# Planificacion del TFM (enfoque agil ligero)
+﻿# Planificación del TFM (enfoque agil ligero)
 
-Enfoque: **Kanban** + hitos academicos. Adecuado para un TFM individual con alcance acotado y orientado a portfolio.
+Enfoque: **Kanban** + hitos académicos. Adecuado para un TFM individual con alcance acotado y orientado a portfolio.
 
 ## Metodologia
 
-- Metodo principal: Kanban (flujo continuo).
-- WIP: maximo 2-3 tareas simultaneas.
+- Método principal: Kanban (flujo continuo).
+- WIP: máximo 2-3 tareas simultaneas.
 - Revisiones: semanal (actualizar tablero antes de cada reunion/hito).
 - Herramienta sugerida: GitHub Projects (v2) para trazabilidad dentro del repositorio.
 - Objetivos oficiales + alcance real: `docs/tfm_oficial_objetivos_decisiones.md`.
@@ -13,18 +13,18 @@ Enfoque: **Kanban** + hitos academicos. Adecuado para un TFM individual con alca
 ## Tablero Kanban (columnas)
 
 1. Backlog (tareas identificadas)
-2. Por definir (pendiente de decision del tutor)
+2. Por definir (pendiente de decisión del tutor)
 3. En curso (tareas activas)
 4. Bloqueado (dependencias externas)
-5. En revision (validacion tecnica / revision del tutor)
+5. En revisión (validación técnica / revisión del tutor)
 6. Hecho (cerrado y documentado)
 
 ## Tipos de tarjetas
 
-- Diseno
-- Implementacion
-- Validacion
-- Documentacion
+- Diseño
+- Implementación
+- Validación
+- Documentación
 - Riesgo
 
 ## Orden canonico de fases (fuente para GitHub Projects)
@@ -45,14 +45,14 @@ Este es el orden total acordado para el TFM:
 - Definir alcance, objetivos y no-objetivos del TFM.
 - Definir tablero Kanban, WIP y criterios DoR/DoD.
 - Configurar GitHub Project con vistas y campos.
-- Definir metricas semanales e hitos academicos.
+- Definir métricas semanales e hitos académicos.
 - Registrar riesgos iniciales y mitigaciones.
 
 ### 02_Modelo_DCAT-AP
 
 - Analizar clases DCAT-AP-ES para la PoC (`Catalog`, `Dataset`, `Distribution`, `DataService`).
 - Cerrar decisiones de mapeo DCAT-AP-ES -> OpenMetadata.
-- Definir set minimo de propiedades DCAT-like.
+- Definir set mínimo de propiedades DCAT-like.
 - Documentar limitaciones y riesgo controlado (dataset DCAT vs tabla SQL).
 
 ### 03_OpenMetadata_Config
@@ -65,17 +65,17 @@ Este es el orden total acordado para el TFM:
 ### 04_Pipeline_Ingesta
 
 - Desplegar PostgreSQL dummy (`bronze/silver/gold`).
-- Ejecutar ingesta tecnica oficial hacia OpenMetadata.
+- Ejecutar ingesta técnica oficial hacia OpenMetadata.
 - Ajustar `governance_defaults.yaml` y `mapping_rules.yaml`.
-- Ejecutar `tfm_ingestor --dry-run` y despues aplicacion real.
-- Implementar harvesting desde CKAN (prioridad MITECO, fallback datos.gob.es) con limite configurable (MVP: 10 datasets).
-- Exportar/federar el catalogo a DCAT-AP (JSON-LD) usando un subconjunto minimo alineado con propiedades obligatorias DCAT-AP-ES.
+- Ejecutar `tfm_ingestor --dry-run` y después aplicación real.
+- Implementar harvesting desde CKAN (prioridad MITECO, fallback datos.gob.es) con límite configurable (MVP: 10 datasets).
+- Exportar/federar el catálogo a DCAT-AP (JSON-LD) usando un subconjunto mínimo alineado con propiedades obligatorias DCAT-AP-ES.
 
 ### 05_Validacion
 
-- Validar entidades tecnicas creadas (service/db/schema/table/column).
+- Validar entidades técnicas creadas (service/db/schema/table/column).
 - Verificar enrichment (tags, domains, custom properties).
-- Comprobar idempotencia en segunda ejecucion.
+- Comprobar idempotencia en segunda ejecución.
 - Validar harvesting (CKAN -> custom properties/tags) y export DCAT (JSON-LD) con ejemplos reales.
 - Ejecutar `pytest` y revisar higiene Git antes de push.
 - Evaluar beneficios y limitaciones (interoperabilidad, automatizacion, mantenimiento).
@@ -90,13 +90,13 @@ Este es el orden total acordado para el TFM:
 ## Estructura sugerida de evidencias
 
 - `01_Planificacion` (roadmap, tablero, actas)
-- `02_Modelo_DCAT-AP` (analisis del estandar)
-- `03_OpenMetadata_Config` (configuracion y custom metadata)
+- `02_Modelo_DCAT-AP` (análisis del estándar)
+- `03_OpenMetadata_Config` (configuración y custom metadata)
 - `04_Pipeline_Ingesta` (desarrollo del codigo)
 - `05_Validacion` (pruebas y evidencias)
 - `06_Memoria` (documento final)
 
-## Metricas simples
+## Métricas simples
 
 - Numero de tareas completadas por semana
 - Porcentaje de avance por hito

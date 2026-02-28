@@ -1,4 +1,4 @@
-# OpenMetadata: custom properties necesarias (DCAT-like) y como crearlas (API)
+﻿# OpenMetadata: custom properties necesarias (DCAT-like) y como crearlas (API)
 
 El ingestor (`tfm_ingestor`) rellena custom properties en `Table.extension.customProperties`.
 Para que OpenMetadata las acepte, primero deben existir como **custom properties** en la entidad `table`.
@@ -22,7 +22,7 @@ Claves (todas tipo `string`):
 - `dcat_endpoint_url`
 - `tfm_layer`
 
-## Creacion via API (resumen)
+## Creación vía API (resumen)
 
 1) Obtener el id del tipo de entidad `table`:
 - GET `http://localhost:8585/api/v1/metadata/types?limit=10000`
@@ -47,9 +47,9 @@ Claves (todas tipo `string`):
 }
 ```
 
-Nota: en OpenMetadata, la gestion de tipos y custom properties puede variar segun version; si tu instancia no acepta este flujo, ajusta el endpoint/metodo segun la documentacion oficial de tu version.
+Nota: en OpenMetadata, la gestión de tipos y custom properties puede variar segun versión; si tu instancia no acepta este flujo, ajusta el endpoint/metodo segun la documentación oficial de tu versión.
 
-## Automatizacion recomendada
+## Automatización recomendada
 
 En este repositorio se incluye un script que crea:
 - Clasificaciones/tags DCAT de la PoC
