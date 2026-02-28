@@ -35,3 +35,6 @@ data_local/
 
 # --- Local tooling / downloads ---
 .tools/
+
+# --- Local agent instructions ---
+AGENTS.md
