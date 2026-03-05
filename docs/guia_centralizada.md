@@ -28,6 +28,20 @@ python -m tfm_ingestor --dry-run
 Si sale `401 Not Authorized! Token not present`, falta `OPENMETADATA_JWT_TOKEN` en esa terminal
 o el token ya expiró (vuelve a generarlo).
 
+## Aplicar cambios reales con `python -m tfm_ingestor`
+
+Si quieres aplicar metadatos (no solo simular), usa el mismo setup del paso 3
+(`port-forward` + token JWT) y ejecuta:
+
+```powershell
+python -m tfm_ingestor
+```
+
+Esto SI aplica cambios en OpenMetadata:
+- crea dominios configurados si no existen
+- asigna dominio/tags/custom properties en tablas
+- devuelve `applied > 0` cuando hay cambios efectivos
+
 ## Si vas a borrar el cluster y conservar estado
 
 ```powershell
