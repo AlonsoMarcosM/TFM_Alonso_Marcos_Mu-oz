@@ -1,5 +1,5 @@
 {
-  "project_title": "TFM - Roadmap completo por fases",
+  "project_title": "TFM - Roadmap completo por fases v2",
   "estado_options": [
     "Backlog",
     "Por definir",
@@ -23,7 +23,7 @@
         {
           "title": "Definir alcance, objetivos y no-objetivos del TFM",
           "tipo": "Diseno",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Acordar el alcance de 6 ECTS y los limites de la PoC para evitar deriva.",
           "evidencias": [
             "README.md",
@@ -33,7 +33,7 @@
         {
           "title": "Definir flujo Kanban, WIP y criterios DoR/DoD",
           "tipo": "Diseno",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Fijar reglas de trabajo del tablero para seguimiento semanal.",
           "evidencias": [
             "docs/planificacion_kanban.md"
@@ -42,7 +42,7 @@
         {
           "title": "Configurar GitHub Project y vistas base del TFM",
           "tipo": "Implementacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Crear project, campos y vistas para gestionar el roadmap completo.",
           "evidencias": [
             "docs/github_projects_mvp.md",
@@ -52,7 +52,7 @@
         {
           "title": "Definir metricas semanales e hitos academicos",
           "tipo": "Validacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Establecer medicion de avance por semana e hitos de entrega.",
           "evidencias": [
             "docs/planificacion_kanban.md"
@@ -61,7 +61,7 @@
         {
           "title": "Registrar riesgos iniciales y plan de mitigacion",
           "tipo": "Riesgo",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Identificar riesgos tecnicos y de calendario con acciones de mitigacion.",
           "evidencias": [
             "docs/planificacion_kanban.md",
@@ -71,14 +71,14 @@
       ]
     },
     {
-      "name": "02_Modelo_DCAT-AP",
-      "milestone": "02_Modelo_DCAT-AP",
+      "name": "02_Modelo_DCAT-AP-ES",
+      "milestone": "02_Modelo_DCAT-AP-ES",
       "tasks": [
         {
           "title": "Analizar entidades DCAT-AP-ES para la PoC",
           "tipo": "Diseno",
-          "estado": "Backlog",
-          "descripcion": "Revisar Catalog, Dataset, Distribution y DataService para limitar el alcance funcional.",
+          "estado": "Hecho",
+          "descripcion": "Revisar Catalog, Dataset, Distribution, DataService y HVD para cerrar el perfil activo de la PoC.",
           "evidencias": [
             "docs/dcat_mapping.md"
           ]
@@ -86,17 +86,17 @@
         {
           "title": "Definir mapeo Catalog y Dataset en OpenMetadata",
           "tipo": "Diseno",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Cerrar decisiones Catalog->Domain y Dataset->Table/View para la PoC.",
           "evidencias": [
             "docs/dcat_mapping.md"
           ]
         },
         {
-          "title": "Definir mapeo Distribution/DataService y campos DCAT-like",
+          "title": "Definir mapeo Distribution/DataService y campos heredados a podar",
           "tipo": "Diseno",
-          "estado": "Backlog",
-          "descripcion": "Acordar campos minimos de distribucion y servicio como custom properties.",
+          "estado": "Hecho",
+          "descripcion": "Acordar qué campos se gobiernan en OpenMetadata y qué campos HVD se derivan por configuración del sistema.",
           "evidencias": [
             "docs/dcat_mapping.md",
             "docs/custom_properties_openmetadata.md"
@@ -105,7 +105,7 @@
         {
           "title": "Documentar riesgos y limitaciones del modelo DCAT",
           "tipo": "Documentacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Registrar trade-offs del mapeo para memoria y defensa.",
           "evidencias": [
             "docs/dcat_mapping.md",
@@ -115,7 +115,7 @@
         {
           "title": "Revisar extensiones DCAT-AP (GeoDCAT-AP/Health) y acotar alcance",
           "tipo": "Diseno",
-          "estado": "Por definir",
+          "estado": "Hecho",
           "descripcion": "Revisar extensiones y justificar que entra/no entra en el alcance final del TFM.",
           "evidencias": [
             "docs/tfm_oficial_objetivos_decisiones.md",
@@ -131,16 +131,17 @@
         {
           "title": "Validar prerrequisitos locales de infraestructura",
           "tipo": "Validacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Comprobar Docker, kubectl, kind, helm y python antes del despliegue.",
           "evidencias": [
-            "docs/anexos_instalacion/A01_prerrequisitos.md"
+            "docs/anexos_instalacion/A01_prerrequisitos.md",
+            "scripts/infra/check_prereqs.ps1"
           ]
         },
         {
           "title": "Desplegar OpenMetadata y dependencias con Helm",
           "tipo": "Implementacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Levantar cluster y stack OpenMetadata desde scripts versionados.",
           "evidencias": [
             "scripts/infra/launch_infra.ps1",
@@ -151,7 +152,7 @@
         {
           "title": "Verificar estado operativo de OpenMetadata",
           "tipo": "Validacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Revisar pods, servicios y acceso UI tras el despliegue.",
           "evidencias": [
             "scripts/infra/status_infra.ps1",
@@ -161,7 +162,7 @@
         {
           "title": "Bootstrap de tags y custom properties base",
           "tipo": "Implementacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Crear metadata de gobierno requerida por el ingestor de la PoC.",
           "evidencias": [
             "scripts/infra/bootstrap_governance.py",
@@ -172,7 +173,7 @@
         {
           "title": "Mitigar riesgo de drift en configuracion Helm",
           "tipo": "Riesgo",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Mantener values declarativos y evitar cambios manuales no trazados.",
           "evidencias": [
             "k8s/openmetadata.values.yaml",
@@ -188,7 +189,7 @@
         {
           "title": "Desplegar postgres-demo con esquema bronze/silver/gold",
           "tipo": "Implementacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Levantar fuente dummy reproducible para ingesta tecnica.",
           "evidencias": [
             "scripts/infra/deploy_postgres_k8s.ps1",
@@ -199,7 +200,7 @@
         {
           "title": "Ejecutar ingesta tecnica de PostgreSQL en OpenMetadata",
           "tipo": "Implementacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Crear/verificar el servicio y lanzar metadata ingest oficial.",
           "evidencias": [
             "scripts/infra/ingest_postgres.ps1",
@@ -210,8 +211,8 @@
         {
           "title": "Ajustar defaults y reglas del tfm_ingestor",
           "tipo": "Implementacion",
-          "estado": "Backlog",
-          "descripcion": "Configurar reglas por capa y defaults DCAT-like en YAML.",
+          "estado": "Hecho",
+          "descripcion": "Configurar reglas por capa y defaults DCAT-AP-ES en YAML.",
           "evidencias": [
             "tfm_ingestor/config/governance_defaults.yaml",
             "tfm_ingestor/config/mapping_rules.yaml",
@@ -219,29 +220,92 @@
           ]
         },
         {
+          "title": "Definir contrato canónico de entrada de gobierno",
+          "tipo": "Diseno",
+          "estado": "Hecho",
+          "descripcion": "Separar el modelo interno de intención de gobierno del formato CSV para que CLI, ETL y futura UI usen el mismo contrato.",
+          "evidencias": [
+            "docs/refactor_orquestacion_operativa.md",
+            "docs/gobierno_funcional_gold.md",
+            "tfm_ingestor/src/tfm_ingestor/governance_model.py",
+            "tfm_ingestor/src/tfm_ingestor/governance_sheet.py"
+          ]
+        },
+        {
+          "title": "Separar adaptadores de entrada del núcleo de negocio",
+          "tipo": "Implementacion",
+          "estado": "Hecho",
+          "descripcion": "Aislar adaptadores CSV, YAML y CKAN del modelo interno para evitar que el CLI concentre reglas de negocio.",
+          "evidencias": [
+            "docs/refactor_orquestacion_operativa.md",
+            "tfm_ingestor/src/tfm_ingestor/main.py",
+            "tfm_ingestor/src/tfm_ingestor/governance_service.py",
+            "tfm_ingestor/src/tfm_ingestor/harvest_ckan.py"
+          ]
+        },
+        {
+          "title": "Extraer una capa de servicios para planificar, aplicar y exportar",
+          "tipo": "Implementacion",
+          "estado": "Hecho",
+          "descripcion": "Mover la lógica de orquestación fuera de main.py para reutilizarla desde CLI, ETL y futura UI.",
+          "evidencias": [
+            "docs/refactor_orquestacion_operativa.md",
+            "tfm_ingestor/src/tfm_ingestor/main.py",
+            "tfm_ingestor/src/tfm_ingestor/governance_service.py",
+            "tfm_ingestor/src/tfm_ingestor/workflow_service.py"
+          ]
+        },
+        {
+          "title": "Crear workflow canónico único para CLI y ETL",
+          "tipo": "Implementacion",
+          "estado": "Hecho",
+          "descripcion": "Introducir un comando de alto nivel con orden reproducible para descubrir, planificar, aplicar, exportar y validar.",
+          "evidencias": [
+            "docs/refactor_orquestacion_operativa.md",
+            "docs/guia_centralizada.md",
+            "tfm_ingestor/src/tfm_ingestor/main.py",
+            "tfm_ingestor/src/tfm_ingestor/workflow_service.py",
+            "scripts/infra/run_full_flow.ps1"
+          ]
+        },
+        {
+          "title": "Centralizar la configuración operativa del sistema",
+          "tipo": "Diseno",
+          "estado": "Hecho",
+          "descripcion": "Reducir el número de ficheros y flags que el operador debe conocer mediante un perfil operativo principal.",
+          "evidencias": [
+            "docs/refactor_orquestacion_operativa.md",
+            "tfm_ingestor/config/operational_profile.yaml",
+            "tfm_ingestor/src/tfm_ingestor/operational_profile.py",
+            "tfm_ingestor/src/tfm_ingestor/main.py"
+          ]
+        },
+        {
           "title": "Ejecutar tfm_ingestor en modo dry-run",
           "tipo": "Validacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Revisar cambios planeados antes de aplicar mutaciones.",
           "evidencias": [
             "docs/tfm_ingestor.md",
-            "docs/anexos_instalacion/A04_custom_properties_tags_dry_run.md"
+            "docs/anexos_instalacion/A04_custom_properties_tags_dry_run.md",
+            "scripts/infra/run_full_flow.ps1"
           ]
         },
         {
           "title": "Aplicar tfm_ingestor sobre metadatos tecnicos",
           "tipo": "Implementacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Ejecutar enriquecimiento real una vez validado el dry-run.",
           "evidencias": [
             "docs/tfm_ingestor.md",
-            "scripts/infra/run_full_flow.ps1"
+            "scripts/infra/run_validation_suite.ps1",
+            "scripts/infra/validate_live_dcat.ps1"
           ]
         },
         {
           "title": "Implementar harvesting/sincronizacion desde CKAN (fuente externa)",
           "tipo": "Implementacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Harvesting CKAN (prioridad MITECO, fallback datos.gob.es), limite configurable (MVP: 10 datasets) y mapeo minimo a custom properties/tags.",
           "evidencias": [
             "tfm_ingestor/config/ckan_harvest.yaml",
@@ -254,10 +318,11 @@
         {
           "title": "Prototipo exportacion DCAT-AP (RDF/JSON-LD) desde el catalogo",
           "tipo": "Implementacion",
-          "estado": "Backlog",
-          "descripcion": "Export JSON-LD DCAT-AP-ES (subset minimo) desde OpenMetadata, incluyendo Catalog/Dataset/Distribution y propiedades obligatorias.",
+          "estado": "Hecho",
+          "descripcion": "Exportar JSON-LD DCAT-AP-ES desde OpenMetadata, incluyendo Catalog, Dataset, Distribution, DataService y restricciones HVD activas.",
           "evidencias": [
             "tfm_ingestor/src/tfm_ingestor/dcat_export.py",
+            "tfm_ingestor/src/tfm_ingestor/resources/shacl/manifest.json",
             "tfm_ingestor/config/governance_defaults.yaml",
             "docs/dcat_mapping.md",
             "docs/tfm_ingestor.md"
@@ -272,49 +337,56 @@
         {
           "title": "Validar entidades tecnicas ingeridas",
           "tipo": "Validacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Comprobar service/db/schema/table/column segun dataset de demo.",
           "evidencias": [
             "docs/ingesta_tecnica_postgres.md",
-            "sql/opendata_demo_init.sql"
+            "sql/opendata_demo_init.sql",
+            "tfm_ingestor/src/tfm_ingestor/runtime_validation.py",
+            "scripts/infra/run_validation_suite.ps1"
           ]
         },
         {
           "title": "Validar metadatos de gobierno aplicados",
           "tipo": "Validacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Verificar domains, tags y custom properties esperadas.",
           "evidencias": [
             "docs/tfm_ingestor.md",
-            "docs/custom_properties_openmetadata.md"
+            "docs/custom_properties_openmetadata.md",
+            "tfm_ingestor/src/tfm_ingestor/runtime_validation.py",
+            "tfm_ingestor/src/tfm_ingestor/resources/shacl/manifest.json",
+            "scripts/infra/run_validation_suite.ps1"
           ]
         },
         {
           "title": "Comprobar idempotencia en segunda ejecucion completa",
           "tipo": "Validacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Repetir flujo para asegurar ausencia de duplicados y drift.",
           "evidencias": [
             "scripts/infra/run_full_flow.ps1",
+            "scripts/infra/run_validation_suite.ps1",
             "docs/anexos_instalacion/README.md"
           ]
         },
         {
           "title": "Ejecutar pytest y revisar higiene Git antes de push",
           "tipo": "Validacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Asegurar tests minimos y chequeo de ficheros ignorados/trazados.",
           "evidencias": [
             "tfm_ingestor/tests/test_rules_config.py",
             "tfm_ingestor/tests/test_mapping.py",
             "tfm_ingestor/tests/test_repo_hygiene.py",
+            "scripts/quality/pre_push_checks.ps1",
             "AGENTS.md"
           ]
         },
         {
           "title": "Evaluar beneficios y limitaciones del enfoque (interoperabilidad/automatizacion/mantenimiento)",
           "tipo": "Documentacion",
-          "estado": "Backlog",
+          "estado": "Hecho",
           "descripcion": "Sintetizar beneficios y limitaciones tecnicas del mapeo y la automatizacion propuesta.",
           "evidencias": [
             "docs/tfm_oficial_objetivos_decisiones.md",

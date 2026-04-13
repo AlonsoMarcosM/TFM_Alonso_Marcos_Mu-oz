@@ -1,124 +1,166 @@
-﻿# MVP GitHub Projects para planificacion del TFM
+# MVP GitHub Projects Para Planificación Del TFM
 
-Objetivo: sustituir Microsoft Planner por un flujo reproducible en GitHub Projects (v2), creado por codigo.
+Objetivo: sustituir Microsoft Planner por un flujo reproducible en GitHub Projects v2, creado y actualizado por código.
 
-Este MVP crea de forma idempotente:
-- Project (v2) del TFM
-- campos single-select (`Estado TFM`, `Fase TFM`, `Tipo TFM`)
-- labels por tipo y fase
-- milestones por fase
-- issues base del roadmap (extraidas de la documentación del repo)
-- alta de issues en el Project y asignacion de campos
-- enlace del Project al repositorio para que aparezca en `/<owner>/<repo>/projects`
+Este MVP crea o actualiza de forma idempotente:
 
-El roadmap se toma del orden canonico definido en:
+- Project v2 del TFM.
+- Campos single-select `Estado TFM`, `Fase TFM` y `Tipo TFM`.
+- Labels por tipo y fase.
+- Milestones por fase.
+- Issues base del roadmap extraídas de la configuración declarativa del repo.
+- Alta de issues en el Project y asignación de campos.
+- Enlace del Project al repositorio para que aparezca en `/<owner>/<repo>/projects`.
+
+El roadmap se toma del orden canónico definido en:
+
 - `docs/planificacion_kanban.md`
-- fases: `01_Planificacion -> 02_Modelo_DCAT-AP -> 03_OpenMetadata_Config -> 04_Pipeline_Ingesta -> 05_Validacion -> 06_Memoria`
+- `01_Planificacion -> 02_Modelo_DCAT-AP-ES -> 03_OpenMetadata_Config -> 04_Pipeline_Ingesta -> 05_Validacion -> 06_Memoria`
 
-## Archivos del MVP
+## Archivos
 
 - Script: `scripts/planning/bootstrap_github_project.py`
-- Config declarativa: `scripts/planning/github_project_mvp.json`
+- Configuración declarativa: `scripts/planning/github_project_mvp.json`
 
-## Prerrequisitos
+## Seguridad Y Tokens
 
-- Python 3.10+
-- Repositorio en GitHub con permisos para crear issues/milestones/projects
-- Token con permisos (elige 1 enfoque):
-  - PAT classic: scopes `repo`, `project`, `read:user` (y `read:org` solo si `--owner` es una organización)
-  - Fine-grained PAT:
-    - Account permissions: `Projects` = Read and write
-    - Repository permissions (para el repo objetivo): `Issues` = Read and write, `Metadata` = Read-only
+Codex no debe pedir tu contraseña de GitHub ni guardar tokens en archivos del repositorio. Hay dos formas válidas de operar:
 
-Puedes usar `GITHUB_TOKEN` o `GH_TOKEN`.
+- Token temporal de sesión: tú defines `GITHUB_TOKEN` o `GH_TOKEN` en la terminal actual y Codex puede usarlo mientras dure esa sesión.
+- Token persistente de usuario: tú defines `GITHUB_TOKEN` como variable de entorno de Windows a nivel de usuario; así futuras sesiones de terminal y de agente pueden usarlo sin que el token esté en el repositorio.
+- Archivo `.env` local: rellenas `.env` a partir de `.env.example` y lo cargas con `scripts/load_env.ps1`. Este archivo está ignorado por Git y no debe versionarse.
 
-## 1) Dry-run local (sin tocar GitHub)
+No uses `.env` versionados para tokens. La plantilla versionable es `.env.example`.
 
-Desde la raiz del repo:
+## Permisos Del Token
 
-```powershell
-python .\scripts\planning\bootstrap_github_project.py
-```
+Para actualizar el tablero e issues se necesita un token con permisos de escritura sobre Projects e Issues.
 
-Salida esperada:
-- JSON con conteos
-- preview de labels/milestones/issues
-- campos del proyecto que se crearian
+Opción PAT classic:
 
-## 2) Aplicar en GitHub (creación real)
+- `repo`
+- `project`
+- `read:user`
+- `read:org` solo si el owner fuera una organización
 
-Configura variables y ejecuta:
+Opción fine-grained PAT:
 
-```powershell
-$env:GITHUB_TOKEN="<TOKEN>"
-$env:GITHUB_OWNER="<usuario_o_org>"
-$env:GITHUB_REPO="<repositorio>"
+- Account permissions: `Projects` con lectura/escritura.
+- Repository permissions sobre el repo objetivo: `Issues` con lectura/escritura y `Metadata` de solo lectura.
 
-python .\scripts\planning\bootstrap_github_project.py --apply
-```
+## Configurar Token Temporal
 
-Opcional: personalizar titulo del Project.
-
-```powershell
-python .\scripts\planning\bootstrap_github_project.py --apply --project-title "TFM - Seguimiento 2026"
-```
-
-## (Opcional) Borrar todos los Projects v2 del owner
-
-Accion destructiva. Usa solo si quieres limpiar todos los proyectos personales.
+Este modo no persiste al cerrar la terminal:
 
 ```powershell
 $env:GITHUB_TOKEN="<TOKEN>"
-python .\scripts\planning\bootstrap_github_project.py --delete-projects --confirm DELETE_ALL_PROJECTS --owner AlonsoMarcosM
+$env:GITHUB_OWNER="AlonsoMarcosM"
+$env:GITHUB_REPO="TFM_Alonso_Marcos_Mu-oz"
 ```
 
-## (Opcional) Borrar milestones antiguas antes de crear el Project
-
-Elimina milestones que no pertenecen al roadmap actual y que empiecen por `Fase `.
+Comprobar que existe token sin imprimirlo:
 
 ```powershell
-$env:GITHUB_TOKEN="<TOKEN>"
-python .\scripts\planning\bootstrap_github_project.py --delete-old-milestones --confirm DELETE_OLD_MILESTONES --owner AlonsoMarcosM --repo TFM_Alonso_Marcos_Mu-oz
+if ($env:GITHUB_TOKEN -or $env:GH_TOKEN) { "TOKEN_OK" } else { "NO_TOKEN" }
 ```
 
-Si tus milestones antiguas tienen otro prefijo:
+## Configurar Token En `.env` Local
+
+Copia la plantilla y rellena el token:
 
 ```powershell
-python .\scripts\planning\bootstrap_github_project.py --delete-old-milestones --confirm DELETE_OLD_MILESTONES --owner AlonsoMarcosM --repo TFM_Alonso_Marcos_Mu-oz --milestone-prefix "Fase ,Fase 1 -"
+Copy-Item .env.example .env
+notepad .env
 ```
 
-## 3) Comportamiento idempotente
+Carga las variables en la terminal actual:
+
+```powershell
+. .\scripts\load_env.ps1
+```
+
+Comprobar sin mostrar el token:
+
+```powershell
+if ($env:GITHUB_TOKEN -or $env:GH_TOKEN) { "TOKEN_OK" } else { "NO_TOKEN" }
+```
+
+## Configurar Token Persistente En Windows
+
+Este modo permite que Codex lo use en futuras sesiones sin pedirlo otra vez:
+
+```powershell
+[Environment]::SetEnvironmentVariable("GITHUB_TOKEN", "<TOKEN>", "User")
+[Environment]::SetEnvironmentVariable("GITHUB_OWNER", "AlonsoMarcosM", "User")
+[Environment]::SetEnvironmentVariable("GITHUB_REPO", "TFM_Alonso_Marcos_Mu-oz", "User")
+[Environment]::SetEnvironmentVariable("GITHUB_PROJECT_NUMBER", "6", "User")
+```
+
+Después cierra y abre una nueva terminal o una nueva sesión de Codex para que herede las variables.
+
+Comprobar sin exponer el token:
+
+```powershell
+[bool][Environment]::GetEnvironmentVariable("GITHUB_TOKEN", "User")
+```
+
+Eliminar el token si quieres revocar el acceso local:
+
+```powershell
+[Environment]::SetEnvironmentVariable("GITHUB_TOKEN", $null, "User")
+```
+
+## Dry-Run Local
+
+Desde la raíz del repo:
+
+```powershell
+python .\scripts\planning\bootstrap_github_project.py --project-number 6
+```
+
+La salida esperada es un JSON con conteos, preview de labels, milestones, issues y campos del proyecto. No toca GitHub si no se pasa `--apply`.
+
+## Actualizar El Project Real
+
+El script no es solo un reflejo local: con `--apply` usa la API de GitHub para crear o actualizar labels, milestones, issues, items del Project y los campos `Estado TFM`, `Fase TFM` y `Tipo TFM`.
+
+Para actualizar el tablero real `https://github.com/users/AlonsoMarcosM/projects/6`, usa `--project-number 6`. Esto evita crear otro Project por error aunque cambie el título.
+
+El script resuelve credenciales en este orden:
+
+- `GITHUB_TOKEN`
+- `GH_TOKEN`
+- sesión activa de GitHub CLI mediante `gh auth token`
+
+Además, si existe `.env` en la raíz, lo carga antes de resolver `GITHUB_OWNER`, `GITHUB_REPO`, `GITHUB_PROJECT_NUMBER` y el token.
+
+```powershell
+python .\scripts\planning\bootstrap_github_project.py --apply --project-number 6
+```
+
+Si se crea un Project nuevo en otro entorno, puede omitirse `--project-number` y usar el título de `github_project_mvp.json`.
+
+## Comportamiento Idempotente
 
 Si ejecutas el script varias veces:
-- no duplica labels
-- no duplica milestones
-- no duplica issues (compara por titulo con prefijo `[TFM]`)
-- no duplica items en el Project
-- vuelve a aplicar valores de campos para mantener coherencia
 
-Nota: si cambias las opciones de un campo existente (por ejemplo `Fase TFM`) y faltan opciones en GitHub,
-el script te pedira recrear ese campo manualmente en la UI para evitar inconsistencias.
+- No duplica labels.
+- No duplica milestones.
+- No duplica issues, porque compara por título con prefijo `[TFM]`.
+- No duplica items en el Project.
+- Vuelve a aplicar valores de campos para mantener coherencia.
+- Si los issues ya existían, intenta dejar coherentes labels `tipo/...`, labels `fase/...` y milestone.
 
-Extra: si los issues ya existian (por ejecuciones previas), el script intenta dejar coherentes:
-- labels `tipo/...` y `fase/...`
-- milestone correspondiente a la fase
+Nota: si cambias las opciones de un campo single-select existente y faltan opciones en GitHub, el script falla de forma explícita. Es más seguro recrear manualmente ese campo en la UI que modificar opciones de forma opaca.
 
-## 4) Vistas/tableros recomendados en GitHub Projects
-
-El API del MVP crea datos y campos. Luego, en la UI del Project:
-
-1. Vista `Kanban Estado`: Board agrupado por `Estado TFM`
-2. Vista `Roadmap Fases`: Table filtrada/agrupada por `Fase TFM`
-3. Vista `Trabajo por tipo`: Table agrupada por `Tipo TFM`
-
-Con esto replicas el flujo Kanban de `docs/planificacion_kanban.md` en GitHub.
-
-## 5) Ajustar tareas/fases sin tocar codigo
+## Ajustar Tareas Sin Tocar Código
 
 Edita solo:
+
 - `scripts/planning/github_project_mvp.json`
 
 Campos editables:
+
 - `project_title`
 - `estado_options`
 - `tipo_options`
@@ -129,5 +171,31 @@ Campos editables:
 Después vuelve a ejecutar:
 
 ```powershell
-python .\scripts\planning\bootstrap_github_project.py --apply
+python .\scripts\planning\bootstrap_github_project.py --apply --project-number 6
 ```
+
+## Acciones Destructivas
+
+Borrar todos los Projects v2 del owner:
+
+```powershell
+$env:GITHUB_TOKEN="<TOKEN>"
+python .\scripts\planning\bootstrap_github_project.py --delete-projects --confirm DELETE_ALL_PROJECTS --owner AlonsoMarcosM
+```
+
+Borrar milestones antiguas que no pertenecen al roadmap actual:
+
+```powershell
+$env:GITHUB_TOKEN="<TOKEN>"
+python .\scripts\planning\bootstrap_github_project.py --delete-old-milestones --confirm DELETE_OLD_MILESTONES --owner AlonsoMarcosM --repo TFM_Alonso_Marcos_Mu-oz
+```
+
+## Vistas Recomendadas
+
+El API del MVP crea datos y campos. Luego, en la UI del Project:
+
+1. Vista `Kanban Estado`: board agrupado por `Estado TFM`.
+2. Vista `Roadmap Fases`: tabla filtrada o agrupada por `Fase TFM`.
+3. Vista `Trabajo por tipo`: tabla agrupada por `Tipo TFM`.
+
+Con esto replicas el flujo Kanban de `docs/planificacion_kanban.md` en GitHub.

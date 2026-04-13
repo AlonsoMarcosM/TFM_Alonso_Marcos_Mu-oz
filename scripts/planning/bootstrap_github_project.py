@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import re
+import subprocess
 import sys
 import urllib.error
 import urllib.parse
@@ -44,6 +45,39 @@ FIELD_OPTION_COLORS = [
     "PINK",
     "GRAY",
 ]
+
+
+def load_dotenv(path: Path) -> None:
+    if not path.exists():
+        return
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
+def github_token_from_gh() -> str | None:
+    try:
+        completed = subprocess.run(
+            ["gh", "auth", "token"],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        return None
+    token = completed.stdout.strip()
+    return token or None
+
+
+def resolve_token() -> str | None:
+    return os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN") or github_token_from_gh()
 
 
 class GitHubApiError(RuntimeError):
@@ -270,7 +304,18 @@ def get_or_create_project(
     owner_id: str,
     owner_projects: list[dict[str, Any]],
     project_title: str,
+    project_number: int | None = None,
 ) -> tuple[dict[str, Any], bool]:
+    if project_number is not None:
+        for proj in owner_projects:
+            try:
+                current_number = int(proj.get("number", -1))
+            except (TypeError, ValueError):
+                continue
+            if current_number == project_number:
+                return proj, False
+        raise GitHubApiError(f"Project number not found for owner: {project_number}")
+
     for proj in owner_projects:
         if str(proj.get("title", "")).strip().lower() == project_title.strip().lower():
             return proj, False
@@ -395,10 +440,27 @@ def ensure_single_select_field(
         options = {str(x["name"]): str(x["id"]) for x in field.get("options", []) if x.get("name") and x.get("id")}
         missing = [opt for opt in option_names if opt not in options]
         if missing:
-            raise GitHubApiError(
-                f"Field '{field_name}' exists but is missing options: {', '.join(missing)}. "
-                "Delete/recreate the field manually or choose another field name."
+            update_single_select_field_options(
+                api,
+                field_id=str(field["id"]),
+                field_name=field_name,
+                option_names=option_names,
             )
+            refreshed_fields = list_project_fields(api, project_id)
+            for refreshed in refreshed_fields:
+                if refreshed.get("name") == field_name and refreshed.get("__typename") == "ProjectV2SingleSelectField":
+                    refreshed_options = {
+                        str(x["name"]): str(x["id"])
+                        for x in refreshed.get("options", [])
+                        if x.get("name") and x.get("id")
+                    }
+                    still_missing = [opt for opt in option_names if opt not in refreshed_options]
+                    if still_missing:
+                        raise GitHubApiError(
+                            f"Field '{field_name}' still missing options after update: {', '.join(still_missing)}"
+                        )
+                    return str(refreshed["id"]), refreshed_options, False
+            raise GitHubApiError(f"Field '{field_name}' not found after updating options")
         return str(field["id"]), options, False
 
     # GitHub API expects non-null description for each single-select option.
@@ -444,6 +506,44 @@ def ensure_single_select_field(
         raise GitHubApiError(f"Could not create field: {field_name}")
     options = {str(x["name"]): str(x["id"]) for x in field.get("options", []) if x.get("name") and x.get("id")}
     return str(field["id"]), options, True
+
+
+def update_single_select_field_options(
+    api: GitHubApi,
+    *,
+    field_id: str,
+    field_name: str,
+    option_names: list[str],
+) -> None:
+    options_payload = [
+        {
+            "name": name,
+            "description": name,
+            "color": normalize_option_color(idx),
+        }
+        for idx, name in enumerate(option_names)
+    ]
+    m = """
+    mutation UpdateField($fieldId: ID!, $name: String!, $options: [ProjectV2SingleSelectFieldOptionInput!]) {
+      updateProjectV2Field(
+        input: {
+          fieldId: $fieldId
+          name: $name
+          singleSelectOptions: $options
+        }
+      ) {
+        projectV2Field {
+          __typename
+          ... on ProjectV2SingleSelectField {
+            id
+            name
+            options { id name }
+          }
+        }
+      }
+    }
+    """
+    api.graphql(m, {"fieldId": field_id, "name": field_name, "options": options_payload})
 
 
 def list_repo_labels(api: GitHubApi, owner: str, repo: str) -> dict[str, dict[str, Any]]:
@@ -772,6 +872,7 @@ def run_apply(
     owner: str,
     repo: str,
     project_title: str,
+    project_number: int | None,
     issue_prefix: str,
     token: str,
     field_estado_name: str,
@@ -786,6 +887,7 @@ def run_apply(
         owner_id=owner_id,
         owner_projects=owner_projects,
         project_title=project_title,
+        project_number=project_number,
     )
     project_id = str(project["id"])
 
@@ -897,6 +999,7 @@ def build_dry_run_summary(
     owner: str | None,
     repo: str | None,
     project_title: str,
+    project_number: int | None,
     issue_prefix: str,
     field_estado_name: str,
     field_fase_name: str,
@@ -908,6 +1011,7 @@ def build_dry_run_summary(
         "owner": owner,
         "repo": repo,
         "project_title": project_title,
+        "project_number": project_number,
         "issue_prefix": issue_prefix,
         "task_count": len(tasks),
         "phase_count": len(cfg["phases"]),
@@ -924,16 +1028,19 @@ def build_dry_run_summary(
 
 def parse_args() -> argparse.Namespace:
     default_cfg = Path(__file__).with_name("github_project_mvp.json")
+    load_dotenv(Path.cwd() / ".env")
     p = argparse.ArgumentParser(description="MVP: crear/actualizar GitHub Project del TFM de forma idempotente.")
     p.add_argument("--config", type=Path, default=default_cfg)
     p.add_argument("--owner", default=os.getenv("GITHUB_OWNER"))
     p.add_argument("--repo", default=os.getenv("GITHUB_REPO"))
     p.add_argument("--project-title", default=None)
+    default_project_number = int(os.getenv("GITHUB_PROJECT_NUMBER")) if os.getenv("GITHUB_PROJECT_NUMBER") else None
+    p.add_argument("--project-number", type=int, default=default_project_number)
     p.add_argument("--issue-prefix", default="[TFM]")
     p.add_argument("--field-estado", default=DEFAULT_FIELD_ESTADO)
     p.add_argument("--field-fase", default=DEFAULT_FIELD_FASE)
     p.add_argument("--field-tipo", default=DEFAULT_FIELD_TIPO)
-    p.add_argument("--token", default=os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN"))
+    p.add_argument("--token", default=resolve_token())
     p.add_argument("--apply", action="store_true", help="Aplicar cambios reales en GitHub API.")
     p.add_argument(
         "--delete-projects",
@@ -1047,6 +1154,7 @@ def main() -> int:
             owner=args.owner,
             repo=args.repo,
             project_title=project_title,
+            project_number=args.project_number,
             issue_prefix=args.issue_prefix,
             field_estado_name=args.field_estado,
             field_fase_name=args.field_fase,
@@ -1066,6 +1174,7 @@ def main() -> int:
             owner=str(args.owner),
             repo=str(args.repo),
             project_title=project_title,
+            project_number=args.project_number,
             issue_prefix=str(args.issue_prefix),
             token=str(args.token),
             field_estado_name=str(args.field_estado),
