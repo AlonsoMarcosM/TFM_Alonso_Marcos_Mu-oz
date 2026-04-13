@@ -1,0 +1,82 @@
+Logotipo Universidad de Castilla-La Mancha
+Trabajos fin de estudios
+
+lunes, 13 de abril de 2026
+06281718  Cerrar Sesión
+  Menu
+Skip Navigation Links
+Usted está en  /  Trabajos fin de estudios UCLM
+  /  
+Mi TFE
+ Volver
+DISEÑO Y CONFIGURACIÓN DE UN MODELO DE METADATOS EN OPENMETADATA CONFORME AL ESTÁNDAR DCAT-AP PARA LA INTEROPERABILIDAD DE CATÁLOGOS DE DATOS
+Información generalDocumentaciónSeguimientoComunicaciones
+Detalle del TFE
+Identificador
+29371
+Comisión
+E.Informática-AB_CR-MUBDCN
+Área
+Ingeniería y Arquitectura
+Fecha alta
+04/11/2025
+Título
+DISEÑO Y CONFIGURACIÓN DE UN MODELO DE METADATOS EN OPENMETADATA CONFORME AL ESTÁNDAR DCAT-AP PARA LA INTEROPERABILIDAD DE CATÁLOGOS DE DATOS
+Título inglés
+Design and Configuration of a Metadata Model in OpenMetadata According to the DCAT-AP Standard for Data Catalog Interoperability
+Fecha máxima vigencia
+18/12/2027
+Tipo de trabajo
+Trabajo de fin de máster
+Lugar de realización
+UCLM
+Idioma de realización
+castellano
+Idioma de defensa
+castellano
+Descripción
+Descripción
+
+Este Trabajo Fin de Máster propone el diseño y la implementación de una configuración de metadatos en la plataforma OpenMetadata alineada con el estándar DCAT-AP (Data Catalog Vocabulary – Application Profile), utilizado en Europa para garantizar la interoperabilidad semántica y técnica de catálogos de datos abiertos e institucionales.
+
+El trabajo consistirá en analizar los elementos del modelo DCAT-AP (Dataset, Distribution, Catalog, Publisher, etc.) y su correspondencia con las entidades del metamodelo de OpenMetadata (Data Assets, Schemas, Tags, Lineage, Owners…). Se definirá una configuración personalizada (custom metadata y taxonomy) que permita representar la estructura y las propiedades de DCAT-AP dentro de OpenMetadata, favoreciendo la integración con portales como CKAN o data.europa.eu.
+El estudiante validará la configuración mediante la carga de ejemplos reales y la exportación del modelo en formato RDF, JSON-LD o equivalente.
+
+Objetivo general
+
+Diseñar y desplegar una configuración de metadatos en OpenMetadata alineada con el estándar DCAT-AP, que permita mejorar la interoperabilidad y la gestión semántica de catálogos de datos en entornos Big Data y de computación en la nube.
+
+Objetivos parciales
+
+Analizar la estructura y los elementos del modelo DCAT-AP y sus extensiones (como DCAT-AP for Health o GeoDCAT-AP).
+
+Mapear las clases y propiedades de DCAT-AP con las entidades equivalentes de OpenMetadata.
+
+Configurar taxonomías, tipos personalizados y relaciones (custom metadata) en OpenMetadata para reflejar el modelo DCAT-AP.
+
+Implementar un pipeline de ingestión o sincronización de metadatos (harvesting) desde una fuente externa (por ejemplo, un portal CKAN).
+
+Validar la configuración mediante la exportación o federación del catálogo en formato compatible con DCAT-AP.
+
+Evaluar los beneficios y limitaciones de la configuración propuesta en términos de interoperabilidad, automatización y mantenimiento.
+
+Competencias
+
+CN02: Conocer las arquitecturas para tratamiento masivo de datos y las técnicas de almacenamiento, orquestación y gestión de pipelines necesarias para construir soluciones avanzadas.
+
+CP03: Implementar marcos de trabajo de gobierno de datos y estrategias de aseguramiento de la calidad para gestionar eficazmente la integridad, seguridad y accesibilidad de los datos masivos.
+
+Observaciones
+
+Tutores
+Tutor	Cargo	Email
+GUALO CEJUDO, FERNANDO	Tutor/a	Fernando.Gualo@uclm.es
+Requisitos
+No existen requisitos particulares del TFE.
+Seleccione perfil:
+Alumno
+  Presentación
+  Mis TFEs
+  Manuales
+  Novedades
+© Universidad de Castilla - La Mancha.  Aviso legal y tratamiento de datos personales
