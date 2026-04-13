@@ -25,26 +25,30 @@ function Stop-OmPortForward {
 $repoRoot = Resolve-RepoRoot
 Set-Location $repoRoot
 
-Write-Host "[1/4] Infraestructura base (kind + helm + postgres en k8s)..."
+if (-not $SkipPipInstall) {
+  Write-Host "[0/5] Dependencias Python del repositorio..."
+  python -m pip install -r ".\requirements-dev.txt"
+}
+
+Write-Host "[1/5] Infraestructura base (kind + helm + postgres en k8s)..."
 powershell -ExecutionPolicy Bypass -File ".\scripts\infra\launch_infra.ps1"
 
-Write-Host "[2/4] Ingesta tecnica Postgres..."
+Write-Host "[2/5] Ingesta tecnica Postgres..."
 powershell -ExecutionPolicy Bypass -File ".\scripts\infra\ingest_postgres.ps1"
 
-Write-Host "[3/4] Custom properties + tags..."
+Write-Host "[3/5] Custom properties + tags..."
 $pfJob = $null
 try {
   $pfJob = Start-OmPortForward
   $token = python ".\scripts\infra\generate_om_jwt.py" --ttl-hours 2
   python ".\scripts\infra\bootstrap_governance.py" --base-url "http://localhost:8585/api/v1" --token $token
 
-  Write-Host "[4/4] Dry-run tfm_ingestor..."
-  if (-not $SkipPipInstall) {
-    python -m pip install -e "tfm_ingestor[dev]"
-  }
+  Write-Host "[4/5] Preparar workflow canónico..."
   $env:OPENMETADATA_BASE_URL = "http://localhost:8585/api/v1"
   $env:OPENMETADATA_JWT_TOKEN = $token
-  python -m tfm_ingestor --dry-run
+
+  Write-Host "[5/5] Dry-run del workflow (refresca hoja y genera plan)..."
+  python -m om_dcat_sync workflow run --dry-run
 } finally {
   Stop-OmPortForward -Job $pfJob
 }
