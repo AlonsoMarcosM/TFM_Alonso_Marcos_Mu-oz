@@ -1,36 +1,25 @@
-﻿# A04 - Custom properties, tags y dry-run del ingestor
+# A04 - Custom properties, tags y dry-run de gobierno
 
-## 1) Crear custom properties (tipo `string`) en entidad `table`
+## 1) Custom properties mínimas de la PoC
 
-Claves usadas por la PoC:
-- `dct_identifier`
+En entidad `table` (tipo `string`):
+
 - `dcat_publisher_name`
-- `dcat_contact_email`
-- `dcat_landing_page`
-- `dct_spatial`
-- `dct_language`
-- `dct_license`
-- `dct_issued`
-- `dct_modified`
-- `dct_temporal`
-- `dct_accrual_periodicity`
+- `dcat_hvd_category`
 - `dcat_access_url`
-- `dcat_download_url`
-- `dcat_endpoint_url`
-- `tfm_layer`
 
-Detalle del procedimiento:
-- Ver `docs/custom_properties_openmetadata.md`
+Detalle:
 
-## 2) Crear tags requeridos en OpenMetadata
+- `docs/custom_properties_openmetadata.md`
 
-Segun `tfm_ingestor/config/mapping_rules.yaml`:
-- `dcat_theme.transport`
-- `dcat_theme.society`
-- `dcat_keyword.bici`
-- `dcat_keyword.eventos`
+## 2) Tags requeridos
 
-## Alternativa automatizada para 1) y 2)
+Según `tfm_ingestor/config/mapping_rules.yaml`:
+
+- `dcat_theme.transporte`
+- `dcat_theme.cultura_ocio`
+
+## 3) Bootstrap automático
 
 ```powershell
 $job = Start-Job -ScriptBlock { kubectl port-forward deployment/openmetadata 8585:8585 }
@@ -40,40 +29,38 @@ python .\scripts\infra\bootstrap_governance.py --base-url http://localhost:8585/
 Stop-Job $job; Remove-Job $job -Force
 ```
 
-## 3) Ejecutar dry-run del enriquecimiento
-
-Instalar dependencias:
+## 4) Dry-run del enriquecimiento
 
 ```powershell
-python -m pip install -e tfm_ingestor[dev]
-```
-
-Variables de entorno (ejemplo):
-
-```powershell
+python -m pip install -r requirements-dev.txt
 $env:OPENMETADATA_BASE_URL="http://localhost:8585/api/v1"
 $env:OPENMETADATA_JWT_TOKEN="<TOKEN_JWT>"
+python -m om_dcat_sync workflow run --dry-run
 ```
 
-Dry-run:
+Resultado esperado:
+
+- `workflow.dry_run: true`
+- `workflow.sheet_refreshed: true`
+- `workflow.sheet_valid: true` o `false` si aún faltan metadatos funcionales
+- `sync.planned`: operaciones PATCH por tabla cuando la hoja ya es válida
+- `sync.applied: 0`
+
+## 5) Aplicación real
 
 ```powershell
-python -m tfm_ingestor --dry-run
+python -m om_dcat_sync workflow run --allow-warnings
 ```
 
-El resultado esperado es un JSON con:
-- `dry_run: true`
-- `planned`: operaciones PATCH planificadas por tabla
-- `applied: 0`
-
-## 4) Aplicación real (sin dry-run)
+## 6) Validación integral del sistema
 
 ```powershell
-python -m tfm_ingestor
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_validation_suite.ps1
 ```
 
-## Flujo completo (todos los pasos naturales en orden)
+Artefactos esperados:
 
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_full_flow.ps1
-```
+- `tmp_pytest/runtime_validation_report.json`
+- `tmp_pytest/validation_suite_summary.json`
+- `tmp_pytest/validation_suite_catalog.jsonld`
+- `tmp_pytest/validation_suite_shacl_report.ttl`

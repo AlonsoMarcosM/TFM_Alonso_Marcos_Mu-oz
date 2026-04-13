@@ -31,7 +31,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\ingest_postgres.ps1
 ```
 
 Este script deja evidencia en consola de:
-- Creación/verificacion del `DatabaseService`
+- Creación/verificación del `DatabaseService`
 - Ejecución de ingesta con pod temporal `om-postgres-ingest`
 - Resumen de tablas detectadas
 
@@ -41,3 +41,10 @@ Este script deja evidencia en consola de:
 - Database `opendata_demo`
 - Schemas: `bronze`, `silver`, `gold`
 - Tables/Columns segun `sql/opendata_demo_init.sql`
+
+Siguiente paso:
+
+```powershell
+python -m om_dcat_sync workflow run --dry-run
+python -m om_dcat_sync workflow run --allow-warnings
+```

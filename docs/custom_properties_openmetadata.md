@@ -1,45 +1,62 @@
-﻿# OpenMetadata: custom properties necesarias (DCAT-like) y como crearlas (API)
+# OpenMetadata: custom properties activas
 
-El ingestor (`tfm_ingestor`) rellena custom properties en `Table.extension.customProperties`.
-Para que OpenMetadata las acepte, primero deben existir como **custom properties** en la entidad `table`.
+`om_dcat_sync` escribe metadatos de gobierno en `Table.extension` solo cuando son imprescindibles para representar el perfil activo y OpenMetadata no los modela de forma nativa en `Table`.
 
-## Propiedades usadas en esta PoC
+## Objetivo
 
-Claves (todas tipo `string`):
-- `dct_identifier`
+Mantener activas únicamente las custom properties necesarias para construir un `dcat:Dataset` HVD y su `dcat:Distribution` mínima, sin alargar artificialmente el modelo.
+
+## Custom properties activas
+
+Tipo `string` sobre entidad `table`:
+
 - `dcat_publisher_name`
+- `dcat_hvd_category`
+- `dcat_access_url`
+
+Uso:
+
+- `dcat_publisher_name`: nombre del agente publicador exportado en `dct:publisher`.
+- `dcat_hvd_category`: URI o alias normalizado de `dcatap:hvdCategory`.
+- `dcat_access_url`: `dcat:accessURL` de la distribución.
+
+## Qué no forma parte del contrato activo
+
+Estas propiedades no forman parte del contrato vivo de la PoC:
+
+- `dct_license`
+- `tfm_layer`
 - `dcat_contact_email`
-- `dcat_landing_page`
 - `dct_spatial`
 - `dct_language`
-- `dct_license`
+- `dcat_download_url`
+- `dcat_endpoint_url`
 - `dct_issued`
 - `dct_modified`
 - `dct_temporal`
 - `dct_accrual_periodicity`
-- `dcat_access_url`
-- `dcat_download_url`
-- `dcat_endpoint_url`
-- `tfm_layer`
+- `dcat_landing_page`
+- `dct_identifier`
 
-## Creación vía API (resumen)
+Interpretación:
 
-1) Obtener el id del tipo de entidad `table`:
-- GET `http://localhost:8585/api/v1/metadata/types?limit=10000`
-- Buscar el objeto con `"name": "table"` y anotar su `id`.
+- `dct:license` sigue siendo obligatoria en `Catalog` y en el caso HVD se aplica también a `Distribution` y `DataService`, pero se gobierna por configuración global del sistema, no por tabla;
+- `dcat_access_url` sí permanece activa porque es obligatoria a través de `Distribution`;
+- `dcat_hvd_category` permanece activa porque la PoC ha activado el caso HVD;
+- `dcat_endpoint_url` no se guarda en OpenMetadata porque el `DataService` se deriva por configuración del publicador.
 
-2) Obtener el id del tipo de campo `string`:
-- GET `http://localhost:8585/api/v1/metadata/types?category=field&limit=10000`
-- Buscar `"name": "string"` y anotar su `id`.
+## Creación vía API
 
-3) Crear cada custom property (una a una) en la entidad `table`:
-- PUT `http://localhost:8585/api/v1/metadata/types/<TABLE_TYPE_ID>`
-- Body (ejemplo):
+1. Obtener ID del tipo `table`.
+2. Obtener ID del tipo `string`.
+3. Crear cada custom property en `table`.
+
+Ejemplo:
 
 ```json
 {
-  "description": "DCAT publisher name",
-  "name": "dcat_publisher_name",
+  "description": "Categoría HVD DCAT-AP-ES activa para el dataset",
+  "name": "dcat_hvd_category",
   "propertyType": {
     "id": "<STRING_FIELD_TYPE_ID>",
     "type": "string"
@@ -47,13 +64,7 @@ Claves (todas tipo `string`):
 }
 ```
 
-Nota: en OpenMetadata, la gestión de tipos y custom properties puede variar segun versión; si tu instancia no acepta este flujo, ajusta el endpoint/metodo segun la documentación oficial de tu versión.
-
 ## Automatización recomendada
-
-En este repositorio se incluye un script que crea:
-- Clasificaciones/tags DCAT de la PoC
-- Custom properties de tabla requeridas por `tfm_ingestor`
 
 ```powershell
 $job = Start-Job -ScriptBlock { kubectl port-forward deployment/openmetadata 8585:8585 }
@@ -61,4 +72,10 @@ Start-Sleep -Seconds 3
 $token = python .\scripts\infra\generate_om_jwt.py --ttl-hours 2
 python .\scripts\infra\bootstrap_governance.py --base-url http://localhost:8585/api/v1 --token $token
 Stop-Job $job; Remove-Job $job -Force
+```
+
+Validación del estado resultante:
+
+```powershell
+python -m om_dcat_sync validate-runtime --strict --output tmp_pytest/runtime_validation_report.json
 ```

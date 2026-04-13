@@ -1,104 +1,264 @@
-﻿# `tfm_ingestor`: enriquecimiento de metadatos (gobierno) vía API OpenMetadata
+# `om_dcat_sync` (alias `tfm_ingestor`)
 
-Objetivo: aplicar reglas simples e idempotentes sobre las entidades creadas por la ingesta técnica (Postgres):
-- Domain por esquema (`bronze/silver/gold`)
-- Tags por convencion de nombres (prefijos)
-- Custom properties "DCAT-like" con defaults
+CLI para enriquecer, exportar y validar metadatos `DCAT-AP-ES` desde OpenMetadata.
 
-Comportamiento:
-- Si un Domain configurado no existe, el script intenta crearlo (PoC).
+## Qué hace y qué no hace
 
-## Instalación (modo editable)
+- Sí: trabaja sobre metadatos de catálogo en entidades `Table/View`.
+- Sí: aplica cambios idempotentes por API REST.
+- Sí: gobierna los obligatorios activos del perfil `DCAT-AP-ES` con el caso `hvd`.
+- Sí: mantiene `dcat_publisher_name`, `dcat_hvd_category` y `dcat_access_url` como custom properties activas.
+- Sí: usa `dcat_theme.*` como familia de tags gestionadas.
+- Sí: permite usar una hoja CSV para que una persona no técnica mantenga título, descripción, publicador, temática, categoría HVD y URL de acceso.
+- Sí: exporta `Catalog`, `Dataset`, `Distribution`, `DataService` y `Agent`.
+- No: no implementa GeoDCAT-AP ni HealthDCAT-AP.
+- No: no sustituye a una API productiva real; el `DataService` de la PoC es una representación metadata reproducible del canal de acceso.
+
+## Instalación
 
 ```powershell
-python -m pip install -e tfm_ingestor[dev]
+python -m pip install -r requirements-dev.txt
 ```
 
-## Configuración
+Alternativa si solo quieres instalar el módulo Python y sus extras:
 
-Ficheros de ejemplo:
+```powershell
+python -m pip install -e tfm_ingestor[dev,infra,validation]
+```
+
+## Configuración base
+
+Archivos principales:
+
+- `tfm_ingestor/config/operational_profile.yaml`
 - `tfm_ingestor/config/governance_defaults.yaml`
 - `tfm_ingestor/config/mapping_rules.yaml`
+- `tfm_ingestor/config/ckan_harvest.yaml`
+- `tfm_ingestor/config/gold_governance.csv`
 
-Prerequisito en OpenMetadata:
-- Crear las custom properties usadas por la PoC (ver `docs/custom_properties_openmetadata.md`).
-- Crear los tags usados en `tfm_ingestor/config/mapping_rules.yaml`.
+Prerequisitos en OpenMetadata:
 
-Automatización recomendada (desde la raiz):
+- custom property `dcat_publisher_name`
+- custom property `dcat_hvd_category`
+- custom property `dcat_access_url`
+- tags `dcat_theme.*`
 
-```powershell
-# Requiere OpenMetadata levantado y accesible por port-forward
-$job = Start-Job -ScriptBlock { kubectl port-forward deployment/openmetadata 8585:8585 }
-Start-Sleep -Seconds 3
-$token = python .\scripts\infra\generate_om_jwt.py --ttl-hours 2
-python .\scripts\infra\bootstrap_governance.py --base-url http://localhost:8585/api/v1 --token $token
-Stop-Job $job; Remove-Job $job -Force
-```
-
-Autenticación (ejemplo):
-- Exportar un token JWT en `OPENMETADATA_JWT_TOKEN` (obtenido desde OpenMetadata, p.ej. desde perfil/usuario admin o API de login segun versión)
-- Base URL en `OPENMETADATA_BASE_URL` (por defecto `http://localhost:8585/api/v1`)
-
-## Ejecución
-
-Dry-run (no aplica cambios):
+## Autenticación
 
 ```powershell
-python -m tfm_ingestor --dry-run
+$env:OPENMETADATA_BASE_URL = "http://localhost:8585/api/v1"
+$env:OPENMETADATA_JWT_TOKEN = python .\scripts\infra\generate_om_jwt.py --ttl-hours 2
 ```
 
-Importante:
-- En `--dry-run` no se crean Domains nuevos.
-- Los Domains (`schema_to_domain`) se crean/asignan al ejecutar sin `--dry-run`.
+## Workflow canónico
 
-Aplicar cambios:
+El punto de entrada principal para operador técnico y automatización es:
 
 ```powershell
-python -m tfm_ingestor
+python -m om_dcat_sync workflow run --dry-run
 ```
 
-## Harvesting desde CKAN (MVP)
+Comportamiento esperado:
 
-Objetivo: sincronizar metadatos desde un portal CKAN y aplicarlos sobre tablas existentes en OpenMetadata
-vía custom properties/tags (idempotente).
+- carga el perfil operativo de `tfm_ingestor/config/operational_profile.yaml`;
+- descubre automáticamente las tablas `gold` visibles en OpenMetadata;
+- genera o refresca `tfm_ingestor/config/gold_governance.csv`;
+- conserva la curación manual previa;
+- serializa un plan reproducible cuando se usa `--plan-output`;
+- si la hoja aún no cumple obligatorios editoriales, devuelve `sheet_valid=false` y el motivo exacto sin aplicar cambios.
 
-Config:
-- Edita `tfm_ingestor/config/ckan_harvest.yaml` (mapping dataset -> table FQN).
-- Por defecto usa CKAN MITECO como primario y datos.gob.es como fallback.
-- `max_datasets` limita el numero total de datasets (MVP: 10).
-  - Se puede sobrescribir en CLI con `--max-datasets`.
-
-Dry-run:
+Aplicación completa:
 
 ```powershell
-python -m tfm_ingestor harvest-ckan --dry-run
+python -m om_dcat_sync workflow run --allow-warnings
 ```
 
-Aplicar:
+## Flujo recomendado con hoja de gobierno
+
+### 1) Primera ejecución canónica
 
 ```powershell
-python -m tfm_ingestor harvest-ckan
+python -m om_dcat_sync workflow run --dry-run
 ```
 
-## Export DCAT-AP (JSON-LD) (MVP)
+Esto refresca la hoja y deja claro si la curación funcional está completa o no.
 
-Objetivo: exportar un catálogo en JSON-LD compatible con DCAT-AP (subset PoC).
+### 2) Edición funcional
+
+La persona de gobierno puede abrir `tfm_ingestor/config/gold_governance.csv` en Excel o LibreOffice y editar:
+
+- `publicar`
+- `titulo_dataset`
+- `descripcion_dataset`
+- `publicador`
+- `tematica_dcat`
+- `categoria_hvd`
+- `access_url_distribucion`
+
+No debería tocar:
+
+- `schema_name`
+- `table_name`
+- `table_fqn`
+
+Valores temáticos admitidos en la PoC demo:
+
+- `transporte`
+- `cultura_ocio`
+
+Valores HVD admitidos en la PoC demo:
+
+- `movilidad`
+- `estadisticas`
+
+### 3) Simular cambios con el mismo workflow
 
 ```powershell
-python -m tfm_ingestor export-dcat --output dcat_catalog.jsonld
+python -m om_dcat_sync workflow run --dry-run
 ```
+
+### 4) Aplicar cambios reales, exportar y validar
+
+```powershell
+python -m om_dcat_sync workflow run --allow-warnings
+```
+
+Qué sincroniza en OpenMetadata:
+
+- `displayName`
+- `description`
+- `dcat_publisher_name`
+- `dcat_hvd_category`
+- `dcat_access_url`
+- `dcat_theme.*`
+- limpieza de metadatos heredados gestionados que ya no forman parte del perfil activo
+
+Comandos detallados de bajo nivel:
+
+```powershell
+python -m om_dcat_sync generate-governance-sheet
+python -m om_dcat_sync --sheet tfm_ingestor/config/gold_governance.csv --dry-run
+python -m om_dcat_sync --sheet tfm_ingestor/config/gold_governance.csv
+```
+
+## Harvesting CKAN
+
+Uso opcional:
+
+```powershell
+python -m om_dcat_sync harvest-ckan --dry-run
+python -m om_dcat_sync harvest-ckan
+```
+
+Puede completar:
+
+- `displayName`
+- `description`
+- `dcat_publisher_name`
+- `dcat_hvd_category` si la temática CKAN mapea a una categoría HVD configurada
+- `dcat_access_url`
+- temática
+
+## Exportación DCAT-AP-ES
+
+```powershell
+python -m om_dcat_sync export-dcat --output dcat_catalog.jsonld
+```
+
+La exportación activa genera:
+
+- `dcat:Catalog`
+- `dcat:Dataset`
+- `dcat:Distribution`
+- `dcat:DataService`
+- `foaf:Agent`
+
+## Validación SHACL
+
+El validador usa las shapes locales vendorizadas en `tfm_ingestor/src/tfm_ingestor/resources/shacl`. Ese directorio replica `shacl/1.0.0` del repositorio oficial `datosgobes/DCAT-AP-ES`, congelado en el commit `f2c8a88868b89239c9f54bffdf621cded2401b9f`. En ejecución no se descargan shapes remotas.
+
+Validar un JSON-LD ya exportado:
+
+```powershell
+python -m om_dcat_sync validate-dcat --input dcat_catalog.jsonld --profile-case hvd --report-output dcat_validation_report.ttl
+```
+
+Validar exportando desde OpenMetadata en el mismo paso:
+
+```powershell
+python -m om_dcat_sync validate-dcat --profile-case hvd --export-output dcat_catalog.jsonld --allow-warnings --report-output dcat_validation_report.ttl
+```
+
+La vía recomendada sigue siendo:
+
+```powershell
+python -m om_dcat_sync workflow run --allow-warnings
+```
+
+Notas:
+
+- la validación usa shapes oficiales versionadas dentro del repositorio;
+- `--profile-case hvd` activa la carga del caso base, la shape base de `DataService` y las shapes HVD;
+- `--allow-warnings` permite considerar conforme el caso en que no existan `Violation` y solo aparezcan `Warning`.
 
 ## Tests
 
 ```powershell
-$env:PYTEST_DISABLE_PLUGIN_AUTOLOAD="1"
-python -m pytest tfm_ingestor/tests
+$env:PYTEST_DISABLE_PLUGIN_AUTOLOAD="1"; python -m pytest
 ```
 
-## Flujo completo en un comando
+## Validación estructural del estado vivo
 
-Si quieres ejecutar todo el flujo (infra + ingesta técnica + bootstrap gobierno + dry-run):
+Validar la instancia real de OpenMetadata contra el contrato técnico del SQL demo y la hoja funcional:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_full_flow.ps1
+python -m om_dcat_sync validate-runtime --strict --output tmp_pytest/runtime_validation_report.json
+```
+
+Qué comprueba:
+
+- `service`, `database`, `schema`, `table` y `column` esperados según `sql/opendata_demo_init.sql`;
+- metadatos de gobierno aplicados en los datasets `gold` publicados;
+- ausencia de drift en custom properties heredadas gestionadas.
+
+## Suite de validación de fase
+
+Comando recomendado para cerrar las validaciones vivas del sistema:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_validation_suite.ps1
+```
+
+La suite ejecuta:
+
+- `validate-runtime`;
+- `workflow run --allow-warnings`;
+- segunda ejecución idempotente del workflow;
+- `pytest`;
+- revisión reproducible de higiene Git.
+
+Resultado observado en este entorno tras la última ejecución versionada de la suite:
+
+- `runtime_conforms: true`
+- `technical_conforms: true`
+- `governance_conforms: true`
+- `first_applied: 2`
+- `tables_exported: 2`
+- `preview_dataset_count: 2`
+- `shacl_conforms: true`
+- `shacl_warnings: 22`
+- `second_applied: 0`
+- `second_planned: 0`
+
+Artefacto canónico:
+
+- `tmp_pytest/validation_suite_summary.json`
+
+## Compatibilidad legacy
+
+El alias anterior sigue funcionando:
+
+```powershell
+python -m tfm_ingestor --dry-run
+python -m tfm_ingestor
 ```

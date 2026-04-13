@@ -35,3 +35,12 @@ Nota: puede aparecer un warning de `pg_stat_statements` en logs. Para esta PoC n
 Tras la ejecución:
 - Aparecen los schemas `bronze`, `silver`, `gold`.
 - Aparecen las tablas y columnas definidas en `sql/opendata_demo_init.sql`.
+
+Siguiente paso (orden correcto):
+- ejecutar enriquecimiento de gobierno sobre esos assets técnicos:
+
+```powershell
+python -m om_dcat_sync workflow run --dry-run
+python -m om_dcat_sync workflow run --allow-warnings
+python -m om_dcat_sync validate-runtime --strict --output tmp_pytest/runtime_validation_report.json
+```

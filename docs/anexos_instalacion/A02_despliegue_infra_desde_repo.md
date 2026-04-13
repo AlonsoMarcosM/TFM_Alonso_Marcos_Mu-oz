@@ -1,32 +1,51 @@
-﻿# A02 - Despliegue de infraestructura desde el repositorio
+# A02 - Despliegue de infraestructura desde el repositorio
 
-Este anexo deja toda la infraestructura arrancada desde un ?nico punto de entrada.
+Este anexo deja toda la infraestructura arrancada desde un único punto de entrada.
 
-## Opcion recomendada (automatizada)
+Para una explicación conceptual de qué son Docker, Kind, Kubernetes, Helm, OpenMetadata, MySQL, OpenSearch y `postgres-demo` en esta PoC, ver:
 
-Desde la raiz del repo:
+- `docs/openmetadata_k8s.md`
+
+## Opción recomendada automatizada
+
+Desde la raíz del repo:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\launch_infra.ps1
 ```
 
-Que hace el script, en orden:
-1. Despliega PostgreSQL dummy dentro de Kubernetes (`postgres-demo`)
-2. Crea/usa cluster `kind` (`kind-tfm-om`)
-3. Crea secretos `mysql-secrets` y `airflow-secrets`
-4. Instala `openmetadata-dependencies` con overrides locales (`k8s/openmetadata-dependencies.values.yaml`)
-5. Instala `openmetadata`
+Qué hace el script, en orden:
+
+1. Crea o reutiliza el clúster `kind` (`kind-tfm-om`).
+2. Despliega PostgreSQL demo dentro de Kubernetes (`postgres-demo`).
+3. Crea secretos `mysql-secrets` y `airflow-secrets`.
+4. Instala `openmetadata-dependencies` con ajustes locales (`k8s/openmetadata-dependencies.values.yaml`).
+5. Restaura automáticamente el snapshot de estado si existe en `state/openmetadata/mysql/openmetadata_db.sql`.
+6. Instala `openmetadata`.
 
 Stack final esperado:
+
 - Docker: `tfm-om-control-plane`
 - Kubernetes: `postgres-demo`, `mysql`, `opensearch`, `openmetadata`
+- Helm: releases `openmetadata-dependencies` y `openmetadata`
 
-## Persistencia de estado (sobrevive a `kind delete cluster`)
+Lectura simple:
 
-El estado funcional de OpenMetadata (tags, dominios, owners, metadatos) se guarda en MySQL.
+```text
+Docker ejecuta el nodo Kind.
+Kind proporciona Kubernetes local.
+Kubernetes ejecuta los pods.
+Helm instala OpenMetadata y sus dependencias.
+El repo automatiza todo con scripts versionados.
+```
+
+## Persistencia de estado
+
+El estado funcional de OpenMetadata, por ejemplo tags, dominios, owners y metadatos, se guarda en MySQL.
+
 Para llevarte ese estado con la carpeta del proyecto:
 
-- Snapshot SQL local (ruta relativa al repo):
+- Snapshot SQL local:
   - `state/openmetadata/mysql/openmetadata_db.sql`
 
 Comandos:
@@ -35,19 +54,43 @@ Comandos:
 # Guardar estado actual en carpeta del proyecto
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\backup_openmetadata_state.ps1
 
-# Borrar cluster conservando snapshot
+# Borrar clúster conservando snapshot
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\delete_cluster_preserve_state.ps1
 
-# Levantar de nuevo y restaurar automaticamente si existe snapshot
+# Levantar de nuevo y restaurar automáticamente si existe snapshot
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\launch_infra.ps1
 ```
 
 Notas:
-- `launch_infra.ps1` restaura automáticamente el snapshot si existe.
-- Puedes desactivar restauracion con `-SkipStateRestore`.
-- `state/` esta en `.gitignore` (no se sube al remoto).
 
-## Exposicion de OpenMetadata UI
+- `launch_infra.ps1` restaura automáticamente el snapshot si existe.
+- Puedes desactivar restauración con `-SkipStateRestore`.
+- `state/` está en `.gitignore` y no se sube al remoto.
+
+## Réplica en otro portátil
+
+Caso esperado: clonar o copiar el repositorio en otro equipo y levantar la PoC desde cero.
+
+Pasos mínimos:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\check_prereqs.ps1 -Strict
+python -m pip install -r requirements-dev.txt
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\launch_infra.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\status_infra.ps1
+```
+
+Si falta Helm 3 en el equipo, el repositorio puede descargar una copia local en `.tools/`.
+
+Si se quiere conservar el estado funcional de OpenMetadata entre equipos, copiar también el snapshot local:
+
+```text
+state/openmetadata/mysql/openmetadata_db.sql
+```
+
+Este snapshot no se sube a Git porque puede contener estado local del entorno.
+
+## Exposición de OpenMetadata UI
 
 En una terminal aparte:
 
@@ -55,24 +98,27 @@ En una terminal aparte:
 kubectl port-forward svc/openmetadata 8585:8585
 ```
 
-Si se corta al reiniciarse el pod, usa auto-reconexion:
+Si se corta al reiniciarse el pod, usa auto-reconexión:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\port_forward_openmetadata.ps1
 ```
 
 Acceso:
+
 - URL: `http://localhost:8585`
 - Usuario: `admin@open-metadata.org`
 - Password: `admin`
 
-## Verificacion de estado
+## Verificación de estado
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\status_infra.ps1
 ```
 
-## Helm desde el repo (aunque no este en PATH)
+## Helm desde el repo
+
+Aunque Helm no esté en `PATH`:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\helm.ps1 ls -A
@@ -80,12 +126,24 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\helm.ps1 get values ope
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\helm.ps1 get values openmetadata-dependencies
 ```
 
-Estado validado en este entorno (04/02/2026):
+Estado validado en este entorno el 4 de febrero de 2026:
+
 - `openmetadata` en estado `deployed`
 - `openmetadata-dependencies` en estado `deployed`
-- Pods principales en `Running`
+- pods principales en `Running`
 
 ## Comentario para VPS/cloud
 
-El flujo es portable: los mismos charts Helm y la misma lógica aplican en un Kubernetes de VPS/cloud (k3s o gestionado).  
-Cambian principalmente: storage class, recursos y configuración de red/ingress.
+El flujo es portable: los mismos charts Helm y la misma lógica aplican en un Kubernetes de VPS/cloud, por ejemplo k3s en un VPS o un clúster gestionado.
+
+Cambian principalmente:
+
+- storage class;
+- recursos CPU/memoria;
+- configuración de red;
+- ingress o balanceador;
+- secretos;
+- backups;
+- observabilidad.
+
+En una empresa no se usaría Kind como entorno principal. Kind se usa aquí porque permite demostrar Kubernetes + Helm de forma local, barata y reproducible.

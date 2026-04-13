@@ -1,17 +1,19 @@
-﻿# Documentación
+# Documentación
 
-- `guia_centralizada.md`: punto ?nico recomendado para ejecutar y entender el flujo.
-- `anexos_instalacion/`: anexos paso a paso para reproducir la instalacion (memoria).
-- `openmetadata_k8s.md`: detalle de despliegue local de OpenMetadata en Kubernetes con Helm.
-- `ingesta_tecnica_postgres.md`: detalle de ingesta técnica PostgreSQL.
-- `custom_properties_openmetadata.md`: custom properties (DCAT-like) y automatizacion.
-- `tfm_ingestor.md`: ejecución del script de enriquecimiento + tests.
-- `diagramas_mermaid.md`: diagramas Mermaid para memoria, README y defensa.
-- `dcat_mapping.md`: mapeo DCAT-AP-ES -> OpenMetadata (PoC simple).
-- `postgres_demo.md`: fuente dummy PostgreSQL (bronze/silver/gold) para la PoC.
-- `planificacion_kanban.md`: enfoque de planificacion/seguimiento (Kanban).
+- `guia_centralizada.md`: ruta operativa recomendada, de infraestructura a exportación y validación HVD.
+- `openmetadata_k8s.md`: explicación de la infraestructura local con Docker, Kind, Kubernetes, Helm, OpenMetadata, MySQL, OpenSearch y PostgreSQL demo.
+- `gobierno_funcional_gold.md`: flujo funcional para gobernar los datasets `gold` desde una hoja editable.
+- `refactor_orquestacion_operativa.md`: arquitectura objetivo ya implantada para simplificar CLI, ETL y futura UI, con decisión de framework de interfaz.
+- `dcat_mapping.md`: matriz del modelo aplicado en la PoC y mapeo `DCAT-AP-ES` hacia OpenMetadata.
+- `diagramas_mermaid.md`: diagramas reutilizables para memoria, defensa y portfolio.
+- `tfm_ingestor.md`: uso del CLI `om_dcat_sync`, hoja de gobierno y validación SHACL.
+- `tfe_ficha_oficial_uclm.txt`: copia literal y canónica de la ficha oficial UCLM; no editar.
+- `tfm_oficial_objetivos_decisiones.md`: decisiones de alcance y justificación de la PoC, sin reescribir la ficha oficial.
+- `custom_properties_openmetadata.md`: custom properties mínimas del modelo activo.
+- `ingesta_tecnica_postgres.md`: ingesta técnica desde PostgreSQL.
+- `postgres_demo.md`: justificación del PostgreSQL demo como base reproducible.
+- `planificacion_kanban.md`: enfoque de planificación y seguimiento Kanban.
 - `github_projects_mvp.md`: MVP automatizable para llevar fases y avance del TFM en GitHub Projects.
-- `tfm_oficial_objetivos_decisiones.md`: enunciado oficial + alineacion con alcance real + decisiones técnicas (riesgos/mitigacion).
-- `../AGENTS.md`: principios para mantener el repo replicable y (si se quiere) desplegable en VPS/cloud.
-- `../scripts/infra/`: scripts para levantar y verificar infraestructura desde la raiz del repo (`launch_infra.ps1`, `deploy_postgres_k8s.ps1`, `ingest_postgres.ps1`, `run_full_flow.ps1`, `helm.ps1`).
-  - Persistencia local de estado OpenMetadata: `backup_openmetadata_state.ps1`, `restore_openmetadata_state.ps1`, `delete_cluster_preserve_state.ps1`.
+- `anexos_instalacion/README.md`: evidencias paso a paso para la memoria.
+- `../AGENTS.md`: principios para mantener el repo simple, reproducible y desplegable.
+- `../scripts/infra/`: scripts para levantar y verificar infraestructura desde la raíz del repo.

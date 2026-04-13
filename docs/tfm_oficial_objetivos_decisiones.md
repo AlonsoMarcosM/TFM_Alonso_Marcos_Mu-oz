@@ -1,126 +1,121 @@
-﻿# TFM (oficial) - Objetivos, alcance y decisiones técnicas
+# Decisiones de alcance e implementación
 
-Este repositorio implementa una PoC reproducible (MVP) alrededor de OpenMetadata y DCAT-AP-ES, y mantiene trazabilidad
-entre:
-- enunciado/objetivos oficiales del TFM
-- alcance real implementado en el repositorio
-- decisiones técnicas (y mitigacion de riesgos) tomadas para llegar a un resultado defendible en tiempo
+Este documento ya no reproduce ni resume la ficha oficial. La fuente oficial íntegra queda congelada en `docs/tfe_ficha_oficial_uclm.txt`.
 
-## Ficha oficial del TFM (UCLM)
+Reglas:
 
-- Identificador: 29371
-- Comisión: E.Informatica-AB_CR-MUBDCN
-- Area: Ingenieria y Arquitectura
-- Tipo: Trabajo de fin de master
-- Lugar: UCLM
-- Idioma: castellano (realizacion y defensa)
-- Fecha alta: 04/11/2025
-- Vigencia maxima: 18/12/2027
-- Tutor: Fernando Gualo Cejudo
+- `docs/tfe_ficha_oficial_uclm.txt` es la copia canónica literal de la ficha UCLM.
+- Este archivo contiene únicamente decisiones, justificaciones y trazabilidad técnica del repositorio.
+- Si alguna decisión de implementación parece contradecir la ficha oficial, prevalece la ficha oficial.
+- Cualquier cambio de alcance debe documentarse aquí, no editando la ficha oficial.
 
-Titulo (ES):
-- DISEÑO Y CONFIGURACIÓN DE UN MODELO DE METADATOS EN OPENMETADATA CONFORME AL ESTÁNDAR DCAT-AP-ES PARA LA INTEROPERABILIDAD DE CATÁLOGOS DE DATOS
+## Cómo se concreta el enunciado en este repositorio
 
-Titulo (EN):
-- Design and Configuration of a Metadata Model in OpenMetadata According to the DCAT-AP-ES Standard for Data Catalog Interoperability
+El enunciado oficial habla de `DCAT-AP`. El repositorio no altera ese marco. Lo que hace es concretarlo con un perfil operativo verificable:
 
-## Descripción oficial (resumen)
+- usa `DCAT-AP-ES` como perfil de trabajo;
+- activa el caso `HVD` en la PoC;
+- trabaja sobre metadatos, no sobre explotación analítica de datos;
+- prioriza una salida interoperable validable en `JSON-LD`.
 
-El TFM propone diseñar e implementar una configuración de metadatos en OpenMetadata alineada con DCAT-AP-ES para mejorar la interoperabilidad de catálogos.
-Incluye: análisis de clases DCAT-AP-ES (Dataset, Distribution, Catalog, Publisher, etc.), mapeo a entidades de OpenMetadata, configuración de taxonomías y custom metadata,
-pipeline de ingesta/sincronización (harvesting) desde una fuente externa (p.ej. CKAN), y validación vía exportacion/federación en RDF, JSON-LD o equivalente.
+Lectura correcta:
 
-## Objetivo general (oficial)
+- `DCAT-AP` es el marco académico oficial;
+- `DCAT-AP-ES` es la concreción operativa aplicada;
+- la extensión `HVD` se activa en la PoC como hipótesis de diseño para cubrir también esa parte del perfil español.
 
-Diseñar y desplegar una configuración de metadatos en OpenMetadata alineada con DCAT-AP-ES, para mejorar interoperabilidad y gestión semántica de catálogos
-en entornos Big Data y cloud.
+## Decisiones justificadas de alcance
 
-## Objetivos parciales (oficiales)
+### 1. DCAT-AP-ES como perfil real de validación
 
-1. Analizar DCAT-AP-ES y extensiones (p.ej. DCAT-AP-ES for Health, GeoDCAT-AP-ES).
-2. Mapear clases y propiedades DCAT-AP-ES con entidades equivalentes de OpenMetadata.
-3. Configurar taxonomías, tipos personalizados y relaciones (custom metadata) en OpenMetadata para reflejar DCAT-AP-ES.
-4. Implementar pipeline de ingesta/sincronización (harvesting) desde una fuente externa (p.ej. CKAN).
-5. Validar mediante exportacion/federación del catálogo en formato compatible con DCAT-AP-ES (RDF, JSON-LD o equivalente).
-6. Evaluar beneficios y limitaciones en interoperabilidad, automatizacion y mantenimiento.
+- Justificación: `DCAT-AP-ES` es el perfil que combina `DCAT-AP 2.1.1`, `DCAT-AP HVD 2.2.0` y restricciones españolas adicionales.
+- Decisión: la PoC valida contra `DCAT-AP-ES` y adopta el caso `hvd` como caso activo del repositorio.
+- Evidencia: `docs/dcat_mapping.md`, `README.md`, `tfm_ingestor/src/tfm_ingestor/shacl_validation.py`.
 
-## Competencias (oficiales)
+### 2. Activación explícita de HVD en la PoC
 
-- CN02: arquitecturas para tratamiento masivo de datos + almacenamiento/orquestacion/pipelines.
-- CP03: gobierno de datos y aseguramiento de calidad (integridad, seguridad, accesibilidad).
+- Justificación: se ha decidido que la memoria y el repositorio contemplen el perfil español completo con la extensión HVD activa, sin dejarla como trabajo futuro.
+- Decisión: los datasets `gold` se tratan como datasets HVD de la PoC y se exportan con `dcatap:hvdCategory`, `dcatap:applicableLegislation`, `Distribution` HVD y `DataService`.
+- Matiz académico: esta activación HVD es una hipótesis de diseño y validación dentro del entorno demo. No equivale por sí sola a una declaración jurídica sobre datasets reales externos a la PoC.
+- Evidencia: `docs/dcat_mapping.md`, `tfm_ingestor/config/governance_defaults.yaml`, `tfm_ingestor/src/tfm_ingestor/dcat_export.py`.
 
-## Alcance real implementado en este repositorio (PoC)
+### 3. Metadatos, no datos de negocio
 
-Lo implementado hasta ahora prioriza simpleza, reproducibilidad e idempotencia:
+- Justificación: OpenMetadata y DCAT gobiernan activos y metadatos.
+- Decisión: la PoC valida completitud, trazabilidad e interoperabilidad del metadato, no calidad fila a fila.
+- Evidencia: `docs/dcat_mapping.md`, `docs/diagramas_mermaid.md`.
 
-- Despliegue reproducible de OpenMetadata en Kubernetes con Helm (stack ?nico).
-- Fuente técnica dummy PostgreSQL (capas `bronze/silver/gold`) dentro del mismo cluster.
-- Ingesta técnica oficial (service/db/schema/table/column) hacia OpenMetadata.
-- Modelado DCAT-like mediante:
-  - tags/clasificaciones
-  - custom properties a nivel de `Table`
-  - domains por convencion (PoC)
-- Automatización idempotente vía API (Python) con `tfm_ingestor` + configuración YAML.
-- Validación mínima con `pytest` centrada en reglas/config/higiene del repo.
+### 4. Solo capa gold como ámbito de publicación
 
-## Alineación objetivo -> evidencia (estado)
+- Justificación: el SQL demo define `bronze`, `silver` y `gold`, pero solo `gold` representa datasets publicables.
+- Decisión: el gobierno funcional DCAT-AP-ES se aplica solo a las tablas `gold` de `sql/opendata_demo_init.sql`.
+- Evidencia: `sql/opendata_demo_init.sql`, `tfm_ingestor/config/mapping_rules.yaml`, `docs/gobierno_funcional_gold.md`.
 
-1) Análisis DCAT-AP-ES y extensiones
-- Estado: Parcial
-- Evidencia: `docs/dcat_mapping.md` (core) + tareas en GitHub Project.
+### 5. Gobierno mínimo en OpenMetadata
 
-2) Mapeo DCAT-AP-ES -> OpenMetadata
-- Estado: Parcial/Hecho (para el subconjunto de la PoC)
-- Evidencia: `docs/dcat_mapping.md`, `tfm_ingestor/config/mapping_rules.yaml`.
+- Justificación: se ha decidido no alargar el modelo con custom metadata no imprescindibles.
+- Decisión: en OpenMetadata solo se gobiernan `displayName`, `description`, `dcat_publisher_name`, `dcat_hvd_category`, `dcat_access_url` y tags `dcat_theme.*`.
+- Efecto: el resto del perfil activo se deriva por configuración del sistema en el momento de exportación.
+- Evidencia: `docs/custom_properties_openmetadata.md`, `docs/gobierno_funcional_gold.md`.
 
-3) Taxonomías + custom metadata en OpenMetadata
-- Estado: Hecho (MVP)
-- Evidencia: `docs/custom_properties_openmetadata.md`, `scripts/infra/bootstrap_governance.py`.
+### 6. Distribution y DataService activas
 
-4) Pipeline harvesting desde CKAN (u otra fuente externa)
-- Estado: MVP implementado (pendiente de validar con un portal CKAN concreto)
-- Evidencia: `tfm_ingestor/config/ckan_harvest.yaml`, `python -m tfm_ingestor harvest-ckan --dry-run`.
+- Justificación: al activar HVD, el perfil no puede cerrarse solo con `Catalog`, `Dataset` y `Distribution`. La PoC necesita además modelar `DataService` y sus vínculos con `servesDataset` y `accessService`.
+- Decisión: el exportador genera una `Distribution` por dataset y un `DataService` HVD derivado por dataset.
+- Evidencia: `docs/dcat_mapping.md`, `tfm_ingestor/src/tfm_ingestor/dcat_export.py`.
 
-5) Exportación/federación DCAT-AP-ES (RDF/JSON-LD)
-- Estado: MVP implementado (JSON-LD) (pendiente de validación formal contra DCAT-AP-ES)
-- Evidencia: `python -m tfm_ingestor export-dcat --output dcat_catalog.jsonld`.
+### 7. Hoja funcional para una persona no técnica
 
-6) Evaluacion de beneficios/limitaciones
-- Estado: Parcial
-- Evidencia: `docs/dcat_mapping.md`, `TFM/memoria_latex/sections/07_limitaciones_trabajo_futuro.tex`.
+- Justificación: si cada dataset exige tocar código o YAML técnico, el mantenimiento no escala.
+- Decisión: la curación funcional se concentra en `tfm_ingestor/config/gold_governance.csv`.
+- Campos editables por la persona responsable del catálogo: `publicar`, `titulo_dataset`, `descripcion_dataset`, `publicador`, `tematica_dcat`, `categoria_hvd` y `access_url_distribucion`.
+- Evidencia: `docs/gobierno_funcional_gold.md`, `tfm_ingestor/src/tfm_ingestor/governance_sheet.py`.
 
-## Decisiones técnicas y mitigacion de riesgos
+### 8. CKAN como enriquecimiento complementario
 
-Separar "objetivo oficial" de "decisiones técnicas" ayuda a justificar por que el MVP es defendible y reproducible.
+- Justificación: el TFM pide harvesting desde fuente externa, pero la defensa no debe depender al cien por cien de esa fuente.
+- Decisión: PostgreSQL demo aporta reproducibilidad y CKAN aporta realismo interoperable como complemento.
+- Evidencia: `docs/postgres_demo.md`, `tfm_ingestor/src/tfm_ingestor/harvest_ckan.py`.
 
-Decisiones clave:
+### 9. JSON-LD como formato de validación actual
 
-- Kubernetes + Helm como vía canónica
-  - Motivo: portabilidad (local/VPS/cloud) y práctica alineada con industria/curriculum.
-  - Riesgo: complejidad operativa.
-  - Mitigación: `kind` + scripts idempotentes + stack ?nico (sin HA/hardening).
+- Justificación: el enunciado admite RDF, JSON-LD o equivalente.
+- Decisión: la validación formal del repositorio se centra en JSON-LD y SHACL.
+- Evidencia: `tfm_ingestor/src/tfm_ingestor/dcat_export.py`, `tfm_ingestor/src/tfm_ingestor/shacl_validation.py`.
 
-- PostgreSQL dummy dentro del cluster
-  - Motivo: dataset controlado y repetible para ingesta técnica (reduce incertidumbre).
-  - Riesgo: poca representatividad de un caso real.
-  - Mitigación: declarar limitación y planificar validación con ejemplo real como trabajo futuro.
+### 10. Validación integrada en el sistema
 
-- DCAT-AP-ES representado como metadatos de gobierno (tags + custom properties + domains)
-  - Motivo: OpenMetadata no es DCAT 1:1; se evita intentar un conector completo en un TFM acotado.
-  - Riesgo: confusion "dataset DCAT" vs "tabla SQL".
-  - Mitigación: documentar el trade-off (riesgo controlado) y mantener trazabilidad de decisiones.
+- Justificación: las comprobaciones no deben quedar como ejecución manual aislada del agente.
+- Decisión: se mantienen tests versionados, CLI `validate-dcat`, CLI `validate-runtime`, scripts reproducibles y shapes oficiales vendorizadas dentro del paquete, sin descarga en ejecución.
+- Evidencia: `tfm_ingestor/tests`, `scripts/infra/validate_live_dcat.ps1`, `scripts/infra/run_validation_suite.ps1`, `tfm_ingestor/src/tfm_ingestor/resources/shacl/`, `tfm_ingestor/src/tfm_ingestor/resources/shacl/manifest.json`.
+- Congelación SHACL: árbol oficial `datosgobes/DCAT-AP-ES/shacl/1.0.0` del commit `f2c8a88868b89239c9f54bffdf621cded2401b9f`, fijado localmente el `2026-04-13`.
 
-- Configuración por YAML/env vars (sin hardcode) + tests mínimos
-  - Motivo: reproducibilidad y facilidad de evolucion.
-  - Riesgo: drift/errores de reglas.
-  - Mitigación: validaciones, dry-run y tests sobre config/reglas.
+## Trazabilidad con la ficha oficial
 
-- GitHub Projects para planificacion
-  - Motivo: trazabilidad dentro del repo y automatizacion por codigo (portfolio).
-  - Riesgo: duplicados/ruido si se re-ejecuta.
-  - Mitigación: script idempotente + comandos de limpieza controlados.
+La ficha oficial completa se consulta en `docs/tfe_ficha_oficial_uclm.txt`. Esta tabla no reescribe sus objetivos; solo enlaza cada objetivo parcial con la evidencia de implementación.
 
-## Notas de refactor pendiente
+| Objetivo parcial | Evidencia principal |
+| --- | --- |
+| 1 | `docs/dcat_mapping.md`, `docs/tfm_oficial_objetivos_decisiones.md` |
+| 2 | `docs/dcat_mapping.md` |
+| 3 | `docs/custom_properties_openmetadata.md`, `scripts/infra/bootstrap_governance.py` |
+| 4 | `tfm_ingestor/src/tfm_ingestor/harvest_ckan.py`, `tfm_ingestor/config/ckan_harvest.yaml` |
+| 5 | `tfm_ingestor/src/tfm_ingestor/dcat_export.py`, `tfm_ingestor/src/tfm_ingestor/shacl_validation.py` |
+| 6 | `docs/tfm_oficial_objetivos_decisiones.md`, `docs/dcat_mapping.md`, `docs/gobierno_funcional_gold.md` |
 
-Si se detecta desviacion entre "oficial" y "alcance real", se debe:
-- reflejarlo en la memoria como limitación/trabajo futuro (no ocultarlo)
+## Riesgos y limitaciones asumidos
+
+- `Dataset` DCAT no equivale exactamente a una tabla SQL.
+- La clasificación HVD de la PoC es una hipótesis de demostración controlada.
+- La PoC genera una única `Distribution` y un único `DataService` por dataset.
+- El `DataService` exportado modela metadatos de acceso reproducibles de la PoC; no sustituye a una API productiva completa.
+- La validación se centra en metadatos e interoperabilidad, no en profiling del contenido.
+- La curación funcional depende de una hoja mantenida por una persona responsable del catálogo.
+- La conformidad estricta sin `Warning` no es objetivo de esta iteración; el repositorio prioriza obligatorios y consistencia reproducible.
+
+## Beneficios obtenidos en la PoC
+
+- Un único workflow canónico sirve para operador técnico, ETL y futura UI.
+- La validación queda versionada dentro del repositorio y deja artefactos reproducibles.
+- El gobierno funcional se desacopla del código gracias a `gold_governance.csv`.
+- La PoC mantiene un modelo OpenMetadata corto y defensible, derivando por configuración lo que no conviene gobernar manualmente.
