@@ -1,0 +1,95 @@
+{
+  "name": "DCAT-AP-ES SHACL 1.0.0",
+  "repository": "https://github.com/datosgobes/DCAT-AP-ES",
+  "source_tree": "https://github.com/datosgobes/DCAT-AP-ES/tree/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0",
+  "source_commit": "f2c8a88868b89239c9f54bffdf621cded2401b9f",
+  "source_path": "shacl/1.0.0",
+  "frozen_date": "2026-04-13",
+  "policy": "Vendored copy. Runtime validation must use these local files and must not download remote SHACL files.",
+  "files": [
+    {
+      "path": "hvd/shacl_common_hvd_shapes.ttl",
+      "upstream_path": "shacl/1.0.0/hvd/shacl_common_hvd_shapes.ttl",
+      "url": "https://raw.githubusercontent.com/datosgobes/DCAT-AP-ES/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0/hvd/shacl_common_hvd_shapes.ttl",
+      "sha256": "c9bd90fc47f58483118762a039e1ccb69599a0b98cbf5de53749c1c0704dbf88",
+      "bytes": 3495
+    },
+    {
+      "path": "hvd/shacl_dataservice_hvd_shape.ttl",
+      "upstream_path": "shacl/1.0.0/hvd/shacl_dataservice_hvd_shape.ttl",
+      "url": "https://raw.githubusercontent.com/datosgobes/DCAT-AP-ES/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0/hvd/shacl_dataservice_hvd_shape.ttl",
+      "sha256": "669a71d774308fdb38e10973144fd5404ef0653c0db7c270f67b1b45331bd7c7",
+      "bytes": 8952
+    },
+    {
+      "path": "hvd/shacl_dataset_hvd_shape.ttl",
+      "upstream_path": "shacl/1.0.0/hvd/shacl_dataset_hvd_shape.ttl",
+      "url": "https://raw.githubusercontent.com/datosgobes/DCAT-AP-ES/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0/hvd/shacl_dataset_hvd_shape.ttl",
+      "sha256": "387d1594afdfd7af004b9d7010fa01efe2f58dbd115851e2b6e0e9ccf4178edb",
+      "bytes": 8083
+    },
+    {
+      "path": "hvd/shacl_distribution_hvd_shape.ttl",
+      "upstream_path": "shacl/1.0.0/hvd/shacl_distribution_hvd_shape.ttl",
+      "url": "https://raw.githubusercontent.com/datosgobes/DCAT-AP-ES/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0/hvd/shacl_distribution_hvd_shape.ttl",
+      "sha256": "c3de235e2d463cf510236f2cda25fa68827e5b8ce824d16fb8c49f1f8b9cb4cf",
+      "bytes": 6461
+    },
+    {
+      "path": "shacl_catalog_shape.ttl",
+      "upstream_path": "shacl/1.0.0/shacl_catalog_shape.ttl",
+      "url": "https://raw.githubusercontent.com/datosgobes/DCAT-AP-ES/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0/shacl_catalog_shape.ttl",
+      "sha256": "1b4f8e6cb8d384b19be2f4328f6540b0c0da4d2723172a27e2702db65135961d",
+      "bytes": 31419
+    },
+    {
+      "path": "shacl_common_shapes.ttl",
+      "upstream_path": "shacl/1.0.0/shacl_common_shapes.ttl",
+      "url": "https://raw.githubusercontent.com/datosgobes/DCAT-AP-ES/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0/shacl_common_shapes.ttl",
+      "sha256": "4762161ebadffdb2465266c843e1a374f52268bea632dcb3b3815e3b4abcb3f5",
+      "bytes": 61079
+    },
+    {
+      "path": "shacl_dataservice_shape.ttl",
+      "upstream_path": "shacl/1.0.0/shacl_dataservice_shape.ttl",
+      "url": "https://raw.githubusercontent.com/datosgobes/DCAT-AP-ES/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0/shacl_dataservice_shape.ttl",
+      "sha256": "56e0d89b7295fff45c9c6e95f382258eafa31bffa9a7c5b176b55e9950ac07b9",
+      "bytes": 17610
+    },
+    {
+      "path": "shacl_dataset_shape.ttl",
+      "upstream_path": "shacl/1.0.0/shacl_dataset_shape.ttl",
+      "url": "https://raw.githubusercontent.com/datosgobes/DCAT-AP-ES/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0/shacl_dataset_shape.ttl",
+      "sha256": "fc8bb9bb328e69908b555aa5e6b9ad968640c9af2886c497c40abef7963a8624",
+      "bytes": 59793
+    },
+    {
+      "path": "shacl_distribution_shape.ttl",
+      "upstream_path": "shacl/1.0.0/shacl_distribution_shape.ttl",
+      "url": "https://raw.githubusercontent.com/datosgobes/DCAT-AP-ES/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0/shacl_distribution_shape.ttl",
+      "sha256": "ab2ef13ede0b8d49b71a4cd98e3363dd27601662ad74b5e66f5cd298dfe15ec7",
+      "bytes": 41160
+    },
+    {
+      "path": "shacl_imports.ttl",
+      "upstream_path": "shacl/1.0.0/shacl_imports.ttl",
+      "url": "https://raw.githubusercontent.com/datosgobes/DCAT-AP-ES/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0/shacl_imports.ttl",
+      "sha256": "7b0d55fdb0c3951339e20fc9284279947d485ef204ec68848236d121024de8e2",
+      "bytes": 2610
+    },
+    {
+      "path": "shacl_mdr-vocabularies.shape.ttl",
+      "upstream_path": "shacl/1.0.0/shacl_mdr-vocabularies.shape.ttl",
+      "url": "https://raw.githubusercontent.com/datosgobes/DCAT-AP-ES/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0/shacl_mdr-vocabularies.shape.ttl",
+      "sha256": "3b10cf6b36b9f3a9123354319f61f4c80580ec5712d583f27b9eaab10b41614b",
+      "bytes": 16985
+    },
+    {
+      "path": "shacl_mdr_imports.ttl",
+      "upstream_path": "shacl/1.0.0/shacl_mdr_imports.ttl",
+      "url": "https://raw.githubusercontent.com/datosgobes/DCAT-AP-ES/f2c8a88868b89239c9f54bffdf621cded2401b9f/shacl/1.0.0/shacl_mdr_imports.ttl",
+      "sha256": "abfb6137064a71b435d8859fe9221f7e560b5b7646d08983e42320c70113fce3",
+      "bytes": 2122
+    }
+  ]
+}

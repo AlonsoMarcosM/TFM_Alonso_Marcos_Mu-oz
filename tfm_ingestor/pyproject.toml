@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tfm-ingestor"
 version = "0.1.0"
-description = "TFM: Enriquecimiento de metadatos de gobierno en OpenMetadata (DCAT-like) via API"
+description = "TFM: Enriquecimiento de metadatos de gobierno DCAT-AP-ES en OpenMetadata vía API"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
@@ -17,15 +17,26 @@ dependencies = [
 dev = [
   "pytest>=7.4",
 ]
+infra = [
+  "PyJWT>=2.8",
+  "cryptography>=42.0",
+]
+validation = [
+  "pyshacl>=0.28",
+]
 
 [project.scripts]
 tfm-ingestor = "tfm_ingestor.main:cli"
+om-dcat-sync = "tfm_ingestor.main:cli"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+tfm_ingestor = ["resources/shacl/*.ttl", "resources/shacl/*.json", "resources/shacl/*.md", "resources/shacl/hvd/*.ttl"]
 
 [tool.pytest.ini_options]
 # Some environments block access to the default OS temp dir and/or .pytest_cache.

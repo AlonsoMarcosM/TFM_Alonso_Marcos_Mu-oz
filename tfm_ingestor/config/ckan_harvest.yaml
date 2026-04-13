@@ -10,7 +10,7 @@ ckan:
   start: 0
   # Max datasets total a recuperar (limite global, MVP)
   max_datasets: 10
-  # Which CKAN resource index to use as "Distribution" in the MVP (0 = first)
+  # Resource index is kept for compatibility but is not used in the mandatory-only profile.
   resource_index: 0
 
 mapping:
@@ -22,22 +22,11 @@ mapping:
   dataset_to_table_fqn:
     ejemplo_dataset: "postgres_demo_service.opendata_demo.bronze.bici_uso_raw"
 
-  # Optional: map CKAN tag/group names to OpenMetadata tag FQNs
-  keyword_to_tag_fqn:
-    bici: "dcat_keyword.bici"
-    eventos: "dcat_keyword.eventos"
+  # Optional: map CKAN group names to OpenMetadata mandatory theme tags
   theme_to_tag_fqn:
-    transport: "dcat_theme.transport"
-    society: "dcat_theme.society"
-
-# Optional: map CKAN extras keys -> OpenMetadata custom property names
-extras_to_custom_properties:
-  spatial: "dct_spatial"
-  language: "dct_language"
-  accrual_periodicity: "dct_accrual_periodicity"
-  temporal: "dct_temporal"
-  issued: "dct_issued"
-  modified: "dct_modified"
+    transport: "dcat_theme.transporte"
+    cultura-ocio: "dcat_theme.cultura_ocio"
+    culture: "dcat_theme.cultura_ocio"
 
 behavior:
   # If true, writes CKAN notes/title to OM table description/displayName when present.

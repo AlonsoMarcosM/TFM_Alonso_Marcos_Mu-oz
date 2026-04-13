@@ -27,8 +27,7 @@ def test_load_rules_normalizes_tags(tmp_path: Path):
             """
             schema_to_layer:
               bronze: Bronze
-            schema_to_domain:
-              bronze: OpenData_Bronze
+            schema_to_domain: {}
             table_tags_by_prefix:
               bici_: ["a", "b"]
             """
@@ -37,4 +36,3 @@ def test_load_rules_normalizes_tags(tmp_path: Path):
     )
     rules = load_rules(p)
     assert rules.table_tags_by_prefix["bici_"] == ["a", "b"]
-

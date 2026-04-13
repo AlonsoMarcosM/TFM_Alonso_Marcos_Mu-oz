@@ -74,6 +74,27 @@ class OpenMetadataApi:
         data = self._request("GET", "/tables", params=params)
         return list(data.get("data", []))
 
+    def list_database_services(self, *, limit: int = 1000, fields: str | None = None) -> list[dict[str, Any]]:
+        params: dict[str, Any] = {"limit": limit}
+        if fields:
+            params["fields"] = fields
+        data = self._request("GET", "/services/databaseServices", params=params)
+        return list(data.get("data", []))
+
+    def list_databases(self, *, limit: int = 1000, fields: str | None = None) -> list[dict[str, Any]]:
+        params: dict[str, Any] = {"limit": limit}
+        if fields:
+            params["fields"] = fields
+        data = self._request("GET", "/databases", params=params)
+        return list(data.get("data", []))
+
+    def list_database_schemas(self, *, limit: int = 1000, fields: str | None = None) -> list[dict[str, Any]]:
+        params: dict[str, Any] = {"limit": limit}
+        if fields:
+            params["fields"] = fields
+        data = self._request("GET", "/databaseSchemas", params=params)
+        return list(data.get("data", []))
+
     def patch_table(self, *, table_id: str, patch_ops: list[dict[str, Any]]) -> dict[str, Any]:
         headers = {"Content-Type": "application/json-patch+json"}
         return self._request("PATCH", f"/tables/{table_id}", headers=headers, json=patch_ops)

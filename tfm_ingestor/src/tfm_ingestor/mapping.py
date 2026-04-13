@@ -1,6 +1,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from urllib.parse import quote
+
+
+HVD_CATEGORY_ALIAS_TO_URI = {
+    "movilidad": "http://data.europa.eu/bna/c_b79e35eb",
+    "mobility": "http://data.europa.eu/bna/c_b79e35eb",
+    "estadisticas": "http://data.europa.eu/bna/c_e1da4e07",
+    "statistics": "http://data.europa.eu/bna/c_e1da4e07",
+}
+HVD_CATEGORY_URI_TO_ALIAS = {uri: alias for alias, uri in HVD_CATEGORY_ALIAS_TO_URI.items() if alias in {"movilidad", "estadisticas"}}
 
 
 def layer_for_schema(schema_name: str, schema_to_layer: dict[str, str]) -> str | None:
@@ -42,6 +52,50 @@ def merge_tag_fqns(existing: list[str], desired: list[str]) -> list[str]:
     return merged
 
 
+def build_distribution_access_url(*, base_url: str, schema_name: str, table_name: str) -> str:
+    base = base_url.rstrip("/")
+    schema = quote(schema_name.strip(), safe="")
+    table = quote(table_name.strip().replace("_", "-"), safe="")
+    return f"{base}/{schema}/{table}"
+
+
+def normalize_hvd_category(value: str) -> str:
+    raw = value.strip()
+    if not raw:
+        return ""
+    alias_uri = HVD_CATEGORY_ALIAS_TO_URI.get(raw.lower())
+    if alias_uri is not None:
+        return alias_uri
+    if raw.startswith("http://") or raw.startswith("https://"):
+        return raw
+    raise ValueError(
+        "categoria_hvd inválida. Usa un alias soportado "
+        "('movilidad', 'estadisticas') o una URI http(s) completa del vocabulario HVD."
+    )
+
+
+def hvd_category_alias(uri: str) -> str:
+    return HVD_CATEGORY_URI_TO_ALIAS.get(uri.strip(), uri.strip())
+
+
+def hvd_category_for_tags(*, tag_fqns: list[str], dataset_defaults: dict[str, str]) -> str:
+    raw_mapping = dataset_defaults.get("hvd_category_by_theme_tag", {}) or {}
+    if not isinstance(raw_mapping, dict):
+        return ""
+    normalized_mapping: dict[str, str] = {}
+    for key, value in raw_mapping.items():
+        key_str = str(key).strip()
+        value_str = str(value).strip()
+        if not key_str or not value_str:
+            continue
+        normalized_mapping[key_str] = normalize_hvd_category(value_str)
+    for tag_fqn in tag_fqns:
+        uri = normalized_mapping.get(tag_fqn)
+        if uri:
+            return uri
+    return ""
+
+
 @dataclass(frozen=True)
 class GovernanceSpec:
     layer: str | None
@@ -64,21 +118,20 @@ def build_governance_spec(
     domain_name = domain_for_schema(schema_name, schema_to_domain)
     tag_fqns = tags_for_table(table_name, tags_by_prefix)
 
-    # "DCAT-like" custom properties kept intentionally small for the PoC.
+    # Minimal mandatory profile: keep only metadata required for Dataset.
     cp: dict[str, str] = {
         "dcat_publisher_name": catalog_defaults["publisher_name"],
-        "dcat_contact_email": catalog_defaults["contact_email"],
-        "dct_spatial": catalog_defaults["spatial"],
-        "dct_language": catalog_defaults["language"],
-        "dct_license": catalog_defaults["license_default"],
     }
-
-    accrual = dataset_defaults.get("accrual_periodicity")
-    if accrual:
-        cp["dct_accrual_periodicity"] = str(accrual)
-
-    if layer:
-        cp["tfm_layer"] = layer
+    access_url_base = str(dataset_defaults.get("access_url_base") or "").strip()
+    if access_url_base:
+        cp["dcat_access_url"] = build_distribution_access_url(
+            base_url=access_url_base,
+            schema_name=schema_name,
+            table_name=table_name,
+        )
+    hvd_category = hvd_category_for_tags(tag_fqns=tag_fqns, dataset_defaults=dataset_defaults)
+    if hvd_category:
+        cp["dcat_hvd_category"] = hvd_category
 
     return GovernanceSpec(
         layer=layer,
@@ -86,4 +139,3 @@ def build_governance_spec(
         tag_fqns=tag_fqns,
         custom_properties=cp,
     )
-

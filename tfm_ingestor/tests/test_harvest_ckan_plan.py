@@ -8,16 +8,21 @@ def test_build_plan_creates_patch_ops_for_mapped_dataset():
             title="Demo",
             description="Demo",
             publisher_name="UCLM",
-            contact_email="demo@uclm.es",
+            publisher_uri="http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001",
             homepage="https://example.org",
-            theme_taxonomy="https://example.org/themes",
+            theme_taxonomy="http://datos.gob.es/kos/sector-publico/sector",
             issued="2026-02-05",
             modified="2026-02-05",
-            spatial="ES-CLM",
-            language="es",
-            license_default="CC-BY-4.0",
+            language="http://publications.europa.eu/resource/authority/language/SPA",
+            license_default="https://example.org/legal",
         ),
-        dataset_defaults={"accrual_periodicity": "daily"},
+        dataset_defaults={
+            "access_url_base": "https://example.org/datos/poc",
+            "hvd_category_by_theme_tag": {
+                "dcat_theme.transporte": "movilidad",
+            },
+        },
+        hvd_defaults={},
     )
 
     cfg = CkanHarvestConfig(
@@ -31,9 +36,7 @@ def test_build_plan_creates_patch_ops_for_mapped_dataset():
             max_datasets=None,
         ),
         dataset_to_table_fqn={"bici-uso": "svc.db.bronze.bici_uso_raw"},
-        keyword_to_tag_fqn={"bici": "dcat_keyword.bici"},
-        theme_to_tag_fqn={"transport": "dcat_theme.transport"},
-        extras_to_custom_properties={},
+        theme_to_tag_fqn={"transport": "dcat_theme.transporte"},
         write_description=True,
         write_display_name=True,
     )
@@ -45,7 +48,11 @@ def test_build_plan_creates_patch_ops_for_mapped_dataset():
         "displayName": "Bici uso (old)",
         "description": "",
         "tags": [],
-        "extension": {"customProperties": {}},
+        "extension": {
+            "dct_license": "legacy-license",
+            "dcat_hvd_category": "http://data.europa.eu/bna/c_e1da4e07",
+            "dcat_access_url": "https://legacy.example.org",
+        },
     }
     om_tables_by_fqn = {table["fullyQualifiedName"]: table}
 
@@ -59,10 +66,7 @@ def test_build_plan_creates_patch_ops_for_mapped_dataset():
         "organization": {"title": "Ayuntamiento"},
         "tags": [{"name": "bici"}],
         "groups": [{"name": "transport"}],
-        "extras": [{"key": "language", "value": "es"}],
-        "metadata_created": "2026-02-01T10:00:00Z",
-        "metadata_modified": "2026-02-04T12:00:00Z",
-        "resources": [{"url": "https://example.org/data.csv"}],
+        "resources": [{"url": "https://demo.ckan.org/dataset/bici-uso.csv"}],
     }
 
     planned, skipped = build_plan(
@@ -86,9 +90,7 @@ def test_build_plan_creates_patch_ops_for_mapped_dataset():
         if op["path"] == "/extension" and isinstance(op.get("value"), dict):
             merged_cp = op["value"]
     assert isinstance(merged_cp, dict)
-    assert merged_cp["dct_identifier"] == "ckan-1"
-    assert merged_cp["dcat_landing_page"].endswith("/dataset/bici-uso")
-    assert merged_cp["dcat_access_url"] == "https://example.org/data.csv"
-    assert merged_cp["dcat_download_url"] == "https://example.org/data.csv"
-    assert merged_cp["dct_issued"] == "2026-02-01T10:00:00Z"
-    assert merged_cp["dct_modified"] == "2026-02-04T12:00:00Z"
+    assert merged_cp["dcat_publisher_name"] == "Ayuntamiento"
+    assert merged_cp["dcat_hvd_category"] == "http://data.europa.eu/bna/c_b79e35eb"
+    assert merged_cp["dcat_access_url"] == "https://demo.ckan.org/dataset/bici-uso.csv"
+    assert "dct_license" not in merged_cp

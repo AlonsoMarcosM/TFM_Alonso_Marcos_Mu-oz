@@ -6,39 +6,9 @@ from typing import Any
 
 from tfm_ingestor.ckan import CkanApiError, CkanClient
 from tfm_ingestor.config import CkanHarvestConfig, DefaultsConfig
+from tfm_ingestor.mapping import hvd_category_for_tags
 from tfm_ingestor.om_api import OpenMetadataApi, OpenMetadataApiError
 from tfm_ingestor.patch_ops import build_table_patch_ops
-
-
-def _ckan_extras(dataset: dict[str, Any]) -> dict[str, str]:
-    extras = dataset.get("extras") or []
-    out: dict[str, str] = {}
-    if not isinstance(extras, list):
-        return out
-    for item in extras:
-        if not isinstance(item, dict):
-            continue
-        k = item.get("key")
-        v = item.get("value")
-        if not k or v is None:
-            continue
-        out[str(k)] = str(v)
-    return out
-
-
-def _ckan_tags(dataset: dict[str, Any]) -> list[str]:
-    tags = dataset.get("tags") or []
-    out: list[str] = []
-    if not isinstance(tags, list):
-        return out
-    for t in tags:
-        if not isinstance(t, dict):
-            continue
-        name = t.get("name") or t.get("display_name")
-        if not name:
-            continue
-        out.append(str(name))
-    return out
 
 
 def _ckan_groups(dataset: dict[str, Any]) -> list[str]:
@@ -69,46 +39,27 @@ def _ckan_publisher_name(dataset: dict[str, Any]) -> str | None:
     return None
 
 
-def _ckan_contact_email(dataset: dict[str, Any]) -> str | None:
-    for k in ("maintainer_email", "author_email"):
-        v = dataset.get(k)
-        if v:
-            return str(v)
-    return None
-
-
-def _ckan_license(dataset: dict[str, Any]) -> str | None:
-    for k in ("license_id", "license_title"):
-        v = dataset.get(k)
-        if v:
-            return str(v)
-    return None
-
-
-def _ckan_created_modified(dataset: dict[str, Any]) -> tuple[str | None, str | None]:
-    created = dataset.get("metadata_created")
-    modified = dataset.get("metadata_modified")
-    created_val = str(created).strip() if created else None
-    modified_val = str(modified).strip() if modified else None
-    return created_val or None, modified_val or None
-
-
-def _ckan_landing_page(base_url: str, dataset: dict[str, Any]) -> str | None:
-    name = dataset.get("name")
-    if not name:
-        return None
-    return f"{base_url.rstrip('/')}/dataset/{name}"
-
-
-def _choose_resource(dataset: dict[str, Any], resource_index: int) -> dict[str, Any] | None:
+def _ckan_distribution_access_url(dataset: dict[str, Any], *, resource_index: int) -> str | None:
     resources = dataset.get("resources") or []
-    if not isinstance(resources, list) or not resources:
-        return None
-    idx = resource_index if resource_index < len(resources) else 0
-    r = resources[idx]
-    if not isinstance(r, dict):
-        return None
-    return r
+    if isinstance(resources, list) and resources:
+        if 0 <= resource_index < len(resources):
+            resource = resources[resource_index]
+            if isinstance(resource, dict):
+                for key in ("access_url", "download_url", "url"):
+                    value = resource.get(key)
+                    if value:
+                        return str(value).strip()
+        for resource in resources:
+            if not isinstance(resource, dict):
+                continue
+            for key in ("access_url", "download_url", "url"):
+                value = resource.get(key)
+                if value:
+                    return str(value).strip()
+    dataset_url = dataset.get("url")
+    if dataset_url:
+        return str(dataset_url).strip()
+    return None
 
 
 def _iter_datasets_with_fallback(
@@ -168,61 +119,24 @@ def build_plan(
             skipped.append({"reason": "table_not_found_in_om", "dataset": ds_name, "table_fqn": table_fqn})
             continue
 
-        extras = _ckan_extras(ds)
-        tags = _ckan_tags(ds)
         groups = _ckan_groups(ds)
 
         desired_tags: list[str] = []
-        for t in tags:
-            mapped = ckan_cfg.keyword_to_tag_fqn.get(t) or ckan_cfg.keyword_to_tag_fqn.get(t.lower())
-            if mapped:
-                desired_tags.append(mapped)
         for g in groups:
             mapped = ckan_cfg.theme_to_tag_fqn.get(g) or ckan_cfg.theme_to_tag_fqn.get(g.lower())
             if mapped:
                 desired_tags.append(mapped)
 
-        # DCAT-like custom properties
+        # Minimal mandatory profile for the active HVD profile:
+        # publisher + HVD category + at least one distribution with access URL.
         cp: dict[str, str] = {}
-        identifier = str(ds.get("id") or ds.get("name") or "").strip()
-        if identifier:
-            cp["dct_identifier"] = identifier
-
-        landing = _ckan_landing_page(ckan_cfg.ckan.base_url, ds)
-        if landing:
-            cp["dcat_landing_page"] = landing
-
         cp["dcat_publisher_name"] = _ckan_publisher_name(ds) or defaults.catalog.publisher_name
-        cp["dcat_contact_email"] = _ckan_contact_email(ds) or defaults.catalog.contact_email
-        cp["dct_license"] = _ckan_license(ds) or defaults.catalog.license_default
-
-        created, modified = _ckan_created_modified(ds)
-        if created:
-            cp["dct_issued"] = created
-        if modified:
-            cp["dct_modified"] = modified
-
-        # Extra fields -> custom properties (configurable)
-        for extra_key, prop_name in ckan_cfg.extras_to_custom_properties.items():
-            v = extras.get(extra_key)
-            if v:
-                cp[prop_name] = v
-
-        # Fallbacks for common DCAT-ish keys if not already set by extras mapping.
-        if "dct_spatial" not in cp:
-            cp["dct_spatial"] = extras.get("spatial") or defaults.catalog.spatial
-        if "dct_language" not in cp:
-            cp["dct_language"] = extras.get("language") or defaults.catalog.language
-        if "dct_accrual_periodicity" not in cp:
-            cp["dct_accrual_periodicity"] = extras.get("accrual_periodicity") or str(defaults.dataset_defaults.get("accrual_periodicity") or "")
-
-        # Distribution (pick one resource for MVP)
-        res = _choose_resource(ds, ckan_cfg.ckan.resource_index)
-        if res:
-            url = res.get("url")
-            if url:
-                cp["dcat_access_url"] = str(url)
-                cp["dcat_download_url"] = str(url)
+        hvd_category = hvd_category_for_tags(tag_fqns=desired_tags, dataset_defaults=defaults.dataset_defaults)
+        if hvd_category:
+            cp["dcat_hvd_category"] = hvd_category
+        access_url = _ckan_distribution_access_url(ds, resource_index=ckan_cfg.ckan.resource_index)
+        if access_url:
+            cp["dcat_access_url"] = access_url
 
         desired_description = str(ds.get("notes") or "").strip() if ckan_cfg.write_description else None
         if desired_description == "":
@@ -238,6 +152,24 @@ def build_plan(
             desired_domain_ref=None,
             desired_description=desired_description,
             desired_display_name=desired_display_name,
+            managed_custom_property_keys=[
+                "dcat_publisher_name",
+                "dcat_hvd_category",
+                "dcat_contact_email",
+                "dct_spatial",
+                "dct_language",
+                "dct_license",
+                "dct_issued",
+                "dct_modified",
+                "dct_temporal",
+                "dct_accrual_periodicity",
+                "dcat_access_url",
+                "dcat_download_url",
+                "dcat_endpoint_url",
+                "dcat_landing_page",
+                "dct_identifier",
+                "tfm_layer",
+            ],
         )
         if not ops:
             skipped.append({"reason": "no_changes", "dataset": ds_name, "table_fqn": table_fqn})

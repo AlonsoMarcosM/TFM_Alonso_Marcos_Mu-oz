@@ -21,12 +21,11 @@ class CatalogDefaults:
     title: str
     description: str
     publisher_name: str
-    contact_email: str
+    publisher_uri: str
     homepage: str
     theme_taxonomy: str
     issued: str
     modified: str
-    spatial: str
     language: str
     license_default: str
 
@@ -35,6 +34,7 @@ class CatalogDefaults:
 class DefaultsConfig:
     catalog: CatalogDefaults
     dataset_defaults: dict[str, Any]
+    hvd_defaults: dict[str, Any]
 
 
 def load_defaults(path: str | Path) -> DefaultsConfig:
@@ -49,12 +49,11 @@ def load_defaults(path: str | Path) -> DefaultsConfig:
         "title",
         "description",
         "publisher_name",
-        "contact_email",
+        "publisher_uri",
         "homepage",
         "theme_taxonomy",
         "issued",
         "modified",
-        "spatial",
         "language",
         "license_default",
     ]
@@ -68,21 +67,27 @@ def load_defaults(path: str | Path) -> DefaultsConfig:
     if not isinstance(dataset_defaults, dict):
         raise ValueError(f"Invalid 'dataset_defaults' in {p} (must be mapping)")
 
+    hvd_defaults = raw.get("hvd_defaults", {})
+    if hvd_defaults is None:
+        hvd_defaults = {}
+    if not isinstance(hvd_defaults, dict):
+        raise ValueError(f"Invalid 'hvd_defaults' in {p} (must be mapping)")
+
     return DefaultsConfig(
         catalog=CatalogDefaults(
             title=str(catalog["title"]),
             description=str(catalog["description"]),
             publisher_name=str(catalog["publisher_name"]),
-            contact_email=str(catalog["contact_email"]),
+            publisher_uri=str(catalog["publisher_uri"]),
             homepage=str(catalog["homepage"]),
             theme_taxonomy=str(catalog["theme_taxonomy"]),
             issued=str(catalog["issued"]),
             modified=str(catalog["modified"]),
-            spatial=str(catalog["spatial"]),
             language=str(catalog["language"]),
             license_default=str(catalog["license_default"]),
         ),
         dataset_defaults=dataset_defaults,
+        hvd_defaults=hvd_defaults,
     )
 
 
@@ -98,13 +103,13 @@ def load_rules(path: str | Path) -> RulesConfig:
     raw = _load_yaml(p)
 
     schema_to_layer = raw.get("schema_to_layer", {})
-    schema_to_domain = raw.get("schema_to_domain", {})
+    schema_to_domain = raw.get("schema_to_domain", {}) or {}
     table_tags_by_prefix = raw.get("table_tags_by_prefix", {})
 
     if not isinstance(schema_to_layer, dict) or not schema_to_layer:
         raise ValueError(f"Missing/invalid 'schema_to_layer' in {p}")
-    if not isinstance(schema_to_domain, dict) or not schema_to_domain:
-        raise ValueError(f"Missing/invalid 'schema_to_domain' in {p}")
+    if not isinstance(schema_to_domain, dict):
+        raise ValueError(f"Invalid 'schema_to_domain' in {p}")
     if not isinstance(table_tags_by_prefix, dict):
         raise ValueError(f"Invalid 'table_tags_by_prefix' in {p}")
 
@@ -142,9 +147,7 @@ class CkanConfig:
 class CkanHarvestConfig:
     ckan: CkanConfig
     dataset_to_table_fqn: dict[str, str]
-    keyword_to_tag_fqn: dict[str, str]
     theme_to_tag_fqn: dict[str, str]
-    extras_to_custom_properties: dict[str, str]
     write_description: bool
     write_display_name: bool
 
@@ -156,9 +159,7 @@ def load_ckan_harvest(path: str | Path) -> CkanHarvestConfig:
     YAML schema (MVP):
     - ckan.base_url (required)
     - mapping.dataset_to_table_fqn (required for patching OM)
-    - mapping.keyword_to_tag_fqn (optional)
     - mapping.theme_to_tag_fqn (optional)
-    - extras_to_custom_properties (optional)
     - behavior.write_description / behavior.write_display_name (optional)
     """
     p = Path(path)
@@ -203,16 +204,9 @@ def load_ckan_harvest(path: str | Path) -> CkanHarvestConfig:
     if not dataset_to_table_fqn_norm:
         raise ValueError(f"Invalid 'mapping.dataset_to_table_fqn' in {p} (empty after normalization)")
 
-    keyword_to_tag_fqn = mapping_raw.get("keyword_to_tag_fqn", {}) or {}
     theme_to_tag_fqn = mapping_raw.get("theme_to_tag_fqn", {}) or {}
-    if not isinstance(keyword_to_tag_fqn, dict):
-        raise ValueError(f"Invalid 'mapping.keyword_to_tag_fqn' in {p} (must be mapping)")
     if not isinstance(theme_to_tag_fqn, dict):
         raise ValueError(f"Invalid 'mapping.theme_to_tag_fqn' in {p} (must be mapping)")
-
-    extras_to_custom_properties = raw.get("extras_to_custom_properties", {}) or {}
-    if not isinstance(extras_to_custom_properties, dict):
-        raise ValueError(f"Invalid 'extras_to_custom_properties' in {p} (must be mapping)")
 
     behavior = raw.get("behavior", {}) or {}
     if not isinstance(behavior, dict):
@@ -236,9 +230,7 @@ def load_ckan_harvest(path: str | Path) -> CkanHarvestConfig:
             max_datasets=int(max_datasets) if max_datasets is not None else None,
         ),
         dataset_to_table_fqn=dataset_to_table_fqn_norm,
-        keyword_to_tag_fqn={str(k): str(v) for k, v in keyword_to_tag_fqn.items() if str(k).strip() and str(v).strip()},
         theme_to_tag_fqn={str(k): str(v) for k, v in theme_to_tag_fqn.items() if str(k).strip() and str(v).strip()},
-        extras_to_custom_properties={str(k): str(v) for k, v in extras_to_custom_properties.items() if str(k).strip() and str(v).strip()},
         write_description=bool(write_description),
         write_display_name=bool(write_display_name),
     )

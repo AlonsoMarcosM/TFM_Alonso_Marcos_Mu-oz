@@ -51,6 +51,8 @@ def build_table_patch_ops(
     desired_domain_ref: OmRef | None = None,
     desired_description: str | None = None,
     desired_display_name: str | None = None,
+    managed_tag_prefixes: list[str] | None = None,
+    managed_custom_property_keys: list[str] | None = None,
 ) -> list[dict[str, Any]]:
     """
     Build JSON Patch operations for an OpenMetadata Table.
@@ -73,13 +75,20 @@ def build_table_patch_ops(
 
     # Tags (union)
     existing_fqns = existing_tag_fqns(table)
-    merged_fqns = merge_tag_fqns(existing_fqns, desired_tag_fqns)
+    if managed_tag_prefixes:
+        unmanaged_fqns = [fqn for fqn in existing_fqns if not any(fqn.startswith(prefix) for prefix in managed_tag_prefixes)]
+        merged_fqns = merge_tag_fqns(unmanaged_fqns, desired_tag_fqns)
+    else:
+        merged_fqns = merge_tag_fqns(existing_fqns, desired_tag_fqns)
     if merged_fqns != existing_fqns:
         ops.append({"op": "add" if not table.get("tags") else "replace", "path": "/tags", "value": tag_labels(merged_fqns)})
 
     # Custom properties (merge, override desired keys)
     existing_cp = existing_custom_properties(table)
-    merged_cp = dict(existing_cp)
+    if managed_custom_property_keys:
+        merged_cp = {k: v for k, v in existing_cp.items() if k not in managed_custom_property_keys}
+    else:
+        merged_cp = dict(existing_cp)
     merged_cp.update(desired_custom_properties)
 
     ext = table.get("extension")
