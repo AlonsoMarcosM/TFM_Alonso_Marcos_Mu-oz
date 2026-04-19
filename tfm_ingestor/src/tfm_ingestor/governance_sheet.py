@@ -30,16 +30,39 @@ SHEET_FIELDNAMES = [
     "access_url_distribucion",
 ]
 
+NTI_RISP_SECTOR_SLUGS = [
+    "ciencia-tecnologia",
+    "comercio",
+    "cultura-ocio",
+    "demografia",
+    "deporte",
+    "economia",
+    "educacion",
+    "empleo",
+    "energia",
+    "hacienda",
+    "industria",
+    "legislacion-justicia",
+    "medio-ambiente",
+    "medio-rural-pesca",
+    "salud",
+    "sector-publico",
+    "seguridad",
+    "sociedad-bienestar",
+    "transporte",
+    "turismo",
+    "urbanismo-infraestructuras",
+    "vivienda",
+]
+
 THEME_ALIAS_TO_TAG_FQN = {
-    "transporte": "dcat_theme.transporte",
-    "cultura_ocio": "dcat_theme.cultura_ocio",
-    "cultura-ocio": "dcat_theme.cultura_ocio",
-    "cultura ocio": "dcat_theme.cultura_ocio",
+    alias: f"dcat_theme.{slug.replace('-', '_')}"
+    for slug in NTI_RISP_SECTOR_SLUGS
+    for alias in {slug, slug.replace("-", "_"), slug.replace("-", " ")}
 }
 
 THEME_TAG_FQN_TO_ALIAS = {
-    "dcat_theme.transporte": "transporte",
-    "dcat_theme.cultura_ocio": "cultura_ocio",
+    f"dcat_theme.{slug.replace('-', '_')}": slug.replace("-", "_") for slug in NTI_RISP_SECTOR_SLUGS
 }
 
 
@@ -77,8 +100,12 @@ def _normalize_theme_list(raw: str, *, row_num: int) -> list[str]:
         normalized = THEME_ALIAS_TO_TAG_FQN.get(part.lower(), part)
         if not normalized.startswith("dcat_theme."):
             raise ValueError(
-                f"Fila {row_num}: temática inválida {part!r}. Usa alias como "
-                f"'transporte' o 'cultura_ocio', o un tag FQN dcat_theme.*"
+                f"Fila {row_num}: tematica_dcat invalida {part!r}. Usa un sector NTI-RISP soportado."
+            )
+        if normalized not in THEME_TAG_FQN_TO_ALIAS:
+            allowed = ", ".join(THEME_TAG_FQN_TO_ALIAS.values())
+            raise ValueError(
+                f"Fila {row_num}: tematica_dcat invalida {part!r}. Valores permitidos: {allowed}."
             )
         out.append(normalized)
     seen: set[str] = set()

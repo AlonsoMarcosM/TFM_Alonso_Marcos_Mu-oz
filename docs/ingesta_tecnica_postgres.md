@@ -15,7 +15,7 @@ El script:
 3) Ejecuta la ingesta técnica con un pod temporal `om-postgres-ingest`.
 4) Muestra resumen de tablas detectadas y elimina el pod temporal.
 
-Nota: puede aparecer un warning de `pg_stat_statements` en logs. Para esta PoC no bloquea la ingesta de metadatos tecnicos.
+Nota: puede aparecer un warning de `pg_stat_statements` en logs. Para esta PoC no bloquea la ingesta de metadatos técnicos.
 
 ## Opcion manual (UI de OpenMetadata)
 

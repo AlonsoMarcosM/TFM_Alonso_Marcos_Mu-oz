@@ -18,6 +18,8 @@ Alcance recordatorio:
 
 ## Estados
 
+En GitHub Projects estos valores se sincronizan sobre el campo nativo `Status`.
+
 1. `Backlog`
 2. `Por definir`
 3. `En curso`
@@ -80,7 +82,7 @@ Con este estado, la funcionalidad técnica de la PoC queda cerrada y la siguient
 - Ejecutar ingesta técnica oficial hacia OpenMetadata.
 - Ajustar `governance_defaults.yaml` y `mapping_rules.yaml`.
 - Definir un contrato canónico de entrada de gobierno desacoplado del formato `CSV`.
-- Separar adaptadores de entrada (`CSV`, `YAML`, `CKAN`, futura UI) del modelo interno.
+- Separar adaptadores de entrada (`CSV`, `YAML`, `CKAN`, app web o API futura) del modelo interno.
 - Extraer una capa de servicios para planificación, aplicación y exportación.
 - Crear un workflow canónico único para CLI y ETL.
 - Centralizar la configuración operativa con `operational_profile.yaml`.

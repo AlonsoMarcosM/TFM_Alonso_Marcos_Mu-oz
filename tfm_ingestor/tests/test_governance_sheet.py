@@ -51,6 +51,24 @@ def test_load_governance_sheet_parses_excel_friendly_csv(tmp_path: Path):
     assert rows[1].publish is False
 
 
+def test_load_governance_sheet_accepts_official_controlled_vocabularies(tmp_path: Path):
+    path = tmp_path / "sheet.csv"
+    path.write_text(
+        "\n".join(
+            [
+                "publicar;schema_name;table_name;table_fqn;titulo_dataset;descripcion_dataset;publicador;tematica_dcat;categoria_hvd;access_url_distribucion",
+                "si;gold;observacion;svc.db.gold.observacion;Observacion;Descripcion;UCLM;medio_ambiente;observacion_de_la_tierra_y_medio_ambiente;https://example.org/datos/poc/gold/observacion",
+            ]
+        ),
+        encoding="utf-8-sig",
+    )
+
+    rows = load_governance_sheet(path)
+
+    assert rows[0].theme_tag_fqns == ["dcat_theme.medio_ambiente"]
+    assert rows[0].hvd_category_uri == "http://data.europa.eu/bna/c_dd313021"
+
+
 def test_generate_governance_sheet_writes_only_gold_tables(tmp_path: Path):
     defaults = _defaults()
     output = tmp_path / "sheet.csv"

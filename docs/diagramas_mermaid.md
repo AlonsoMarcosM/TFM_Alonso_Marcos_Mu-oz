@@ -90,11 +90,11 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-  M1[Scripts PowerShell] --> JOBS[Jobs de metadatos]
-  M2[Airflow DAG] --> JOBS
-  M3[Scheduler CI/CD] --> JOBS
-  JOBS --> OM[OpenMetadata API]
-  JOBS --> VAL[SHACL validation]
+  M1[Scripts PowerShell] --> EJEC[Ejecuciones de metadatos]
+  M2[Airflow DAG] --> EJEC
+  M3[Scheduler CI/CD] --> EJEC
+  EJEC --> OM[OpenMetadata API]
+  EJEC --> VAL[Validación SHACL]
 ```
 
 La PoC actual usa scripts PowerShell. Airflow o CI/CD quedan como evolución natural.

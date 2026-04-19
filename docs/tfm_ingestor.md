@@ -2,6 +2,20 @@
 
 CLI para enriquecer, exportar y validar metadatos `DCAT-AP-ES` desde OpenMetadata.
 
+## Nombre y alcance del CLI
+
+Nombre recomendado en documentación nueva:
+
+- `om_dcat_sync`
+
+Nombre conservado por compatibilidad:
+
+- `tfm_ingestor`
+
+La diferencia es deliberada. `om_dcat_sync` describe mejor el objetivo actual: sincronizar gobierno entre OpenMetadata y una salida DCAT-AP-ES validable. `tfm_ingestor` se mantiene como paquete Python e import path histórico para no romper tests, instalación editable ni ejecuciones anteriores.
+
+No se renombran ahora módulos como `workflow_service.py`, `governance_service.py`, `dcat_export.py` o `runtime_validation.py` porque son nombres técnicos claros, coherentes con Python y alineados con los comandos del CLI. La explicación funcional se da en español en la documentación.
+
 ## Qué hace y qué no hace
 
 - Sí: trabaja sobre metadatos de catálogo en entidades `Table/View`.
@@ -35,6 +49,8 @@ Archivos principales:
 - `tfm_ingestor/config/mapping_rules.yaml`
 - `tfm_ingestor/config/ckan_harvest.yaml`
 - `tfm_ingestor/config/gold_governance.csv`
+
+Estos nombres quedan como contrato técnico estable. En castellano equivalen a: perfil operativo, defaults de gobierno, reglas de mapeo, configuración CKAN y hoja de gobierno gold. La traducción se usa en texto, no en el nombre físico del fichero, para no duplicar rutas ni romper automatización.
 
 Prerequisitos en OpenMetadata:
 
@@ -103,13 +119,13 @@ No debería tocar:
 
 Valores temáticos admitidos en la PoC demo:
 
-- `transporte`
-- `cultura_ocio`
+- los sectores NTI-RISP definidos en las SHACL locales congeladas, usando alias de hoja en `snake_case`;
+- ejemplos: `transporte`, `cultura_ocio`, `medio_ambiente`, `sector_publico`.
 
 Valores HVD admitidos en la PoC demo:
 
-- `movilidad`
-- `estadisticas`
+- las seis categorías superiores del vocabulario europeo HVD;
+- ejemplos: `movilidad`, `estadisticas`, `geoespacial`, `observacion_de_la_tierra_y_medio_ambiente`.
 
 ### 3) Simular cambios con el mismo workflow
 

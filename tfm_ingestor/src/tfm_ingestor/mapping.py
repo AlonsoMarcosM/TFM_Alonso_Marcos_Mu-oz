@@ -5,12 +5,31 @@ from urllib.parse import quote
 
 
 HVD_CATEGORY_ALIAS_TO_URI = {
+    "geoespacial": "http://data.europa.eu/bna/c_ac64a52d",
+    "geospatial": "http://data.europa.eu/bna/c_ac64a52d",
+    "observacion_de_la_tierra_y_medio_ambiente": "http://data.europa.eu/bna/c_dd313021",
+    "observacion_tierra_medio_ambiente": "http://data.europa.eu/bna/c_dd313021",
+    "earth_observation_environment": "http://data.europa.eu/bna/c_dd313021",
+    "meteorologia": "http://data.europa.eu/bna/c_164e0bf5",
+    "meteorological": "http://data.europa.eu/bna/c_164e0bf5",
+    "estadistica": "http://data.europa.eu/bna/c_e1da4e07",
     "movilidad": "http://data.europa.eu/bna/c_b79e35eb",
     "mobility": "http://data.europa.eu/bna/c_b79e35eb",
     "estadisticas": "http://data.europa.eu/bna/c_e1da4e07",
     "statistics": "http://data.europa.eu/bna/c_e1da4e07",
+    "sociedades_y_propiedad_de_sociedades": "http://data.europa.eu/bna/c_a9135398",
+    "sociedades": "http://data.europa.eu/bna/c_a9135398",
+    "empresas": "http://data.europa.eu/bna/c_a9135398",
+    "companies_company_ownership": "http://data.europa.eu/bna/c_a9135398",
 }
-HVD_CATEGORY_URI_TO_ALIAS = {uri: alias for alias, uri in HVD_CATEGORY_ALIAS_TO_URI.items() if alias in {"movilidad", "estadisticas"}}
+HVD_CATEGORY_URI_TO_ALIAS = {
+    "http://data.europa.eu/bna/c_ac64a52d": "geoespacial",
+    "http://data.europa.eu/bna/c_dd313021": "observacion_de_la_tierra_y_medio_ambiente",
+    "http://data.europa.eu/bna/c_164e0bf5": "meteorologia",
+    "http://data.europa.eu/bna/c_e1da4e07": "estadisticas",
+    "http://data.europa.eu/bna/c_a9135398": "sociedades_y_propiedad_de_sociedades",
+    "http://data.europa.eu/bna/c_b79e35eb": "movilidad",
+}
 
 
 def layer_for_schema(schema_name: str, schema_to_layer: dict[str, str]) -> str | None:
@@ -68,9 +87,10 @@ def normalize_hvd_category(value: str) -> str:
         return alias_uri
     if raw.startswith("http://") or raw.startswith("https://"):
         return raw
+    supported = ", ".join(HVD_CATEGORY_URI_TO_ALIAS.values())
     raise ValueError(
-        "categoria_hvd inválida. Usa un alias soportado "
-        "('movilidad', 'estadisticas') o una URI http(s) completa del vocabulario HVD."
+        f"categoria_hvd invalida. Usa uno de estos alias: {supported}; "
+        "o una URI http(s) completa del vocabulario HVD."
     )
 
 

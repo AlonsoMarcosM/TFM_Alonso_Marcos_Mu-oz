@@ -106,6 +106,43 @@ def cli_generate_governance_sheet(argv: list[str] | None = None) -> int:
     return 0
 
 
+def cli_validate_governance_sheet(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="TFM: validate governance sheet CSV")
+    paths = repo_paths()
+
+    parser.add_argument("--sheet", default=str(paths.sheet_path), help="Governance sheet CSV path")
+    args = parser.parse_args(argv)
+
+    try:
+        rows = load_governance_sheet(args.sheet)
+    except ValueError as exc:
+        print(
+            json.dumps(
+                {
+                    "conforms": False,
+                    "row_count": 0,
+                    "errors": [str(exc)],
+                },
+                indent=2,
+                ensure_ascii=False,
+            )
+        )
+        return 2
+
+    print(
+        json.dumps(
+            {
+                "conforms": True,
+                "row_count": len(rows),
+                "errors": [],
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+    )
+    return 0
+
+
 def cli_harvest_ckan(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="TFM: harvest CKAN metadata and enrich OpenMetadata tables")
     paths = repo_paths()
@@ -365,6 +402,8 @@ def cli(argv: list[str] | None = None) -> int:
     args = list(argv) if argv is not None else sys.argv[1:]
     if args and args[0] == "generate-governance-sheet":
         return cli_generate_governance_sheet(args[1:])
+    if args and args[0] == "validate-governance-sheet":
+        return cli_validate_governance_sheet(args[1:])
     if args and args[0] == "harvest-ckan":
         return cli_harvest_ckan(args[1:])
     if args and args[0] == "export-dcat":

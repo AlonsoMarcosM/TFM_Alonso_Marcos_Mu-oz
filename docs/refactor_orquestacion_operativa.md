@@ -1,6 +1,6 @@
 # Refactor de orquestación operativa
 
-Objetivo: preparar la PoC para que el flujo pueda ejecutarse de forma automática por CLI o ETL hoy, y por una futura UI mañana, sin duplicar lógica ni multiplicar configuraciones manuales.
+Objetivo: preparar la PoC para que el flujo pueda ejecutarse de forma automática por CLI, scripts y app web, sin duplicar lógica ni multiplicar configuraciones manuales.
 
 ## Problema que se quería resolver
 
@@ -15,7 +15,7 @@ El sistema ya funcionaba, pero la operación estaba demasiado repartida:
 Eso era suficiente para una PoC temprana, pero no para:
 
 - automatizar desde ETL o CI;
-- preparar una futura UI;
+- preparar y mantener una UI operativa;
 - explicar el flujo a actores no técnicos;
 - mantener documentación y código alineados.
 
@@ -26,7 +26,7 @@ El sistema pivota ahora sobre un modelo interno canónico y una capa de servicio
 La interfaz de entrada puede cambiar:
 
 - hoy: `CSV`, `YAML`, CLI;
-- mañana: UI o API;
+- hoy: app web operativa o API futura;
 - más adelante: integración con otro sistema de gobierno.
 
 Pero el núcleo de reglas y el orden del flujo deben seguir siendo los mismos.
@@ -58,6 +58,10 @@ Piezas principales:
   - punto de configuración operativo para el workflow;
 - `tfm_ingestor/src/tfm_ingestor/main.py`
   - CLI fino que delega en la capa de servicios.
+- `web/`
+  - consola Next.js que invoca una lista cerrada de scripts/CLI y muestra resultados, logs y artefactos.
+
+La nomenclatura técnica se conserva en inglés cuando forma parte de comandos o módulos (`workflow`, `runtime`, `governance`, `mapping`, `export`). La justificación y el mapa completo están en `docs/estructura_repositorio.md`.
 
 ## Flujo canónico actual
 
@@ -137,9 +141,9 @@ El operador habitual ya no necesita pensar en:
 
 Solo necesita ejecutar el workflow canónico y, cuando proceda, editar la hoja funcional.
 
-## Decisión para la futura interfaz
+## Decisión para la interfaz web
 
-Framework recomendado: `Next.js + React + TypeScript`.
+Framework elegido: `Next.js + React + TypeScript`.
 
 Motivos:
 
@@ -151,9 +155,17 @@ Motivos:
 
 Condición de arquitectura:
 
-- la UI futura no debe hablar con OpenMetadata directamente;
+- la UI no debe hablar con OpenMetadata directamente;
 - la UI debe consumir una capa fina propia que invoque el mismo workflow o los mismos servicios canónicos;
 - las reglas de gobierno deben seguir viviendo en Python, no duplicadas en JavaScript.
+
+Estado implantado:
+
+- la app web ejecuta operaciones cerradas del repositorio, no comandos arbitrarios;
+- cada ejecución queda persistida como job en `state/web_jobs/`;
+- el resultado visible incluye estado, mensaje final, duración, código de salida, resumen de JSON de consola y artefactos generados;
+- la pantalla `Gobierno` edita el mismo `gold_governance.csv` que usa el workflow Python;
+- la pantalla `Artefactos` consulta solo una lista segura de ficheros reproducibles.
 
 Alternativa aceptable si se quisiera un frontend mínimo y totalmente desacoplado:
 
@@ -174,10 +186,9 @@ La inteligencia del flujo ya no vive en PowerShell.
 
 ## Qué no hay que hacer ahora
 
-- no construir todavía la UI;
 - no mover el catálogo funcional a una base de datos sin necesidad;
 - no reabrir clases DCAT-AP-ES fuera del alcance activo;
-- no duplicar la lógica del workflow en scripts, notebooks o una futura interfaz.
+- no duplicar la lógica del workflow en scripts, notebooks o interfaz.
 
 ## Criterio de éxito
 
@@ -185,6 +196,7 @@ Este refactor se considera bien encaminado porque ya se cumplen estas condicione
 
 - un operador técnico puede ejecutar el flujo principal con un único comando;
 - una persona funcional solo necesita editar una única fuente de gobierno;
-- el núcleo no depende del formato `CSV`, `YAML` o futura UI;
+- el núcleo no depende del formato `CSV`, `YAML` o app web;
 - los scripts llaman al workflow canónico en lugar de encadenar lógica propia;
+- la app web muestra una respuesta de éxito/error y evidencias visibles para cada ejecución;
 - los tests cubren la capa de servicios y el workflow.

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import json
 import os
 import re
@@ -16,9 +17,12 @@ from typing import Any
 API_BASE_URL = "https://api.github.com"
 GRAPHQL_URL = "https://api.github.com/graphql"
 
-DEFAULT_FIELD_ESTADO = "Estado TFM"
+DEFAULT_FIELD_STATUS = "Status"
 DEFAULT_FIELD_FASE = "Fase TFM"
 DEFAULT_FIELD_TIPO = "Tipo TFM"
+DEFAULT_FIELD_FECHA_INICIO = "fecha_inicio"
+DEFAULT_FIELD_FECHA_FIN = "fecha_fin"
+LEGACY_FIELD_ESTADO = "Estado TFM"
 
 TYPE_LABEL_COLORS = {
     "diseno": "0052cc",
@@ -168,6 +172,15 @@ def normalize_option_color(index: int) -> str:
     return FIELD_OPTION_COLORS[index % len(FIELD_OPTION_COLORS)]
 
 
+def parse_iso_date(value: Any, *, task_title: str, field_name: str) -> dt.date:
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"Task {task_title!r} must define non-empty {field_name}")
+    try:
+        return dt.date.fromisoformat(value)
+    except ValueError as exc:
+        raise ValueError(f"Task {task_title!r} has invalid {field_name}: {value!r}") from exc
+
+
 def load_config(path: Path) -> dict[str, Any]:
     raw = path.read_text(encoding="utf-8")
     cfg = json.loads(raw)
@@ -176,20 +189,20 @@ def load_config(path: Path) -> dict[str, Any]:
 
 
 def validate_config(cfg: dict[str, Any]) -> None:
-    required_keys = ("project_title", "estado_options", "tipo_options", "phases")
+    required_keys = ("project_title", "status_options", "tipo_options", "phases")
     for key in required_keys:
         if key not in cfg:
             raise ValueError(f"Config missing key: {key}")
 
-    if not isinstance(cfg["estado_options"], list) or not cfg["estado_options"]:
-        raise ValueError("estado_options must be a non-empty list")
+    if not isinstance(cfg["status_options"], list) or not cfg["status_options"]:
+        raise ValueError("status_options must be a non-empty list")
     if not isinstance(cfg["tipo_options"], list) or not cfg["tipo_options"]:
         raise ValueError("tipo_options must be a non-empty list")
     if not isinstance(cfg["phases"], list) or not cfg["phases"]:
         raise ValueError("phases must be a non-empty list")
 
     tipos = set(cfg["tipo_options"])
-    estados = set(cfg["estado_options"])
+    statuses = set(cfg["status_options"])
     seen_titles: set[str] = set()
 
     for phase in cfg["phases"]:
@@ -202,7 +215,7 @@ def validate_config(cfg: dict[str, Any]) -> None:
             raise ValueError(f"Phase {phase['name']!r} has no tasks")
 
         for task in phase["tasks"]:
-            for key in ("title", "tipo", "estado", "descripcion", "evidencias"):
+            for key in ("title", "tipo", "status", "fecha_inicio", "fecha_fin", "descripcion", "evidencias"):
                 if key not in task:
                     raise ValueError(f"Task in phase {phase['name']!r} missing key: {key}")
             title = str(task["title"]).strip()
@@ -213,8 +226,12 @@ def validate_config(cfg: dict[str, Any]) -> None:
             seen_titles.add(title)
             if task["tipo"] not in tipos:
                 raise ValueError(f"Unknown tipo {task['tipo']!r} in task {title!r}")
-            if task["estado"] not in estados:
-                raise ValueError(f"Unknown estado {task['estado']!r} in task {title!r}")
+            if task["status"] not in statuses:
+                raise ValueError(f"Unknown status {task['status']!r} in task {title!r}")
+            fecha_inicio = parse_iso_date(task["fecha_inicio"], task_title=title, field_name="fecha_inicio")
+            fecha_fin = parse_iso_date(task["fecha_fin"], task_title=title, field_name="fecha_fin")
+            if fecha_fin < fecha_inicio:
+                raise ValueError(f"Task {title!r} has fecha_fin before fecha_inicio")
             if not isinstance(task["evidencias"], list):
                 raise ValueError(f"Task evidencias must be a list in task {title!r}")
 
@@ -239,7 +256,9 @@ def build_issue_body(task: dict[str, Any]) -> str:
         "## Contexto",
         f"- Fase: `{task['phase_name']}`",
         f"- Tipo: `{task['tipo']}`",
-        f"- Estado inicial: `{task['estado']}`",
+        f"- Status inicial: `{task['status']}`",
+        f"- Fecha inicio: `{task['fecha_inicio']}`",
+        f"- Fecha fin: `{task['fecha_fin']}`",
         "",
         "## Evidencias / referencias",
     ]
@@ -342,7 +361,7 @@ def list_project_fields(api: GitHubApi, project_id: str) -> list[dict[str, Any]]
           fields(first: 100) {
             nodes {
               __typename
-              ... on ProjectV2Field { id name }
+              ... on ProjectV2Field { id name dataType }
               ... on ProjectV2SingleSelectField {
                 id
                 name
@@ -506,6 +525,43 @@ def ensure_single_select_field(
         raise GitHubApiError(f"Could not create field: {field_name}")
     options = {str(x["name"]): str(x["id"]) for x in field.get("options", []) if x.get("name") and x.get("id")}
     return str(field["id"]), options, True
+
+
+def ensure_date_field(
+    api: GitHubApi,
+    *,
+    project_id: str,
+    field_name: str,
+) -> tuple[str, bool]:
+    fields = list_project_fields(api, project_id)
+    for field in fields:
+        if field.get("name") != field_name:
+            continue
+        if field.get("__typename") != "ProjectV2Field" or field.get("dataType") != "DATE":
+            raise GitHubApiError(f"Field '{field_name}' exists but is not a date field")
+        return str(field["id"]), False
+
+    m = """
+    mutation CreateDateField($projectId: ID!, $name: String!) {
+      createProjectV2Field(
+        input: {
+          projectId: $projectId
+          name: $name
+          dataType: DATE
+        }
+      ) {
+        projectV2Field {
+          __typename
+          ... on ProjectV2Field { id name dataType }
+        }
+      }
+    }
+    """
+    data = api.graphql(m, {"projectId": project_id, "name": field_name}).get("data", {})
+    field = data.get("createProjectV2Field", {}).get("projectV2Field")
+    if not field or field.get("__typename") != "ProjectV2Field" or field.get("dataType") != "DATE":
+        raise GitHubApiError(f"Could not create date field: {field_name}")
+    return str(field["id"]), True
 
 
 def update_single_select_field_options(
@@ -759,8 +815,8 @@ def ensure_issues(
     }
 
 
-def list_project_items_by_content_id(api: GitHubApi, project_id: str) -> dict[str, str]:
-    out: dict[str, str] = {}
+def list_project_issue_items(api: GitHubApi, project_id: str) -> list[dict[str, str]]:
+    out: list[dict[str, str]] = []
     cursor: str | None = None
     q = """
     query ProjectItems($projectId: ID!, $cursor: String) {
@@ -792,7 +848,14 @@ def list_project_items_by_content_id(api: GitHubApi, project_id: str) -> dict[st
             content_id = content.get("id")
             item_id = node.get("id")
             if content_id and item_id:
-                out[str(content_id)] = str(item_id)
+                out.append(
+                    {
+                        "content_id": str(content_id),
+                        "item_id": str(item_id),
+                        "title": str(content.get("title", "")),
+                        "number": str(content.get("number", "")),
+                    }
+                )
         page_info = items_block.get("pageInfo", {}) or {}
         if not page_info.get("hasNextPage"):
             break
@@ -800,6 +863,10 @@ def list_project_items_by_content_id(api: GitHubApi, project_id: str) -> dict[st
         if not cursor:
             break
     return out
+
+
+def list_project_items_by_content_id(api: GitHubApi, project_id: str) -> dict[str, str]:
+    return {item["content_id"]: item["item_id"] for item in list_project_issue_items(api, project_id)}
 
 
 def add_issue_to_project(api: GitHubApi, project_id: str, issue_node_id: str) -> str:
@@ -815,6 +882,17 @@ def add_issue_to_project(api: GitHubApi, project_id: str, issue_node_id: str) ->
     if not item or not item.get("id"):
         raise GitHubApiError("Could not add issue to project")
     return str(item["id"])
+
+
+def delete_project_item(api: GitHubApi, *, project_id: str, item_id: str) -> None:
+    m = """
+    mutation DeleteProjectItem($projectId: ID!, $itemId: ID!) {
+      deleteProjectV2Item(input: {projectId: $projectId, itemId: $itemId}) {
+        deletedItemId
+      }
+    }
+    """
+    api.graphql(m, {"projectId": project_id, "itemId": item_id})
 
 
 def delete_project_v2(api: GitHubApi, project_id: str) -> None:
@@ -866,6 +944,73 @@ def set_single_select_value(
     )
 
 
+def set_date_value(
+    api: GitHubApi,
+    *,
+    project_id: str,
+    item_id: str,
+    field_id: str,
+    date_value: str,
+) -> None:
+    m = """
+    mutation SetDateFieldValue(
+      $projectId: ID!
+      $itemId: ID!
+      $fieldId: ID!
+      $dateValue: Date!
+    ) {
+      updateProjectV2ItemFieldValue(
+        input: {
+          projectId: $projectId
+          itemId: $itemId
+          fieldId: $fieldId
+          value: {date: $dateValue}
+        }
+      ) {
+        projectV2Item { id }
+      }
+    }
+    """
+    api.graphql(
+        m,
+        {
+            "projectId": project_id,
+            "itemId": item_id,
+            "fieldId": field_id,
+            "dateValue": date_value,
+        },
+    )
+
+
+def delete_project_field(api: GitHubApi, field_id: str) -> None:
+    m = """
+    mutation DeleteField($fieldId: ID!) {
+      deleteProjectV2Field(input: {fieldId: $fieldId}) {
+        clientMutationId
+      }
+    }
+    """
+    api.graphql(m, {"fieldId": field_id})
+
+
+def delete_project_field_by_name(
+    api: GitHubApi,
+    *,
+    project_id: str,
+    field_name: str,
+    keep_field_id: str | None = None,
+) -> bool:
+    for field in list_project_fields(api, project_id):
+        if field.get("name") != field_name:
+            continue
+        field_id = str(field.get("id", ""))
+        if not field_id or field_id == keep_field_id:
+            continue
+        delete_project_field(api, field_id)
+        return True
+    return False
+
+
 def run_apply(
     *,
     cfg: dict[str, Any],
@@ -875,9 +1020,12 @@ def run_apply(
     project_number: int | None,
     issue_prefix: str,
     token: str,
-    field_estado_name: str,
+    field_status_name: str,
     field_fase_name: str,
     field_tipo_name: str,
+    field_fecha_inicio_name: str,
+    field_fecha_fin_name: str,
+    legacy_field_status_name: str,
 ) -> dict[str, Any]:
     api = GitHubApi(token=token)
 
@@ -905,8 +1053,8 @@ def run_apply(
         issue_prefix=issue_prefix,
     )
 
-    estado_field_id, estado_options, estado_field_created = ensure_single_select_field(
-        api, project_id=project_id, field_name=field_estado_name, option_names=list(cfg["estado_options"])
+    status_field_id, status_options, status_field_created = ensure_single_select_field(
+        api, project_id=project_id, field_name=field_status_name, option_names=list(cfg["status_options"])
     )
     fase_field_id, fase_options, fase_field_created = ensure_single_select_field(
         api,
@@ -917,8 +1065,27 @@ def run_apply(
     tipo_field_id, tipo_options, tipo_field_created = ensure_single_select_field(
         api, project_id=project_id, field_name=field_tipo_name, option_names=list(cfg["tipo_options"])
     )
+    fecha_inicio_field_id, fecha_inicio_field_created = ensure_date_field(
+        api, project_id=project_id, field_name=field_fecha_inicio_name
+    )
+    fecha_fin_field_id, fecha_fin_field_created = ensure_date_field(
+        api, project_id=project_id, field_name=field_fecha_fin_name
+    )
 
-    project_items = list_project_items_by_content_id(api, project_id)
+    desired_issue_titles = {build_issue_title(issue_prefix, str(task["title"])) for task in iter_tasks(cfg)}
+    stale_project_items_removed: list[str] = []
+    project_issue_items = list_project_issue_items(api, project_id)
+    for item in project_issue_items:
+        title = item["title"]
+        if title.startswith(issue_prefix) and title not in desired_issue_titles:
+            delete_project_item(api, project_id=project_id, item_id=item["item_id"])
+            stale_project_items_removed.append(title)
+
+    project_items = {
+        item["content_id"]: item["item_id"]
+        for item in project_issue_items
+        if item["title"] in desired_issue_titles
+    }
     items_added = 0
     items_existing = 0
     field_updates = 0
@@ -937,14 +1104,14 @@ def run_apply(
             else:
                 items_existing += 1
 
-            estado_option_id = estado_options[task["estado"]]
+            status_option_id = status_options[task["status"]]
             tipo_option_id = tipo_options[task["tipo"]]
             set_single_select_value(
                 api,
                 project_id=project_id,
                 item_id=item_id,
-                field_id=estado_field_id,
-                option_id=estado_option_id,
+                field_id=status_field_id,
+                option_id=status_option_id,
             )
             set_single_select_value(
                 api,
@@ -960,7 +1127,30 @@ def run_apply(
                 field_id=tipo_field_id,
                 option_id=tipo_option_id,
             )
-            field_updates += 3
+            set_date_value(
+                api,
+                project_id=project_id,
+                item_id=item_id,
+                field_id=fecha_inicio_field_id,
+                date_value=str(task["fecha_inicio"]),
+            )
+            set_date_value(
+                api,
+                project_id=project_id,
+                item_id=item_id,
+                field_id=fecha_fin_field_id,
+                date_value=str(task["fecha_fin"]),
+            )
+            field_updates += 5
+
+    legacy_status_deleted = False
+    if legacy_field_status_name and legacy_field_status_name != field_status_name:
+        legacy_status_deleted = delete_project_field_by_name(
+            api,
+            project_id=project_id,
+            field_name=legacy_field_status_name,
+            keep_field_id=status_field_id,
+        )
 
     return {
         "project": {
@@ -981,14 +1171,21 @@ def run_apply(
             "existing": issues_summary["existing"],
         },
         "fields": {
-            field_estado_name: {"created": estado_field_created, "options": list(cfg["estado_options"])},
+            field_status_name: {"created": status_field_created, "options": list(cfg["status_options"])},
             field_fase_name: {"created": fase_field_created, "options": [str(p["name"]) for p in cfg["phases"]]},
             field_tipo_name: {"created": tipo_field_created, "options": list(cfg["tipo_options"])},
+            field_fecha_inicio_name: {"created": fecha_inicio_field_created, "type": "DATE"},
+            field_fecha_fin_name: {"created": fecha_fin_field_created, "type": "DATE"},
+            "deleted_legacy_status_field": {
+                "name": legacy_field_status_name,
+                "deleted": legacy_status_deleted,
+            },
         },
         "project_items": {
             "added": items_added,
             "existing": items_existing,
             "field_updates": field_updates,
+            "stale_removed": stale_project_items_removed,
         },
     }
 
@@ -1001,9 +1198,12 @@ def build_dry_run_summary(
     project_title: str,
     project_number: int | None,
     issue_prefix: str,
-    field_estado_name: str,
+    field_status_name: str,
     field_fase_name: str,
     field_tipo_name: str,
+    field_fecha_inicio_name: str,
+    field_fecha_fin_name: str,
+    legacy_field_status_name: str,
 ) -> dict[str, Any]:
     tasks = iter_tasks(cfg)
     return {
@@ -1016,10 +1216,15 @@ def build_dry_run_summary(
         "task_count": len(tasks),
         "phase_count": len(cfg["phases"]),
         "fields_to_create": {
-            field_estado_name: cfg["estado_options"],
+            field_status_name: cfg["status_options"],
             field_fase_name: [str(p["name"]) for p in cfg["phases"]],
             field_tipo_name: cfg["tipo_options"],
+            field_fecha_inicio_name: "DATE",
+            field_fecha_fin_name: "DATE",
         },
+        "fields_to_delete": [legacy_field_status_name]
+        if legacy_field_status_name and legacy_field_status_name != field_status_name
+        else [],
         "labels_to_create": [lbl["name"] for lbl in expected_labels(cfg)],
         "milestones_to_create": [str(phase["milestone"]) for phase in cfg["phases"]],
         "issue_titles_preview": [build_issue_title(issue_prefix, str(t["title"])) for t in tasks],
@@ -1037,9 +1242,12 @@ def parse_args() -> argparse.Namespace:
     default_project_number = int(os.getenv("GITHUB_PROJECT_NUMBER")) if os.getenv("GITHUB_PROJECT_NUMBER") else None
     p.add_argument("--project-number", type=int, default=default_project_number)
     p.add_argument("--issue-prefix", default="[TFM]")
-    p.add_argument("--field-estado", default=DEFAULT_FIELD_ESTADO)
+    p.add_argument("--field-status", "--field-estado", dest="field_status", default=DEFAULT_FIELD_STATUS)
     p.add_argument("--field-fase", default=DEFAULT_FIELD_FASE)
     p.add_argument("--field-tipo", default=DEFAULT_FIELD_TIPO)
+    p.add_argument("--field-fecha-inicio", default=DEFAULT_FIELD_FECHA_INICIO)
+    p.add_argument("--field-fecha-fin", default=DEFAULT_FIELD_FECHA_FIN)
+    p.add_argument("--legacy-field-estado", default=LEGACY_FIELD_ESTADO)
     p.add_argument("--token", default=resolve_token())
     p.add_argument("--apply", action="store_true", help="Aplicar cambios reales en GitHub API.")
     p.add_argument(
@@ -1156,9 +1364,12 @@ def main() -> int:
             project_title=project_title,
             project_number=args.project_number,
             issue_prefix=args.issue_prefix,
-            field_estado_name=args.field_estado,
+            field_status_name=args.field_status,
             field_fase_name=args.field_fase,
             field_tipo_name=args.field_tipo,
+            field_fecha_inicio_name=args.field_fecha_inicio,
+            field_fecha_fin_name=args.field_fecha_fin,
+            legacy_field_status_name=args.legacy_field_estado,
         )
         print(json.dumps(summary, indent=2, ensure_ascii=False))
         return 0
@@ -1177,9 +1388,12 @@ def main() -> int:
             project_number=args.project_number,
             issue_prefix=str(args.issue_prefix),
             token=str(args.token),
-            field_estado_name=str(args.field_estado),
+            field_status_name=str(args.field_status),
             field_fase_name=str(args.field_fase),
             field_tipo_name=str(args.field_tipo),
+            field_fecha_inicio_name=str(args.field_fecha_inicio),
+            field_fecha_fin_name=str(args.field_fecha_fin),
+            legacy_field_status_name=str(args.legacy_field_estado),
         )
     except (GitHubApiError, ValueError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)

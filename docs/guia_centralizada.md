@@ -13,6 +13,13 @@ Perfil activo de la PoC:
 - gobierno manual mínimo en OpenMetadata;
 - `DataService` derivado por configuración del sistema.
 
+Nombres y rutas canónicas:
+
+- CLI recomendado: `om_dcat_sync`.
+- Paquete Python conservado por compatibilidad: `tfm_ingestor`.
+- Hoja funcional: `tfm_ingestor/config/gold_governance.csv`.
+- Mapa de estructura y nomenclatura: `docs/estructura_repositorio.md`.
+
 ## Ruta mínima recomendada
 
 Desde la raíz del repo:
@@ -94,6 +101,27 @@ Si quieres ejecutar la validación integral de fases 04-05:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_validation_suite.ps1
 ```
+
+## Ruta equivalente con app web
+
+La misma ruta puede ejecutarse desde `web/`, usando botones sobre los scripts versionados:
+
+```powershell
+cd .\web
+npm install
+npm run dev
+```
+
+Abrir `http://localhost:3000` y seguir:
+
+1. `Infraestructura`: comprobar prerrequisitos y, si procede, ejecutar `Reset limpio y recrear PoC`.
+2. `Ingesta`: ejecutar `Ingestar PostgreSQL demo` y `Preparar tags y custom properties`.
+3. `Gobierno`: revisar, autorrellenar si se quiere para demo y guardar `gold_governance.csv`.
+4. `Workflow`: ejecutar `Dry-run del workflow` y después `Aplicar workflow`.
+5. `DCAT`, `Estado vivo` y `Validación`: exportar, validar y cerrar evidencias.
+6. `Artefactos` y `Ejecuciones`: revisar resultados, logs, resúmenes y ficheros generados.
+
+Cada ejecución desde la web queda registrada como job en `state/web_jobs/` y muestra un resultado visible: mensaje final, duración, código de salida, resumen de la salida JSON y artefactos generados.
 
 ## Harvesting CKAN
 

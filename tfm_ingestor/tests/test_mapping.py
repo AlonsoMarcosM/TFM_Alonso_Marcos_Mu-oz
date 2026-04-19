@@ -47,6 +47,11 @@ def test_build_distribution_access_url_is_deterministic():
 def test_hvd_category_helpers_support_aliases_and_theme_defaults():
     assert normalize_hvd_category("movilidad") == "http://data.europa.eu/bna/c_b79e35eb"
     assert hvd_category_alias("http://data.europa.eu/bna/c_e1da4e07") == "estadisticas"
+    assert normalize_hvd_category("geoespacial") == "http://data.europa.eu/bna/c_ac64a52d"
+    assert (
+        normalize_hvd_category("observacion_de_la_tierra_y_medio_ambiente")
+        == "http://data.europa.eu/bna/c_dd313021"
+    )
     assert hvd_category_for_tags(
         tag_fqns=["dcat_theme.transporte"],
         dataset_defaults={"hvd_category_by_theme_tag": {"dcat_theme.transporte": "movilidad"}},

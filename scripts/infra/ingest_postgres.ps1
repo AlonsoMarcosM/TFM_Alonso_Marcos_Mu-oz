@@ -27,6 +27,26 @@ function New-OmToken {
   return $token.Trim()
 }
 
+function Import-LocalEnv {
+  param([string]$RepoRoot)
+  $loader = Join-Path $RepoRoot "scripts\load_env.ps1"
+  $envPath = Join-Path $RepoRoot ".env"
+  if (Test-Path -LiteralPath $loader) {
+    . $loader -Path $envPath -Quiet
+  }
+}
+
+function Resolve-OmToken {
+  param([string]$RepoRoot)
+  foreach ($name in @("OPENMETADATA_JWT_TOKEN", "OPENMETADATA_TOKEN")) {
+    $value = [Environment]::GetEnvironmentVariable($name)
+    if ($value -and $value.Trim().Length -gt 0) {
+      return $value.Trim()
+    }
+  }
+  return New-OmToken -RepoRoot $RepoRoot
+}
+
 function Start-OmPortForward {
   $job = Start-Job -ScriptBlock {
     kubectl port-forward deployment/openmetadata 8585:8585
@@ -216,6 +236,11 @@ function Print-TableSummary {
   $items = @($tables.data | Where-Object { $_.fullyQualifiedName -like "$ServiceName.*" })
   Write-Host "Tablas detectadas para '$ServiceName': $($items.Count)"
   $items | Select-Object -First 6 | ForEach-Object { Write-Host " - $($_.fullyQualifiedName)" }
+  return @{
+    service_name = $ServiceName
+    tables_detected = $items.Count
+    sample_tables = @($items | Select-Object -First 6 | ForEach-Object { $_.fullyQualifiedName })
+  }
 }
 
 function Resolve-DbHostPort {
@@ -235,6 +260,7 @@ function Resolve-DbHostPort {
 
 $repoRoot = Resolve-RepoRoot
 Set-Location $repoRoot
+Import-LocalEnv -RepoRoot $repoRoot
 
 Require-Command "kubectl"
 Require-Command "python"
@@ -242,8 +268,8 @@ Require-Command "python"
 $DbHostPort = Resolve-DbHostPort -Value $DbHostPort
 Write-Host "DB host:port seleccionado: $DbHostPort"
 
-Write-Host "[1/3] Generando token de OpenMetadata..."
-$token = New-OmToken -RepoRoot $repoRoot
+Write-Host "[1/3] Resolviendo token de OpenMetadata desde entorno o generador local..."
+$token = Resolve-OmToken -RepoRoot $repoRoot
 
 $pfJob = $null
 try {
@@ -270,7 +296,11 @@ try {
     -Token $token
 
   $pfJob = Start-OmPortForward
-  Print-TableSummary -Token $token -ServiceName $ServiceName
+  $summary = Print-TableSummary -Token $token -ServiceName $ServiceName
 } finally {
   Stop-OmPortForward -Job $pfJob
 }
+
+$summary.db_host_port = $DbHostPort
+$summary.database = $DbName
+$summary | ConvertTo-Json -Depth 6

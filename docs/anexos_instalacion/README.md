@@ -30,3 +30,13 @@ Atajo de validación completa:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_validation_suite.ps1
 ```
+
+Consola web para ejecutar los mismos pasos con resultados visibles:
+
+```powershell
+cd .\web
+npm install
+npm run dev
+```
+
+La app muestra por cada job el estado final, el resumen de ejecución, el log y los artefactos generados.

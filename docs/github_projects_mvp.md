@@ -5,12 +5,13 @@ Objetivo: sustituir Microsoft Planner por un flujo reproducible en GitHub Projec
 Este MVP crea o actualiza de forma idempotente:
 
 - Project v2 del TFM.
-- Campos single-select `Estado TFM`, `Fase TFM` y `Tipo TFM`.
+- Campos `Status`, `Fase TFM`, `Tipo TFM`, `fecha_inicio` y `fecha_fin`.
 - Labels por tipo y fase.
 - Milestones por fase.
 - Issues base del roadmap extraídas de la configuración declarativa del repo.
 - Alta de issues en el Project y asignación de campos.
 - Enlace del Project al repositorio para que aparezca en `/<owner>/<repo>/projects`.
+- Eliminación del campo legado `Estado TFM` para que no duplique el `Status` nativo de GitHub Projects.
 
 El roadmap se toma del orden canónico definido en:
 
@@ -122,7 +123,7 @@ La salida esperada es un JSON con conteos, preview de labels, milestones, issues
 
 ## Actualizar El Project Real
 
-El script no es solo un reflejo local: con `--apply` usa la API de GitHub para crear o actualizar labels, milestones, issues, items del Project y los campos `Estado TFM`, `Fase TFM` y `Tipo TFM`.
+El script no es solo un reflejo local: con `--apply` usa la API de GitHub para crear o actualizar labels, milestones, issues, items del Project y los campos `Status`, `Fase TFM`, `Tipo TFM`, `fecha_inicio` y `fecha_fin`.
 
 Para actualizar el tablero real `https://github.com/users/AlonsoMarcosM/projects/6`, usa `--project-number 6`. Esto evita crear otro Project por error aunque cambie el título.
 
@@ -149,6 +150,8 @@ Si ejecutas el script varias veces:
 - No duplica issues, porque compara por título con prefijo `[TFM]`.
 - No duplica items en el Project.
 - Vuelve a aplicar valores de campos para mantener coherencia.
+- Sincroniza las fechas declaradas en `fecha_inicio` y `fecha_fin` para vistas de roadmap/Gantt.
+- Borra el campo legado `Estado TFM` si existe, porque el estado canónico pasa a ser `Status`.
 - Si los issues ya existían, intenta dejar coherentes labels `tipo/...`, labels `fase/...` y milestone.
 
 Nota: si cambias las opciones de un campo single-select existente y faltan opciones en GitHub, el script falla de forma explícita. Es más seguro recrear manualmente ese campo en la UI que modificar opciones de forma opaca.
@@ -162,11 +165,13 @@ Edita solo:
 Campos editables:
 
 - `project_title`
-- `estado_options`
+- `status_options`
 - `tipo_options`
 - `phases[].name`
 - `phases[].milestone`
 - `phases[].tasks[]`
+- `phases[].tasks[].fecha_inicio`
+- `phases[].tasks[].fecha_fin`
 
 Después vuelve a ejecutar:
 
@@ -194,8 +199,9 @@ python .\scripts\planning\bootstrap_github_project.py --delete-old-milestones --
 
 El API del MVP crea datos y campos. Luego, en la UI del Project:
 
-1. Vista `Kanban Estado`: board agrupado por `Estado TFM`.
+1. Vista `Kanban Estado`: board agrupado por `Status`.
 2. Vista `Roadmap Fases`: tabla filtrada o agrupada por `Fase TFM`.
-3. Vista `Trabajo por tipo`: tabla agrupada por `Tipo TFM`.
+3. Vista `Gantt/Roadmap`: roadmap usando `fecha_inicio` y `fecha_fin`.
+4. Vista `Trabajo por tipo`: tabla agrupada por `Tipo TFM`.
 
 Con esto replicas el flujo Kanban de `docs/planificacion_kanban.md` en GitHub.

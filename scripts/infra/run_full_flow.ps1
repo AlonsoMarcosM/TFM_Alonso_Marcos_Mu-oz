@@ -1,5 +1,6 @@
 param(
-  [switch]$SkipPipInstall
+  [switch]$SkipPipInstall,
+  [string]$PlanOutput = ".\\tmp_pytest\\workflow_first_plan.json"
 )
 
 $ErrorActionPreference = "Stop"
@@ -24,6 +25,7 @@ function Stop-OmPortForward {
 
 $repoRoot = Resolve-RepoRoot
 Set-Location $repoRoot
+New-Item -ItemType Directory -Force -Path (Split-Path -Parent $PlanOutput) | Out-Null
 
 if (-not $SkipPipInstall) {
   Write-Host "[0/5] Dependencias Python del repositorio..."
@@ -48,7 +50,22 @@ try {
   $env:OPENMETADATA_JWT_TOKEN = $token
 
   Write-Host "[5/5] Dry-run del workflow (refresca hoja y genera plan)..."
-  python -m om_dcat_sync workflow run --dry-run
+  $workflow = python -m om_dcat_sync workflow run --dry-run --plan-output $PlanOutput | ConvertFrom-Json
 } finally {
   Stop-OmPortForward -Job $pfJob
 }
+
+$plannedCount = 0
+if ($null -ne $workflow.sync -and $null -ne $workflow.sync.planned) {
+  $plannedCount = ($workflow.sync.planned | Measure-Object).Count
+}
+
+$summary = @{
+  output = $PlanOutput
+  dry_run = $workflow.workflow.dry_run
+  sheet_valid = $workflow.workflow.sheet_valid
+  tables_discovered = $workflow.workflow.tables_discovered
+  sheet_rows_loaded = $workflow.workflow.sheet_rows_loaded
+  planned_changes = $plannedCount
+}
+$summary | ConvertTo-Json -Depth 6

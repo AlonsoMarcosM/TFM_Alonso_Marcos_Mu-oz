@@ -7,6 +7,32 @@ from typing import Any
 import requests
 
 
+NTI_RISP_SECTORS = [
+    ("ciencia_tecnologia", "Ciencia y tecnologia"),
+    ("comercio", "Comercio"),
+    ("cultura_ocio", "Cultura y ocio"),
+    ("demografia", "Demografia"),
+    ("deporte", "Deporte"),
+    ("economia", "Economia"),
+    ("educacion", "Educacion"),
+    ("empleo", "Empleo"),
+    ("energia", "Energia"),
+    ("hacienda", "Hacienda"),
+    ("industria", "Industria"),
+    ("legislacion_justicia", "Legislacion y justicia"),
+    ("medio_ambiente", "Medio ambiente"),
+    ("medio_rural_pesca", "Medio rural y pesca"),
+    ("salud", "Salud"),
+    ("sector_publico", "Sector publico"),
+    ("seguridad", "Seguridad"),
+    ("sociedad_bienestar", "Sociedad y bienestar"),
+    ("transporte", "Transporte"),
+    ("turismo", "Turismo"),
+    ("urbanismo_infraestructuras", "Urbanismo e infraestructuras"),
+    ("vivienda", "Vivienda"),
+]
+
+
 class OmApiError(RuntimeError):
     pass
 
@@ -97,8 +123,8 @@ def main() -> int:
         ("dcat_theme", "Tags temáticos DCAT-AP-ES para la PoC del TFM"),
     ]
     required_tags = [
-        ("dcat_theme", "transporte", "Temática obligatoria DCAT-AP-ES: transporte"),
-        ("dcat_theme", "cultura_ocio", "Temática obligatoria DCAT-AP-ES: cultura y ocio"),
+        ("dcat_theme", tag_name, f"Sector NTI-RISP DCAT-AP-ES: {label}")
+        for tag_name, label in NTI_RISP_SECTORS
     ]
     required_custom_properties = [
         ("dcat_publisher_name", "Nombre del agente publicador DCAT-AP-ES"),

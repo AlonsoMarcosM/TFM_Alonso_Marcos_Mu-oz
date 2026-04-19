@@ -58,6 +58,21 @@ Metadatos derivados por configuración y exportador:
 - `dcat:contactPoint`
 - `dcat:servesDataset`
 
+## Estructura del repositorio
+
+El mapa de carpetas, nombres canónicos y criterio de nomenclatura queda documentado en `docs/estructura_repositorio.md`.
+
+Resumen:
+
+- `docs/`: documentación operativa, decisiones y anexos para memoria/defensa.
+- `tfm_ingestor/`: paquete Python y núcleo del workflow `om_dcat_sync`.
+- `web/`: consola web operativa en Next.js.
+- `scripts/`: scripts reproducibles de infraestructura, planificación y calidad.
+- `k8s/`: configuración declarativa Helm/Kubernetes.
+- `sql/`: PostgreSQL demo reproducible.
+
+Se mantienen nombres técnicos en inglés cuando forman parte de comandos, paquetes o convenciones del ecosistema. La documentación y los textos visibles de la app se redactan en español.
+
 ## Orden correcto del flujo
 
 1. Levantar infraestructura.
@@ -77,6 +92,31 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\check_prereqs.ps1 -Stri
 python -m pip install -r requirements-dev.txt
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_full_flow.ps1
 ```
+
+## App web operativa
+
+La PoC incluye una consola web en `web/` para ejecutar el flujo sin memorizar comandos. La app no reimplementa el núcleo: lanza la lista cerrada de scripts y comandos versionados, edita `tfm_ingestor/config/gold_governance.csv` y muestra el resultado de cada ejecución.
+
+Arranque local:
+
+```powershell
+cd .\web
+npm install
+npm run dev
+```
+
+Abrir `http://localhost:3000`.
+
+Cada botón de ejecución crea un job con:
+
+- estado visible (`pendiente`, `en ejecución`, `correcto` o `error`);
+- mensaje final de éxito o error;
+- resumen de lo ejecutado a partir de la salida JSON del comando;
+- duración y código de salida;
+- artefactos generados con resumen y vista previa cuando son JSON, JSON-LD, TTL, YAML o CSV;
+- historial consultable en la pantalla `Ejecuciones`.
+
+Documentación específica: `docs/app_web.md`.
 
 CLI principal canónico:
 
@@ -108,6 +148,13 @@ Tests:
 
 ```powershell
 $env:PYTEST_DISABLE_PLUGIN_AUTOLOAD="1"; python -m pytest
+```
+
+Tests de la app web:
+
+```powershell
+cd .\web
+npm test
 ```
 
 Validación SHACL del catálogo exportado:
@@ -170,4 +217,6 @@ El perfil operativo principal del workflow queda concentrado en `tfm_ingestor/co
 - `docs/gobierno_funcional_gold.md`
 - `docs/custom_properties_openmetadata.md`
 - `docs/tfm_ingestor.md`
+- `docs/estructura_repositorio.md`
 - `docs/guia_centralizada.md`
+- `docs/app_web.md`

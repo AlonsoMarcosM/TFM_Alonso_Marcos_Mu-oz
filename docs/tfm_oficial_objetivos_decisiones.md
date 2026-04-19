@@ -90,6 +90,30 @@ Lectura correcta:
 - Evidencia: `tfm_ingestor/tests`, `scripts/infra/validate_live_dcat.ps1`, `scripts/infra/run_validation_suite.ps1`, `tfm_ingestor/src/tfm_ingestor/resources/shacl/`, `tfm_ingestor/src/tfm_ingestor/resources/shacl/manifest.json`.
 - Congelación SHACL: árbol oficial `datosgobes/DCAT-AP-ES/shacl/1.0.0` del commit `f2c8a88868b89239c9f54bffdf621cded2401b9f`, fijado localmente el `2026-04-13`.
 
+### 11. Consola web operativa
+
+- Justificación: la web no debe duplicar el TFM ni crear un núcleo paralelo; debe hacer más cómodo ejecutar las capacidades ya versionadas.
+- Decisión: la app web se limita a orquestar CLI y scripts existentes, editar la hoja funcional y mostrar evidencias reproducibles. La pantalla de gobierno usa listas controladas para `tematica_dcat` y `categoria_hvd`.
+- Alcance de vocabularios: `tematica_dcat` usa los sectores NTI-RISP enumerados en las SHACL locales congeladas; `categoria_hvd` usa las seis categorías superiores del vocabulario europeo HVD.
+- Operación de demo: la pantalla `Infraestructura` centraliza prerrequisitos, estado, backup/restore, reset conservando estado, reset limpio y flujo completo reproducible.
+- Resultado de ejecución: cada botón crea un job persistido con estado, log, mensaje final, duración, código de salida, resumen de la salida JSON y visualización de artefactos generados. Esto permite demostrar desde la web qué se ha hecho sin depender únicamente de leer el log bruto.
+- Evidencia: `docs/app_web.md`, `web/`, `scripts/infra/reset_poc_clean.ps1`, `tfm_ingestor/src/tfm_ingestor/governance_sheet.py`, `tfm_ingestor/src/tfm_ingestor/mapping.py`.
+
+### 12. Estado y calendario canónicos en GitHub Projects
+
+- Justificación: mantener `Estado TFM` y `Status` como campos separados duplica la misma información y dificulta las vistas de seguimiento.
+- Decisión: el estado del roadmap se sincroniza sobre el campo nativo `Status`; el campo `Estado TFM` queda como legado eliminable por el script de bootstrap.
+- Decisión: cada tarea declara `fecha_inicio` y `fecha_fin` en `scripts/planning/github_project_mvp.json` para alimentar vistas de roadmap/Gantt reproducibles.
+- Evidencia: `scripts/planning/github_project_mvp.json`, `scripts/planning/bootstrap_github_project.py`, `docs/github_projects_mvp.md`.
+
+### 13. Nomenclatura y estructura estable del repositorio
+
+- Justificación: en esta fase conviene maximizar legibilidad sin introducir cambios de rutas que rompan comandos, imports, tests o documentación ya consolidada.
+- Decisión: se mantienen como canónicos los nombres técnicos `om_dcat_sync`, `tfm_ingestor`, `workflow`, `runtime`, `governance`, `mapping`, `export` y los YAML actuales porque encajan con Python, OpenMetadata, DCAT y el ecosistema de despliegue.
+- Decisión: la documentación, los textos de app y la explicación de carpetas se redactan en español; los nombres físicos se traducen solo cuando no forman parte de un contrato técnico.
+- Decisión: no se crean directorios paralelos en español para código o configuración, porque duplicarían fuentes de verdad. La claridad se resuelve con `docs/estructura_repositorio.md`.
+- Evidencia: `docs/estructura_repositorio.md`, `README.md`, `.gitignore`.
+
 ## Trazabilidad con la ficha oficial
 
 La ficha oficial completa se consulta en `docs/tfe_ficha_oficial_uclm.txt`. Esta tabla no reescribe sus objetivos; solo enlaza cada objetivo parcial con la evidencia de implementación.
@@ -115,7 +139,9 @@ La ficha oficial completa se consulta en `docs/tfe_ficha_oficial_uclm.txt`. Esta
 
 ## Beneficios obtenidos en la PoC
 
-- Un único workflow canónico sirve para operador técnico, ETL y futura UI.
+- Un único workflow canónico sirve para operador técnico, ETL y app web.
+- La app web operativa usa ese mismo workflow y scripts cerrados sin crear un núcleo paralelo.
 - La validación queda versionada dentro del repositorio y deja artefactos reproducibles.
 - El gobierno funcional se desacopla del código gracias a `gold_governance.csv`.
 - La PoC mantiene un modelo OpenMetadata corto y defensible, derivando por configuración lo que no conviene gobernar manualmente.
+- La estructura del repositorio queda documentada con nombres canónicos y distinción explícita entre rutas versionables, rutas locales y artefactos generados.

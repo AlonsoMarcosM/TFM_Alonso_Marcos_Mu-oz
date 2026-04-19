@@ -41,12 +41,44 @@ Las columnas técnicas no deben tocarse:
 - `table_name`
 - `table_fqn`
 
-Valores admitidos en la PoC demo:
+Valores admitidos desde la app web:
 
-- `tematica_dcat`: `transporte`, `cultura_ocio`
-- `categoria_hvd`: `movilidad`, `estadisticas`
+- `tematica_dcat`: los sectores NTI-RISP definidos en las SHACL locales congeladas, con alias de hoja en formato `snake_case`: `ciencia_tecnologia`, `comercio`, `cultura_ocio`, `demografia`, `deporte`, `economia`, `educacion`, `empleo`, `energia`, `hacienda`, `industria`, `legislacion_justicia`, `medio_ambiente`, `medio_rural_pesca`, `salud`, `sector_publico`, `seguridad`, `sociedad_bienestar`, `transporte`, `turismo`, `urbanismo_infraestructuras` y `vivienda`.
+- `categoria_hvd`: las seis categorías superiores del vocabulario europeo HVD: `geoespacial`, `observacion_de_la_tierra_y_medio_ambiente`, `meteorologia`, `estadisticas`, `sociedades_y_propiedad_de_sociedades` y `movilidad`.
 
-También se admite una URI HVD completa si en el futuro la interfaz o la hoja necesitan más granularidad.
+La app web usa listas desplegables para estos dos campos, precisamente para evitar valores fuera de los vocabularios controlados. A nivel Python también se admite una URI HVD completa si en el futuro la hoja necesita más granularidad fuera de la demo cerrada.
+
+La ayuda de la web recomienda cómo rellenar cada campo y el botón `Autorrellenar vacíos` propone valores por defecto validables para las tablas concretas de la PoC sin sobrescribir datos ya escritos.
+
+## Qué significa `publicar`
+
+`publicar` es la decisión funcional de incluir o excluir una tabla `gold` del catálogo abierto exportado en la PoC.
+
+- `publicar=si`: la tabla se trata como `dcat:Dataset` publicable. Debe tener título, descripción, publicador, temática DCAT, categoría HVD y URL de acceso. El workflow la sincroniza con OpenMetadata y el exportador la incluye en el JSON-LD.
+- `publicar=no`: la fila puede conservarse como referencia operativa, pero no representa un dataset publicable de la PoC. No se le exigen los obligatorios funcionales de publicación.
+
+Este campo no es una propiedad DCAT-AP-ES. Es un control operativo local para separar assets técnicos ingeridos de datasets que se publican en el catálogo.
+
+## Cobertura de obligatorios HVD
+
+La hoja `gold_governance.csv` no contiene todos los obligatorios de `DCAT-AP-ES` con HVD. Contiene únicamente los campos funcionales que varían por dataset y que una persona responsable del catálogo debe poder curar sin tocar código:
+
+| Columna | Papel en DCAT-AP-ES / HVD |
+| --- | --- |
+| `titulo_dataset` | `dct:title` del `dcat:Dataset` |
+| `descripcion_dataset` | `dct:description` del `dcat:Dataset` |
+| `publicador` | nombre funcional del publicador usado en `dct:publisher` |
+| `tematica_dcat` | `dcat:theme` del `dcat:Dataset` y del `dcat:DataService` |
+| `categoria_hvd` | `dcatap:hvdCategory` |
+| `access_url_distribucion` | `dcat:accessURL` de la `dcat:Distribution` |
+
+El resto de obligatorios se cubre por configuración global y derivación automática:
+
+- `dcat:Catalog`: `title`, `description`, `publisher`, `homepage`, `themeTaxonomy`, `issued`, `modified`, `language` y `license` salen de `tfm_ingestor/config/governance_defaults.yaml`.
+- `dcat:Distribution`: licencia HVD y legislación aplicable salen de `hvd_defaults`.
+- `dcat:DataService`: `title`, `endpointURL`, `endpointDescription`, `publisher`, `theme`, `hvdCategory`, `applicableLegislation`, `contactPoint`, `foaf:page`, `servesDataset`, `license` y `accessRights` se derivan en `tfm_ingestor/src/tfm_ingestor/dcat_export.py`.
+
+Por tanto, la afirmación defendible es: **la hoja cubre los obligatorios funcionales por dataset; el sistema completo, hoja más configuración global más exportador, cubre el perfil HVD validado en la PoC**.
 
 ## Qué gobierna realmente la PoC
 
@@ -135,4 +167,4 @@ Esta solución es preferible a un mapeo estático por dataset porque:
 - evita tocar código por cada alta o cambio editorial;
 - mantiene la automatización idempotente;
 - permite que la curación la haga una persona no técnica desde un único punto controlado;
-- deja preparado el sistema para una futura UI que escriba el mismo contrato lógico que hoy representa la hoja CSV.
+- deja preparado el sistema para que la app web y cualquier futura API escriban el mismo contrato lógico que hoy representa la hoja CSV.
