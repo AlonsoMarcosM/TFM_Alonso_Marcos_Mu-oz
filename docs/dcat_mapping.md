@@ -145,3 +145,5 @@ El resto del perfil activo se deriva por configuración y exportación:
 5. Exportación JSON-LD del catálogo.
 6. Validación estructural con `validate-runtime`.
 7. Validación SHACL con `validate-dcat --profile-case hvd`.
+
+En la app web, `Workflow` agrupa la orquestación canónica: refresca hoja, planifica, aplica gobierno y, en la ejecución completa, exporta y valida. La pantalla `DCAT` permite repetir solo la exportación y la validación JSON-LD como evidencias independientes sin volver a aplicar metadatos sobre OpenMetadata.

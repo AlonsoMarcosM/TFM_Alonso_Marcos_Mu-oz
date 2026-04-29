@@ -15,6 +15,7 @@ export default function IngestaPage() {
         <article className="card">
           <h2>Orden recomendado</h2>
           <ol>
+            <li>Vaciar PostgreSQL demo en OpenMetadata, si quieres repetir la demo desde el estado actual.</li>
             <li>Ingestar PostgreSQL demo.</li>
             <li>Preparar tags y custom properties.</li>
             <li>Revisar Gobierno.</li>

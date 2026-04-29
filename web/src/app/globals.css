@@ -308,6 +308,16 @@ td textarea {
   min-height: 72px;
 }
 
+.config-editor {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-family: Consolas, "Courier New", monospace;
+  min-height: 360px;
+  padding: 0.75rem;
+  resize: vertical;
+  width: 100%;
+}
+
 .readonly {
   color: var(--muted);
   font-size: 0.9rem;

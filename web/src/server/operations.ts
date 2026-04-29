@@ -8,9 +8,12 @@ export type OperationId =
   | "delete-cluster-preserve-state"
   | "reset-poc-clean"
   | "run-full-flow"
+  | "clear-openmetadata-postgres-demo"
   | "ingest-postgres"
   | "bootstrap-governance"
+  | "refresh-governance-sheet"
   | "validate-governance-sheet"
+  | "apply-governance"
   | "workflow-dry-run"
   | "workflow-apply"
   | "export-dcat"
@@ -134,6 +137,19 @@ export const operations: Operation[] = [
     timeoutMs: 3_600_000,
   },
   {
+    id: "clear-openmetadata-postgres-demo",
+    title: "Vaciar PostgreSQL demo en OpenMetadata",
+    group: "Ingesta",
+    description: "Borra solo el servicio postgres_demo_service y sus tablas en OpenMetadata, manteniendo la infraestructura levantada.",
+    command: powershell,
+    args: ["-ExecutionPolicy", "Bypass", "-File", ".\\scripts\\infra\\clear_openmetadata_postgres_demo.ps1"],
+    artifacts: [],
+    timeoutMs: 180_000,
+    requiresOpenMetadataToken: true,
+    risk: "Elimina de OpenMetadata el servicio PostgreSQL demo y sus entidades hijas. No borra Kubernetes, PostgreSQL demo ni reinstala OpenMetadata.",
+    confirmText: "Vaciar postgres_demo_service y sus tablas en OpenMetadata?",
+  },
+  {
     id: "ingest-postgres",
     title: "Ingestar PostgreSQL demo",
     group: "Ingesta",
@@ -154,6 +170,17 @@ export const operations: Operation[] = [
     timeoutMs: 180_000,
   },
   {
+    id: "refresh-governance-sheet",
+    title: "Refrescar hoja gold desde OpenMetadata",
+    group: "Gobierno",
+    description: "Regenera gold_governance.csv con las tablas gold descubiertas en OpenMetadata y conserva la curacion manual existente.",
+    command: powershell,
+    args: ["-ExecutionPolicy", "Bypass", "-File", ".\\scripts\\infra\\refresh_governance_sheet_from_env.ps1", "-SkipPipInstall"],
+    artifacts: ["tfm_ingestor/config/gold_governance.csv"],
+    timeoutMs: 180_000,
+    requiresOpenMetadataToken: true,
+  },
+  {
     id: "validate-governance-sheet",
     title: "Validar hoja gold",
     group: "Gobierno",
@@ -162,6 +189,17 @@ export const operations: Operation[] = [
     args: ["-m", "om_dcat_sync", "validate-governance-sheet", "--sheet", ".\\tfm_ingestor\\config\\gold_governance.csv"],
     artifacts: ["tfm_ingestor/config/gold_governance.csv"],
     timeoutMs: 60_000,
+  },
+  {
+    id: "apply-governance",
+    title: "Aplicar gobierno en OpenMetadata",
+    group: "Gobierno",
+    description: "Aplica title, description, tags DCAT y custom properties desde la hoja gold sin exportar ni validar DCAT.",
+    command: python,
+    args: ["-m", "om_dcat_sync", "workflow", "run", "--skip-export", "--skip-validate"],
+    artifacts: [],
+    timeoutMs: 180_000,
+    requiresOpenMetadataToken: true,
   },
   {
     id: "workflow-dry-run",

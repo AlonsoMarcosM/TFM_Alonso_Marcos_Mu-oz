@@ -14,9 +14,12 @@ describe("operations catalog", () => {
       "delete-cluster-preserve-state",
       "reset-poc-clean",
       "run-full-flow",
+      "clear-openmetadata-postgres-demo",
       "ingest-postgres",
       "bootstrap-governance",
+      "refresh-governance-sheet",
       "validate-governance-sheet",
+      "apply-governance",
       "workflow-dry-run",
       "workflow-apply",
       "export-dcat",
@@ -38,7 +41,12 @@ describe("operations catalog", () => {
   });
 
   it("marks destructive reset operations with confirmation text", () => {
-    const destructiveIds = ["restore-openmetadata-state", "delete-cluster-preserve-state", "reset-poc-clean"];
+    const destructiveIds = [
+      "restore-openmetadata-state",
+      "delete-cluster-preserve-state",
+      "reset-poc-clean",
+      "clear-openmetadata-postgres-demo",
+    ];
     for (const id of destructiveIds) {
       const operation = operations.find((item) => item.id === id);
       expect(operation?.risk).toBeTruthy();

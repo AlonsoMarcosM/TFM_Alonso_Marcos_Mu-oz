@@ -95,9 +95,9 @@ Lectura correcta:
 - Justificación: la web no debe duplicar el TFM ni crear un núcleo paralelo; debe hacer más cómodo ejecutar las capacidades ya versionadas.
 - Decisión: la app web se limita a orquestar CLI y scripts existentes, editar la hoja funcional y mostrar evidencias reproducibles. La pantalla de gobierno usa listas controladas para `tematica_dcat` y `categoria_hvd`.
 - Alcance de vocabularios: `tematica_dcat` usa los sectores NTI-RISP enumerados en las SHACL locales congeladas; `categoria_hvd` usa las seis categorías superiores del vocabulario europeo HVD.
-- Operación de demo: la pantalla `Infraestructura` centraliza prerrequisitos, estado, backup/restore, reset conservando estado, reset limpio y flujo completo reproducible.
+- Operación de demo: la pantalla `Infraestructura` centraliza prerrequisitos, estado, backup/restore, reset conservando estado, reset limpio y flujo completo reproducible. La pantalla `Ingesta` permite vaciar solo el servicio PostgreSQL demo en OpenMetadata para repetir la carga sin reinstalar infraestructura. La pantalla `Gobierno` permite refrescar la hoja gold desde las tablas descubiertas en OpenMetadata, editar configuración YAML controlada y aplicar solo gobierno sin exportar DCAT.
 - Resultado de ejecución: cada botón crea un job persistido con estado, log, mensaje final, duración, código de salida, resumen de la salida JSON y visualización de artefactos generados. Esto permite demostrar desde la web qué se ha hecho sin depender únicamente de leer el log bruto.
-- Evidencia: `docs/app_web.md`, `web/`, `scripts/infra/reset_poc_clean.ps1`, `tfm_ingestor/src/tfm_ingestor/governance_sheet.py`, `tfm_ingestor/src/tfm_ingestor/mapping.py`.
+- Evidencia: `docs/app_web.md`, `web/`, `scripts/infra/reset_poc_clean.ps1`, `scripts/infra/clear_openmetadata_postgres_demo.ps1`, `scripts/infra/refresh_governance_sheet_from_env.ps1`, `tfm_ingestor/src/tfm_ingestor/governance_sheet.py`, `tfm_ingestor/src/tfm_ingestor/mapping.py`.
 
 ### 12. Estado y calendario canónicos en GitHub Projects
 

@@ -1,5 +1,6 @@
 import { GovernanceEditor } from "@/components/GovernanceEditor";
 import { OperationGrid } from "@/components/OperationGrid";
+import { ConfigEditor } from "@/components/ConfigEditor";
 import { operations } from "@/server/operations";
 
 export default function GobiernoPage() {
@@ -39,7 +40,13 @@ export default function GobiernoPage() {
         </article>
       </section>
       <GovernanceEditor />
-      <OperationGrid operations={operations.filter((operation) => operation.id === "validate-governance-sheet")} />
+      <OperationGrid
+        operations={operations.filter((operation) =>
+          ["refresh-governance-sheet", "validate-governance-sheet"].includes(operation.id),
+        )}
+      />
+      <ConfigEditor />
+      <OperationGrid operations={operations.filter((operation) => operation.id === "apply-governance")} />
     </div>
   );
 }

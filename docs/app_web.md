@@ -15,9 +15,12 @@ La app permite:
 - hacer backup/restore del estado OpenMetadata;
 - resetear infraestructura conservando snapshot;
 - resetear la PoC limpia y recrearla desde cero;
+- vaciar solo el servicio PostgreSQL demo en OpenMetadata sin reinstalar infraestructura;
 - ejecutar la ingesta técnica de PostgreSQL demo en OpenMetadata;
 - preparar tags y custom properties de gobierno;
 - editar `tfm_ingestor/config/gold_governance.csv`;
+- refrescar `tfm_ingestor/config/gold_governance.csv` desde las tablas descubiertas en OpenMetadata;
+- editar YAML de configuración de gobierno controlados en `tfm_ingestor/config/`;
 - validar la hoja gold;
 - ejecutar dry-run del workflow;
 - aplicar el workflow;
@@ -33,7 +36,7 @@ Queda fuera de alcance:
 - GitHub Project;
 - login y permisos;
 - pedir tokens en formularios;
-- editar reglas YAML avanzadas;
+- crear editores específicos para cualquier YAML fuera de la lista controlada de gobierno;
 - crear flujos dinámicos nuevos.
 
 ## Gobierno gold y HVD
@@ -87,16 +90,19 @@ npm test
 
 1. Abrir `Infraestructura` y ejecutar `Comprobar prerrequisitos`.
 2. Para demo desde cero, ejecutar `Reset limpio y recrear PoC`.
-3. Abrir `Ingesta`, ejecutar `Ingestar PostgreSQL demo` si se quiere repetir solo la ingesta técnica.
-4. Ejecutar `Preparar tags y custom properties`.
-5. Abrir `Gobierno`, revisar o editar los datasets gold.
-6. Guardar la hoja y ejecutar `Validar hoja gold`.
-7. Abrir `Workflow` y ejecutar `Dry-run`.
-8. Ejecutar `Aplicar workflow`.
-9. Abrir `DCAT`, exportar JSON-LD y validar DCAT.
-10. Abrir `Estado vivo` y validar el estado runtime.
-11. Abrir `Validación` y ejecutar la suite completa.
-12. Abrir `Artefactos` para revisar JSON, JSON-LD y TTL generados.
+3. Abrir `Ingesta` y ejecutar `Vaciar PostgreSQL demo en OpenMetadata` si se quiere repetir solo la carga técnica desde OpenMetadata ya levantado.
+4. Ejecutar `Ingestar PostgreSQL demo`.
+5. Ejecutar `Preparar tags y custom properties`.
+6. Abrir `Gobierno` y ejecutar `Refrescar hoja gold desde OpenMetadata`.
+7. Pulsar `Recargar`, revisar o editar los datasets gold, usar `Autorrellenar vacíos` si procede y guardar.
+8. Ejecutar `Validar hoja gold`.
+9. Ejecutar `Aplicar gobierno en OpenMetadata` si se quiere aplicar solo metadatos sin exportar DCAT.
+10. Abrir `Workflow` y ejecutar `Dry-run` para revisar el plan canónico completo.
+11. Ejecutar `Aplicar workflow` para aplicar, exportar y validar en una sola operación.
+12. Abrir `DCAT`, exportar JSON-LD y validar DCAT si se quiere repetir esa parte por separado.
+13. Abrir `Estado vivo` y validar el estado runtime.
+14. Abrir `Validación` y ejecutar la suite completa.
+15. Abrir `Artefactos` para revisar JSON, JSON-LD y TTL generados.
 
 ## Resultado visible por ejecución
 
@@ -119,6 +125,7 @@ Ejemplos de resúmenes mostrados:
 - `workflow-apply`: cambios aplicados, datasets exportados y conformidad SHACL.
 - `validate-runtime`: conformidad técnica y de gobierno del estado vivo.
 - `run-validation-suite`: conformidad runtime, idempotencia, SHACL y pre-push checks.
+- `clear-openmetadata-postgres-demo`: servicio eliminado y tablas restantes asociadas al servicio.
 - `ingest-postgres`: servicio usado, base de datos y tablas detectadas en OpenMetadata.
 
 ## Comandos equivalentes
@@ -136,8 +143,11 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\delete_cluster_preserve
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\reset_poc_clean.ps1 -RunFullFlow -SkipPipInstall
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_full_flow.ps1 -SkipPipInstall
 python -m om_dcat_sync validate-governance-sheet --sheet .\tfm_ingestor\config\gold_governance.csv
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\clear_openmetadata_postgres_demo.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\ingest_postgres.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\bootstrap_governance_from_env.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\refresh_governance_sheet_from_env.ps1 -SkipPipInstall
+python -m om_dcat_sync workflow run --skip-export --skip-validate
 python -m om_dcat_sync workflow run --dry-run --plan-output .\tmp_pytest\web_workflow_plan.json
 python -m om_dcat_sync workflow run --allow-warnings --export-output .\tmp_pytest\web_catalog.jsonld --report-output .\tmp_pytest\web_shacl_report.ttl
 python -m om_dcat_sync export-dcat --output .\tmp_pytest\web_catalog.jsonld

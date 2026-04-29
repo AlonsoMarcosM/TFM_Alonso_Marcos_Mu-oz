@@ -9,7 +9,15 @@ export default async function HomePage() {
   const env = envStatus();
   const artifacts = await listArtifacts();
   const quick = operations.filter((operation) =>
-    ["ingest-postgres", "bootstrap-governance", "validate-governance-sheet", "workflow-dry-run", "workflow-apply", "run-validation-suite"].includes(operation.id),
+    [
+      "ingest-postgres",
+      "bootstrap-governance",
+      "refresh-governance-sheet",
+      "validate-governance-sheet",
+      "workflow-dry-run",
+      "workflow-apply",
+      "run-validation-suite",
+    ].includes(operation.id),
   );
 
   return (

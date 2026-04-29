@@ -236,6 +236,16 @@ export function summarizeStructuredValue(value: unknown): string[] {
   if (hasKey(object, "tables_detected")) {
     lines.push(`Tablas detectadas: ${String(object.tables_detected)}.`);
   }
+  if (hasKey(object, "service_name") && hasKey(object, "tables_after")) {
+    lines.push(`Servicio OpenMetadata: ${String(object.service_name)}.`);
+    if (hasKey(object, "service_deleted")) {
+      lines.push(`Servicio eliminado: ${yesNo(object.service_deleted)}.`);
+    }
+    if (hasKey(object, "tables_before")) {
+      lines.push(`Tablas antes de limpiar: ${String(object.tables_before)}.`);
+    }
+    lines.push(`Tablas tras limpiar: ${String(object.tables_after)}.`);
+  }
 
   lines.push(...summarizePrereqs(object));
   lines.push(...summarizeBootstrap(object));
