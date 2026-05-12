@@ -2,7 +2,7 @@
 
 Este anexo deja toda la infraestructura arrancada desde un único punto de entrada.
 
-Para una explicación conceptual de qué son Docker, Kind, Kubernetes, Helm, OpenMetadata, MySQL, OpenSearch y `postgres-demo` en esta PoC, ver:
+Para una explicación conceptual de qué son Docker, Kind, Kubernetes, Helm, OpenMetadata, MySQL, OpenSearch y `postgres-demo` en esta plataforma, ver:
 
 - `docs/openmetadata_k8s.md`
 
@@ -17,7 +17,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\launch_infra.ps1
 Qué hace el script, en orden:
 
 1. Crea o reutiliza el clúster `kind` (`kind-tfm-om`).
-2. Despliega PostgreSQL demo dentro de Kubernetes (`postgres-demo`).
+2. Despliega PostgreSQL de referencia dentro de Kubernetes (`postgres-demo`).
 3. Crea secretos `mysql-secrets` y `airflow-secrets`.
 4. Instala `openmetadata-dependencies` con ajustes locales (`k8s/openmetadata-dependencies.values.yaml`).
 5. Restaura automáticamente el snapshot de estado si existe en `state/openmetadata/mysql/openmetadata_db.sql`.
@@ -69,7 +69,7 @@ Notas:
 
 ## Réplica en otro portátil
 
-Caso esperado: clonar o copiar el repositorio en otro equipo y levantar la PoC desde cero.
+Caso esperado: clonar o copiar el repositorio en otro equipo y levantar la plataforma desde cero.
 
 Pasos mínimos:
 
@@ -146,4 +146,4 @@ Cambian principalmente:
 - backups;
 - observabilidad.
 
-En una empresa no se usaría Kind como entorno principal. Kind se usa aquí porque permite demostrar Kubernetes + Helm de forma local, barata y reproducible.
+En una empresa no se usaría Kind como entorno principal. Kind se usa aquí porque permite ejecutar Kubernetes + Helm de forma local, barata y reproducible.

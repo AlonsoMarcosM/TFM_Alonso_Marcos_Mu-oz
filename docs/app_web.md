@@ -1,67 +1,79 @@
-# App web operativa de la PoC
+# App web operativa de la plataforma
 
 ## Propósito
 
-La app web es una consola simple para demostrar la PoC sin memorizar comandos. No sustituye al núcleo Python ni a los scripts versionados: ejecuta operaciones concretas ya disponibles en el repositorio y muestra logs, resultados, resúmenes y artefactos.
+La app web es una consola simple para operar la **Plataforma de Gobierno del Dato** sin memorizar comandos. Su usuario principal es un operario de negocio o una persona responsable del catálogo que necesita ejecutar el caso de uso de validación, revisar metadatos, lanzar el flujo completo y consultar evidencias.
+
+La app no sustituye al núcleo Python ni a los scripts versionados. Ejecuta una lista cerrada de operaciones ya disponibles en el repositorio, muestra logs y artefactos, y edita únicamente las fuentes funcionales controladas.
 
 La ruta física `web/` se mantiene por convención del ecosistema Node/Next.js. En la documentación se denomina consola web operativa.
 
-## Alcance
+## Proceso completo para operador de negocio
 
-La app permite:
+El flujo se entiende de izquierda a derecha: primero se conectan activos técnicos a OpenMetadata, después se completan metadatos de gobierno y finalmente se exporta un catálogo RDF serializado en JSON-LD conforme a `DCAT-AP-ES`.
 
-- comprobar prerrequisitos y estado de infraestructura;
-- levantar infraestructura con los scripts canónicos;
-- hacer backup/restore del estado OpenMetadata;
-- resetear infraestructura conservando snapshot;
-- resetear la PoC limpia y recrearla desde cero;
-- vaciar solo el servicio PostgreSQL demo en OpenMetadata sin reinstalar infraestructura;
-- ejecutar la ingesta técnica de PostgreSQL demo en OpenMetadata;
-- preparar tags y custom properties de gobierno;
-- editar `tfm_ingestor/config/gold_governance.csv`;
-- refrescar `tfm_ingestor/config/gold_governance.csv` desde las tablas descubiertas en OpenMetadata;
-- editar YAML de configuración de gobierno controlados en `tfm_ingestor/config/`;
-- validar la hoja gold;
-- ejecutar dry-run del workflow;
-- aplicar el workflow;
-- exportar DCAT JSON-LD;
-- validar DCAT con las SHACL locales congeladas;
-- validar runtime;
-- ejecutar la suite de validación;
-- consultar artefactos de `tmp_pytest/`;
-- consultar el manifiesto SHACL congelado.
+| Pantalla | Acción del operario | Qué ejecuta por detrás | Resultado visible | Utilidad de negocio |
+| --- | --- | --- | --- | --- |
+| `Infraestructura` | Comprobar prerequisitos o recrear la plataforma limpia. | Scripts PowerShell de `scripts/infra/` para Kind, Helm, OpenMetadata y PostgreSQL de referencia. | Job con log, duración y estado. | Asegura un entorno reproducible antes de gobernar metadatos. |
+| `Ingesta` | Ingestar PostgreSQL de referencia y preparar tags/custom properties. | Metadata ingest oficial de OpenMetadata y bootstrap de gobierno. | Servicio, base de datos, esquemas, tablas y propiedades disponibles en OpenMetadata. | Convierte servicios conectados en activos catalogables y gobernables. |
+| `Gobierno` | Revisar o editar la hoja `gold_governance.csv`. | API interna Next.js que lee/escribe el CSV; validación autoritativa en Python. | Tabla editable, validación y mensajes de campos obligatorios. | Permite definir título, descripción, publicador, temática, HVD y URL de acceso sin tocar código. |
+| `Workflow` | Ejecutar `Dry-run` y después `Aplicar workflow`. | `python -m om_dcat_sync workflow run`. | Plan reproducible, cambios aplicados, catálogo exportado e informe SHACL. | Sincroniza OpenMetadata con el contrato funcional y genera el catálogo UCLM gobernado. |
+| `DCAT` | Repetir exportación o validación del catálogo. | `export-dcat` y `validate-dcat --profile-case hvd`. | `web_catalog.jsonld` y `web_shacl_report.ttl`. | Comprueba interoperabilidad con `DCAT-AP-ES` y preparación para federación. |
+| `Estado vivo` | Validar OpenMetadata frente al contrato esperado. | `validate-runtime --strict`. | Informe JSON de estado técnico y de gobierno. | Detecta drift entre OpenMetadata, SQL de referencia y hoja funcional. |
+| `Validación` | Ejecutar suite completa o validación live DCAT. | `run_validation_suite.ps1` o `validate_live_dcat.ps1`. | Resumen de conformidad, catálogo JSON-LD e informe SHACL. | Deja evidencia reproducible para memoria, defensa y operación. |
+| `Artefactos` / `Ejecuciones` | Revisar ficheros y jobs generados. | Lectura segura de `tmp_pytest/` y `state/web_jobs/`. | Vista previa de JSON, JSON-LD, TTL, YAML o CSV. | Permite auditar qué se ejecutó y qué evidencias produjo. |
 
-Queda fuera de alcance:
+## Backend, frontend y núcleo de negocio
 
-- GitHub Project;
-- login y permisos;
-- pedir tokens en formularios;
-- crear editores específicos para cualquier YAML fuera de la lista controlada de gobierno;
-- crear flujos dinámicos nuevos.
+La app web está construida con `Next.js + React + TypeScript`, pero no contiene reglas de gobierno. Su backend interno crea jobs y lanza procesos cerrados definidos en `web/src/server/operations.ts`.
+
+Esos jobs invocan:
+
+- scripts PowerShell para infraestructura, ingesta y validación de entorno;
+- el CLI `python -m om_dcat_sync` para gobierno, exportación DCAT y validación;
+- el mismo núcleo Python que usan los comandos manuales: `workflow_service.py`, `governance_service.py`, `governance_sheet.py`, `dcat_export.py` y `shacl_validation.py`.
+
+No existe endpoint para ejecutar comandos arbitrarios. La web tampoco habla directamente con OpenMetadata: los scripts y el CLI son los responsables de usar la API de OpenMetadata.
+
+## Catálogo UCLM y gobierno DCAT-AP-ES
+
+Cada servicio conectado a OpenMetadata aporta activos técnicos al catálogo de la plataforma. En el caso de uso de validación, el servicio principal es PostgreSQL de referencia con esquemas `bronze`, `silver` y `gold`.
+
+La capa `gold` se trata como el conjunto de datasets publicables. La pantalla `Gobierno` trabaja sobre `tfm_ingestor/config/gold_governance.csv`, que contiene la curación funcional por dataset:
+
+- `publicar`;
+- `titulo_dataset`;
+- `descripcion_dataset`;
+- `publicador`;
+- `tematica_dcat`;
+- `categoria_hvd`;
+- `access_url_distribucion`.
+
+El fichero `tfm_ingestor/config/governance_defaults.yaml` fija las propiedades globales del catálogo UCLM: publicador, URI de organismo, página principal, licencia, idioma, taxonomía temática, legislación HVD, contacto y URLs base de servicio. Con esa combinación se genera un catálogo RDF serializado en JSON-LD validable frente a `DCAT-AP-ES` y preparado para publicación o federación hacia `datos.gob.es` y ecosistemas europeos compatibles.
+
+La plataforma no publica automáticamente en un CKAN externo ni certifica aceptación por un portal externo en esta iteración. La salida queda preparada y validada para ese tipo de integración.
 
 ## Gobierno gold y HVD
 
-La pantalla `Gobierno` trabaja sobre `tfm_ingestor/config/gold_governance.csv`.
-
 El campo `publicar` significa:
 
-- `si`: la tabla `gold` entra en el catálogo DCAT exportado como dataset publicable de la PoC;
+- `si`: la tabla `gold` entra en el catálogo DCAT exportado como dataset publicable de la plataforma;
 - `no`: la fila puede existir como referencia, pero no entra en el contrato publicable ni se le exigen los obligatorios funcionales.
 
-La hoja cubre los campos funcionales por dataset: título, descripción, publicador, temática, categoría HVD y URL de acceso. El resto de obligatorios HVD se deriva desde `governance_defaults.yaml` y `dcat_export.py`: catálogo, legislación aplicable, licencias, `DataService`, `contactPoint`, documentación y vínculos `accessService` / `servesDataset`.
+La hoja cubre los campos funcionales por dataset. El resto de obligatorios HVD se deriva desde `governance_defaults.yaml` y `dcat_export.py`: catálogo, legislación aplicable, licencias, `DataService`, `contactPoint`, documentación y vínculos `accessService` / `servesDataset`.
 
-En la web, `tematica_dcat` y `categoria_hvd` se editan mediante listas cerradas para evitar valores inválidos:
+En la web, `tematica_dcat` y `categoria_hvd` se editan mediante listas cerradas:
 
-- `tematica_dcat`: los 22 sectores NTI-RISP enumerados en `tfm_ingestor/src/tfm_ingestor/resources/shacl/shacl_common_shapes.ttl`, por ejemplo `transporte`, `cultura_ocio`, `medio_ambiente` o `sector_publico`.
-- `categoria_hvd`: las seis categorías superiores del vocabulario europeo HVD `http://data.europa.eu/bna/asd487ae75`: `geoespacial`, `observacion_de_la_tierra_y_medio_ambiente`, `meteorologia`, `estadisticas`, `sociedades_y_propiedad_de_sociedades` y `movilidad`.
+- `tematica_dcat`: sectores NTI-RISP enumerados en las SHACL locales congeladas, por ejemplo `transporte`, `cultura_ocio`, `medio_ambiente` o `sector_publico`;
+- `categoria_hvd`: categorías superiores del vocabulario europeo HVD, como `movilidad`, `estadisticas` o `geoespacial`.
 
-La app muestra ayuda de rellenado junto a la tabla y ofrece un botón `Autorrellenar vacíos`. Ese botón solo completa campos vacíos con valores demo validables; no sobreescribe lo que el operador ya haya escrito.
+La app muestra ayuda de rellenado junto a la tabla y ofrece un botón `Autorrellenar vacíos`. Ese botón solo completa campos vacíos con valores de validación; no sobreescribe lo que el operador ya haya escrito.
 
-La formulación correcta para defensa es: la hoja no es todo DCAT-AP-ES HVD; es el contrato funcional por dataset. El sistema completo, formado por hoja, configuración global, OpenMetadata, exportador y validación SHACL, cubre el perfil activo de la PoC.
+La formulación correcta para defensa es: la hoja no es todo `DCAT-AP-ES HVD`; es el contrato funcional por dataset. El sistema completo, formado por hoja, configuración global, OpenMetadata, exportador y validación SHACL, cubre el perfil activo de la plataforma.
 
-## Preparación de demo
+## Preparación del caso de uso de validación
 
-Antes de abrir la app, la infraestructura debe estar levantada. Si `OPENMETADATA_BASE_URL` apunta a `localhost`, deja activo el port-forward para que los comandos Python directos puedan hablar con OpenMetadata. La ingesta técnica puede lanzarse ya desde la pantalla `Ingesta`.
+Antes de abrir la app, la infraestructura debe estar levantada. Si `OPENMETADATA_BASE_URL` apunta a `localhost`, deja activo el port-forward para que los comandos Python directos puedan hablar con OpenMetadata. La ingesta técnica puede lanzarse desde la pantalla `Ingesta`.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\launch_infra.ps1
@@ -86,23 +98,19 @@ Tests de la app:
 npm test
 ```
 
-## Flujo de demostración
+## Flujo operativo recomendado
 
 1. Abrir `Infraestructura` y ejecutar `Comprobar prerrequisitos`.
-2. Para demo desde cero, ejecutar `Reset limpio y recrear PoC`.
-3. Abrir `Ingesta` y ejecutar `Vaciar PostgreSQL demo en OpenMetadata` si se quiere repetir solo la carga técnica desde OpenMetadata ya levantado.
-4. Ejecutar `Ingestar PostgreSQL demo`.
-5. Ejecutar `Preparar tags y custom properties`.
-6. Abrir `Gobierno` y ejecutar `Refrescar hoja gold desde OpenMetadata`.
-7. Pulsar `Recargar`, revisar o editar los datasets gold, usar `Autorrellenar vacíos` si procede y guardar.
-8. Ejecutar `Validar hoja gold`.
-9. Ejecutar `Aplicar gobierno en OpenMetadata` si se quiere aplicar solo metadatos sin exportar DCAT.
-10. Abrir `Workflow` y ejecutar `Dry-run` para revisar el plan canónico completo.
-11. Ejecutar `Aplicar workflow` para aplicar, exportar y validar en una sola operación.
-12. Abrir `DCAT`, exportar JSON-LD y validar DCAT si se quiere repetir esa parte por separado.
-13. Abrir `Estado vivo` y validar el estado runtime.
-14. Abrir `Validación` y ejecutar la suite completa.
-15. Abrir `Artefactos` para revisar JSON, JSON-LD y TTL generados.
+2. Si se quiere partir de cero, ejecutar `Reset limpio y recrear la plataforma`.
+3. Abrir `Ingesta` y ejecutar `Ingestar PostgreSQL de referencia`.
+4. Ejecutar `Preparar tags y custom properties`.
+5. Abrir `Gobierno` y ejecutar `Refrescar hoja gold desde OpenMetadata`.
+6. Revisar o editar datasets `gold`, usar `Autorrellenar vacíos` si procede y guardar.
+7. Ejecutar `Validar hoja gold`.
+8. Abrir `Workflow` y ejecutar `Dry-run del workflow`.
+9. Ejecutar `Aplicar workflow`.
+10. Abrir `DCAT`, `Estado vivo` y `Validación` para repetir validaciones o generar evidencias independientes.
+11. Abrir `Artefactos` y `Ejecuciones` para revisar JSON, JSON-LD, TTL, logs y resumen de jobs.
 
 ## Resultado visible por ejecución
 
@@ -117,16 +125,7 @@ Cada botón `Ejecutar` crea un job persistido en `state/web_jobs/`. Al terminar,
 - vista previa corta de JSON, JSON-LD, TTL, YAML y CSV;
 - enlace a la pantalla `Artefactos` cuando el fichero forma parte de la lista segura de evidencias consultables.
 
-Esto cubre tanto operaciones de CLI Python como scripts PowerShell. Si un script no genera un artefacto persistente, la web sigue dejando evidencia visible mediante el estado, el mensaje final, la duración, el código de salida y el log completo. Los scripts que producen evidencias de validación escriben además ficheros en `tmp_pytest/`.
-
-Ejemplos de resúmenes mostrados:
-
-- `workflow-dry-run`: tablas descubiertas, filas de hoja cargadas, validez de la hoja y cambios planificados.
-- `workflow-apply`: cambios aplicados, datasets exportados y conformidad SHACL.
-- `validate-runtime`: conformidad técnica y de gobierno del estado vivo.
-- `run-validation-suite`: conformidad runtime, idempotencia, SHACL y pre-push checks.
-- `clear-openmetadata-postgres-demo`: servicio eliminado y tablas restantes asociadas al servicio.
-- `ingest-postgres`: servicio usado, base de datos y tablas detectadas en OpenMetadata.
+Esto cubre tanto operaciones de CLI Python como scripts PowerShell. Si un script no genera un artefacto persistente, la web sigue dejando evidencia visible mediante el estado, el mensaje final, la duración, el código de salida y el log completo.
 
 ## Comandos equivalentes
 
@@ -140,10 +139,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\restore_openmetadata_st
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\deploy_postgres_k8s.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\launch_infra.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\delete_cluster_preserve_state.ps1
-powershell -ExecutionPolicy Bypass -File .\scripts\infra\reset_poc_clean.ps1 -RunFullFlow -SkipPipInstall
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\reset_platform_clean.ps1 -RunFullFlow -SkipPipInstall
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_full_flow.ps1 -SkipPipInstall
 python -m om_dcat_sync validate-governance-sheet --sheet .\tfm_ingestor\config\gold_governance.csv
-powershell -ExecutionPolicy Bypass -File .\scripts\infra\clear_openmetadata_postgres_demo.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\clear_openmetadata_postgres_source.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\ingest_postgres.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\bootstrap_governance_from_env.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\refresh_governance_sheet_from_env.ps1 -SkipPipInstall
@@ -158,8 +157,6 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\validate_live_dcat.ps1
 ```
 
 `port_forward_openmetadata.ps1` no se expone como job normal porque es un proceso persistente. La app abre port-forward temporal dentro de los scripts que lo necesitan y el comando manual sigue documentado en `Preparación`.
-
-No existe endpoint para ejecutar comandos arbitrarios.
 
 ## Artefactos principales
 
@@ -178,14 +175,11 @@ No existe endpoint para ejecutar comandos arbitrarios.
 
 ## Despliegue básico
 
-La ruta recomendada para demo es local con `npm run dev`. Se incluye `web/Dockerfile` como base para VPS o contenedor controlador, asumiendo que el repositorio completo se monta o copia en `/workspace` y que la infraestructura ya está disponible.
+La ruta recomendada para el caso de uso de validación es local con `npm run dev`. Se incluye `web/Dockerfile` como base para VPS o contenedor controlador, asumiendo que el repositorio completo se monta o copia en `/workspace` y que la infraestructura ya está disponible.
 
 ## Trabajo futuro
 
-- autenticación;
-- multiusuario;
-- GitHub Project;
-- base de datos propia;
-- edición avanzada de YAML;
-- nuevos datasets dinámicos;
-- auditoría avanzada.
+- Ejecutar el workflow con Airflow u otro planificador para exportar periódicamente el catálogo y subirlo a un CKAN externo cuando exista un portal de publicación real.
+- Enviar por correo el informe de validación RDF/SHACL a responsables de catálogo.
+- Generar informes presentables en PDF o HTML además de JSON y TTL.
+- Añadir autenticación, permisos y auditoría avanzada si la app pasa de consola local a herramienta multiusuario.

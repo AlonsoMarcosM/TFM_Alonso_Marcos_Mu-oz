@@ -9,18 +9,25 @@ export default function GobiernoPage() {
       <header>
         <h1 className="page-title">Gobierno funcional gold</h1>
         <p className="lead">
-          Edita los metadatos funcionales de los datasets gold concretos de la PoC. La hoja cubre los campos
+          Edita los metadatos funcionales de los datasets gold concretos de la plataforma. La hoja cubre los campos
           por dataset que decide una persona responsable del catálogo; los demás obligatorios HVD se derivan
           desde la configuración global y el exportador DCAT.
         </p>
       </header>
       <section className="grid">
         <article className="card">
+          <h2>Catálogo UCLM</h2>
+          <p className="muted">
+            <code>governance_defaults.yaml</code> fija el organismo publicador, URI institucional, licencias, contacto,
+            legislación HVD y URLs base. La hoja solo recoge lo que cambia por dataset.
+          </p>
+        </article>
+        <article className="card">
           <h2>Qué significa publicar</h2>
           <p className="muted">
             <strong>si</strong> significa que la tabla gold entra en el catálogo DCAT exportado y debe tener
             título, descripción, publicador, temática, categoría HVD y URL de acceso. <strong>no</strong> deja
-            la tabla fuera del contrato publicable de la PoC.
+            la tabla fuera del contrato publicable de la plataforma.
           </p>
         </article>
         <article className="card">

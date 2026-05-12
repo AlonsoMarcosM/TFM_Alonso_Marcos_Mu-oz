@@ -1,0 +1,39 @@
+\section{Validación}
+
+La validación del repositorio no depende de comprobaciones manuales del operador. Queda integrada en comandos y scripts versionados.
+
+Las shapes SHACL utilizadas para la validación DCAT-AP-ES están vendorizadas dentro del repositorio en \texttt{tfm\_ingestor/src/tfm\_ingestor/resources/shacl}. Este directorio replica el árbol oficial \texttt{shacl/1.0.0} de \texttt{datosgobes/DCAT-AP-ES}, congelado en el commit \texttt{f2c8a88868b89239c9f54bffdf621cded2401b9f}. Por tanto, la validación no descarga shapes remotas durante la ejecución.
+
+Se han implementado pruebas con \texttt{pytest} para:
+\begin{itemize}
+  \item carga y validación de configuraciones YAML,
+  \item reglas de mapeo \texttt{schema/domain/layer},
+  \item planificación de operaciones de enriquecimiento,
+  \item exportación JSON-LD en el perfil activo DCAT-AP-ES con caso HVD,
+  \item validación estructural del estado vivo,
+  \item higiene del repositorio.
+\end{itemize}
+
+Ejecución:
+\begin{verbatim}
+$env:PYTEST_DISABLE_PLUGIN_AUTOLOAD="1"; python -m pytest
+\end{verbatim}
+
+Además, la validación funcional del TFM se apoya en los siguientes puntos de entrada:
+\begin{itemize}
+  \item \texttt{python -m om\_dcat\_sync validate-runtime}
+  \item \texttt{python -m om\_dcat\_sync validate-dcat --profile-case hvd}
+  \item \texttt{powershell -ExecutionPolicy Bypass -File .\textbackslash scripts\textbackslash infra\textbackslash run\_validation\_suite.ps1}
+\end{itemize}
+
+La consola web ejecuta esos mismos puntos de entrada mediante botones. Para el operador de negocio, la validación queda visible como jobs, mensajes de éxito o error, informes JSON/TTL y artefactos consultables. Para la memoria, esos artefactos evidencian trazabilidad entre activos técnicos, metadatos gobernados en OpenMetadata, catálogo JSON-LD y conformidad SHACL.
+
+La comprobación cubre:
+\begin{itemize}
+  \item inventario técnico ingerido (\texttt{service}, \texttt{database}, \texttt{schema}, \texttt{table}, \texttt{column}) frente a \texttt{sql/opendata\_demo\_init.sql},
+  \item consistencia entre hoja funcional y metadatos gobernados en OpenMetadata,
+  \item exportación JSON-LD y validación SHACL HVD,
+  \item idempotencia del workflow canónico en segunda ejecución.
+\end{itemize}
+
+En la última ejecución completa de la suite reproducible se obtuvo \texttt{runtime\_conforms=true}, \texttt{technical\_conforms=true}, \texttt{governance\_conforms=true}, \texttt{shacl\_conforms=true}, \texttt{idempotence\_conforms=true}, \texttt{tables\_exported=2}, \texttt{first\_applied=2} y \texttt{second\_applied=0}. El informe canónico queda en \texttt{tmp\_pytest/validation\_suite\_summary.json}.

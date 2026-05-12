@@ -6,10 +6,10 @@ Repositorio del Trabajo Fin de Máster:
 - Título oficial (EN): `Design and Configuration of a Metadata Model in OpenMetadata According to the DCAT-AP Standard for Data Catalog Interoperability`.
 - Ficha oficial UCLM literal: `docs/tfe_ficha_oficial_uclm.txt`.
 
-## Qué demuestra este proyecto
+## Qué valida este proyecto
 
 - Despliegue reproducible de OpenMetadata en Kubernetes + Helm.
-- Flujo de metadatos gobernados sobre PostgreSQL demo y OpenMetadata.
+- Flujo de metadatos gobernados sobre PostgreSQL de referencia y OpenMetadata.
 - Exportación DCAT-AP-ES en JSON-LD.
 - Validación SHACL reproducible incluida en el propio repositorio.
 - Shapes SHACL oficiales vendorizadas en `tfm_ingestor/src/tfm_ingestor/resources/shacl`, congeladas desde `datosgobes/DCAT-AP-ES/shacl/1.0.0` en el commit `f2c8a88868b89239c9f54bffdf621cded2401b9f`.
@@ -18,15 +18,17 @@ Repositorio del Trabajo Fin de Máster:
 
 Este TFM trabaja sobre **metadatos**, no sobre datos de negocio.
 
-- Los activos técnicos proceden del PostgreSQL demo `bronze/silver/gold`.
-- Solo la capa `gold` entra en el catálogo publicable de la PoC.
+- Los activos técnicos proceden del PostgreSQL de referencia `bronze/silver/gold`.
+- Solo la capa `gold` entra en el catálogo publicable de la plataforma.
 - El perfil activo del repositorio es `DCAT-AP-ES` con el caso `HVD` activado para los datasets `gold`.
+
+Los servicios conectados a OpenMetadata forman el catálogo técnico gobernado de la plataforma. En el caso de uso de validación, ese catálogo se publica funcionalmente como catálogo UCLM: `gold_governance.csv` define la curación por dataset y `governance_defaults.yaml` completa publicador, URI de organismo, licencias, contacto, legislación HVD y URLs base. La salida es RDF serializado en JSON-LD, preparado para interoperar con `datos.gob.es` y catálogos europeos compatibles.
 
 Importante:
 
 - En la memoria del TFM, `DCAT-AP` sigue siendo el marco oficial del enunciado.
-- En la implementación, la PoC usa `DCAT-AP-ES = DCAT-AP 2.1.1 + DCAT-AP HVD 2.2.0 + especificaciones adicionales`.
-- La calificación HVD en la PoC se usa como **hipótesis de diseño y validación** para ejercitar la extensión HVD dentro del entorno demo. No debe interpretarse como una calificación jurídica automática de datasets reales fuera de la PoC.
+- En la implementación, la plataforma usa `DCAT-AP-ES = DCAT-AP 2.1.1 + DCAT-AP HVD 2.2.0 + especificaciones adicionales`.
+- La calificación HVD en la plataforma se usa como **hipótesis de diseño y validación** para ejercitar la extensión HVD dentro del caso de uso de validación. No debe interpretarse como una calificación jurídica automática de datasets reales fuera de la plataforma.
 
 ## Perfil activo del repositorio
 
@@ -69,7 +71,7 @@ Resumen:
 - `web/`: consola web operativa en Next.js.
 - `scripts/`: scripts reproducibles de infraestructura, planificación y calidad.
 - `k8s/`: configuración declarativa Helm/Kubernetes.
-- `sql/`: PostgreSQL demo reproducible.
+- `sql/`: PostgreSQL de referencia reproducible.
 
 Se mantienen nombres técnicos en inglés cuando forman parte de comandos, paquetes o convenciones del ecosistema. La documentación y los textos visibles de la app se redactan en español.
 
@@ -79,7 +81,7 @@ Se mantienen nombres técnicos en inglés cuando forman parte de comandos, paque
 2. Ingestar metadatos técnicos en OpenMetadata.
 3. Crear tags y custom properties mínimas.
 4. Ejecutar `om_dcat_sync workflow run --dry-run` para refrescar la hoja funcional y generar un plan reproducible.
-5. Curar funcionalmente `gold_governance.csv` cuando el workflow indique que faltan obligatorios editoriales.
+5. Curar funcionalmente `gold_governance.csv` cuando el workflow indique que faltan obligatorios editoriales; esa hoja es la fuente canónica de sincronización para los datasets `gold`.
 6. Volver a ejecutar `workflow run --dry-run` para revisar el plan.
 7. Ejecutar `workflow run --allow-warnings` para aplicar, exportar y validar.
 
@@ -95,7 +97,9 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_full_flow.ps1
 
 ## App web operativa
 
-La PoC incluye una consola web en `web/` para ejecutar el flujo sin memorizar comandos. La app no reimplementa el núcleo: lanza la lista cerrada de scripts y comandos versionados, edita `tfm_ingestor/config/gold_governance.csv` y muestra el resultado de cada ejecución.
+La plataforma incluye una consola web en `web/` para ejecutar el flujo sin memorizar comandos. La app no reimplementa el núcleo: lanza la lista cerrada de scripts y comandos versionados, edita `tfm_ingestor/config/gold_governance.csv` y muestra el resultado de cada ejecución.
+
+Para un operador de negocio, el recorrido es: comprobar infraestructura, ingestar activos técnicos, revisar la hoja de gobierno, ejecutar el workflow, exportar DCAT-AP-ES, validar SHACL y revisar evidencias. Cada botón corresponde a un script PowerShell o a `python -m om_dcat_sync`; no existen comandos arbitrarios ni conexión directa desde el frontend a OpenMetadata.
 
 Arranque local:
 

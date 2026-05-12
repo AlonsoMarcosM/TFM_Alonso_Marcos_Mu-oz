@@ -1,0 +1,29 @@
+\section{Modelado DCAT-AP-ES en OpenMetadata}
+
+La referencia normativa usada es DCAT-AP-ES y su sección de conformidad:
+\begin{itemize}
+  \item \texttt{https://datosgobes.github.io/DCAT-AP-ES/}
+  \item \texttt{https://datosgobes.github.io/DCAT-AP-ES/\#conformidad}
+\end{itemize}
+
+La plataforma no intenta replicar todo el modelo editorial de un portal de datos abiertos. El objetivo es evidenciar un flujo completo y reproducible: conectar servicios técnicos a OpenMetadata, convertirlos en un catálogo gobernado, exportar RDF serializado en JSON-LD y validar ese grafo contra las shapes DCAT-AP-ES.
+
+Clases activas en el caso de uso de validación:
+\begin{itemize}
+  \item \textbf{dcat:Catalog}: catálogo UCLM construido desde \texttt{governance\_defaults.yaml}.
+  \item \textbf{dcat:Dataset}: datasets publicables aproximados mediante tablas \texttt{gold} de OpenMetadata.
+  \item \textbf{dcat:Distribution}: una distribución por dataset, con URL de acceso gobernada.
+  \item \textbf{dcat:DataService}: servicio de datos derivado para cubrir el perfil HVD activo.
+  \item \textbf{foaf:Agent}: organismo publicador, con UCLM como identidad institucional del catálogo.
+\end{itemize}
+
+Correspondencia aplicada:
+\begin{itemize}
+  \item Dataset DCAT $\rightarrow$ \texttt{Table/View} en OpenMetadata.
+  \item Catalog DCAT $\rightarrow$ defaults globales de \texttt{governance\_defaults.yaml}.
+  \item Distribution DCAT $\rightarrow$ custom property \texttt{dcat\_access\_url}.
+  \item DataService DCAT $\rightarrow$ derivación automática desde defaults HVD.
+  \item Agent DCAT $\rightarrow$ publicador configurado y URI institucional.
+\end{itemize}
+
+La hoja \texttt{gold\_governance.csv} recoge los metadatos funcionales que cambian por dataset: título, descripción, publicador, temática, categoría HVD y URL de acceso. Las propiedades globales del catálogo, licencias, legislación aplicable, contacto y URLs base se centralizan en \texttt{governance\_defaults.yaml}. Esta separación permite que un operador de negocio cure metadatos sin modificar código.

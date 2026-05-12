@@ -5,35 +5,47 @@ Este documento centraliza diagramas reutilizables para memoria, defensa y portfo
 ## 1) Arquitectura lógica por capas
 
 ```mermaid
-flowchart TB
-  subgraph INFRA["Infraestructura reproducible (Kubernetes)"]
-    PG[(postgres-demo)]
+flowchart LR
+  subgraph SRC["Fuente técnica reproducible"]
+    PG[(PostgreSQL de referencia)]
+  end
+
+  subgraph META["Catálogo técnico en Kubernetes"]
     OM[OpenMetadata]
     MY[(MySQL)]
     OS[(OpenSearch)]
   end
 
-  subgraph GOV["Capa de gobierno de metadatos"]
-    SYNC[om_dcat_sync]
+  subgraph INPUT["Entrada funcional y configuración"]
+    DISC[Tablas gold descubiertas]
     SHEET[(gold_governance.csv)]
     CFG[(governance_defaults.yaml)]
+    OP[Operario de negocio]
+    STATE[Estado vivo consultado]
   end
 
-  subgraph EXT["Fuentes externas de metadatos"]
-    CKAN1[CKAN MITECO]
-    CKAN2[CKAN datos.gob.es]
+  subgraph CORE["Núcleo Python canónico"]
+    SYNC[om_dcat_sync workflow]
+    APPLY[Plan y aplicación de gobierno]
+  end
+
+  subgraph OUT["Catálogo UCLM gobernado"]
+    CAT[DCAT-AP-ES/HVD<br/>JSON-LD/RDF validable]
   end
 
   PG -->|ingesta técnica| OM
   OM --> MY
   OM --> OS
-  CFG --> SYNC
-  OM -->|descubre tablas gold| SYNC
-  SYNC -->|genera hoja| SHEET
-  SHEET -->|curación funcional| SYNC
-  SYNC -->|publisher + theme + hvdCategory + accessURL| OM
-  CKAN1 -->|harvest| SYNC
-  CKAN2 -->|fallback| SYNC
+  OM -->|activos técnicos| DISC
+  DISC -->|refresco controlado| SHEET
+  OP -->|curación funcional| SHEET
+  OM -->|estado vivo| STATE
+  STATE -->|lectura API| SYNC
+  CFG -->|defaults globales DCAT/HVD| SYNC
+  SHEET -->|metadatos por dataset| SYNC
+  SYNC --> APPLY
+  APPLY -->|cambios idempotentes| OM
+  SYNC -->|exporta y valida| CAT
 ```
 
 ## 2) Flujo operativo real
@@ -53,11 +65,11 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-  TBL[Assets técnicos en OpenMetadata] --> GOV[Metadatos gobernados\nTitle + Description + Publisher + Theme + HVD Category + AccessURL]
-  GOV --> DER[Metadatos derivados\nLegislation + License + DataService + ContactPoint]
-  DER --> DCAT[Modelo activo\nCatalog + Dataset + Distribution + DataService + Agent]
-  DCAT --> OUT[Salida interoperable\nJSON-LD]
-  OUT --> SHACL[Validación SHACL\nprofile-case hvd]
+  TBL[Assets técnicos en OpenMetadata] --> GOV[Metadatos gobernados<br/>Title + Description + Publisher + Theme + HVD Category + AccessURL]
+  GOV --> DER[Metadatos derivados<br/>Legislation + License + DataService + ContactPoint]
+  DER --> DCAT[Modelo activo<br/>Catalog + Dataset + Distribution + DataService + Agent]
+  DCAT --> OUT[Salida interoperable<br/>JSON-LD]
+  OUT --> SHACL[Validación SHACL<br/>profile-case hvd]
 ```
 
 ## 4) Mapeo activo conforme
@@ -80,7 +92,7 @@ flowchart LR
   OM[OpenMetadata] -->|tablas gold| C
   C -->|refresca hoja sin perder curación| S
   S -->|--sheet| C
-  C -->|si faltan obligatorios,\nmarca sheet_valid=false| S
+  C -->|si faltan obligatorios,<br/>marca sheet_valid=false| S
   C -->|workflow run --allow-warnings| OM
   C -->|exporta y valida| J[dcat_catalog.jsonld]
   J -->|SHACL HVD| R[SHACL report]
@@ -97,4 +109,78 @@ flowchart LR
   EJEC --> VAL[Validación SHACL]
 ```
 
-La PoC actual usa scripts PowerShell. Airflow o CI/CD quedan como evolución natural.
+La plataforma actual usa scripts PowerShell y app web. Airflow o CI/CD quedan como evolución natural.
+
+## 7) App web operativa y núcleo Python
+
+```mermaid
+flowchart LR
+  USR[Operador] -->|navegador| UI[Consola web Next.js]
+  UI -->|API interna Next.js| API[Capa servidor cerrada]
+  API -->|edita| CSV[(gold_governance.csv)]
+  API -->|invoca lista cerrada| CLI[om_dcat_sync workflow run]
+  API -->|invoca lista cerrada| SCR[Scripts PowerShell de infra]
+  CLI --> CORE[Capa servicios Python<br/>workflow_service + governance_service]
+  SCR --> CORE
+  CORE --> OM[OpenMetadata API]
+  CORE --> EXP[Exportador DCAT-AP-ES]
+  CORE --> SHACL[Validación SHACL HVD]
+  API -->|persiste| JOBS[(state/web_jobs/)]
+  API -->|expone| ART[(tmp_pytest/ artefactos)]
+```
+
+La UI nunca duplica reglas: invoca el mismo núcleo Python que el CLI y los scripts.
+
+## 8) Despliegue Kubernetes reproducible
+
+```mermaid
+flowchart TB
+  subgraph LOCAL["Host local"]
+    DOCKER[Docker Engine]
+    KIND[Kind]
+    KCTL[kubectl + helm]
+    PSCR[Scripts PowerShell de infra]
+  end
+  subgraph CLUSTER["Cluster Kind"]
+    NS[Namespace default]
+    subgraph DEPS["Helm release openmetadata-dependencies"]
+      MY[(MySQL)]
+      OS[(OpenSearch)]
+    end
+    subgraph APP["Helm release openmetadata"]
+      OM[OpenMetadata server]
+    end
+    PG[(postgres-demo<br/>ConfigMap + Service)]
+  end
+  PSCR -->|crea cluster| KIND
+  KIND --> CLUSTER
+  PSCR -->|helm upgrade --install| DEPS
+  PSCR -->|helm upgrade --install| APP
+  PSCR -->|aplica manifiestos| PG
+  KCTL -->|port-forward 8585| OM
+  OM --> MY
+  OM --> OS
+  OM -->|ingesta técnica| PG
+```
+
+Los `values` Helm canónicos están en `k8s/openmetadata.values.yaml` y `k8s/openmetadata-dependencies.values.yaml`. El SQL fuente reproducible se aplica desde `sql/opendata_demo_init.sql`.
+
+## 9) Artefactos y evidencias reproducibles
+
+```mermaid
+flowchart LR
+  WF[workflow run --allow-warnings] --> J1[dcat_catalog.jsonld]
+  WF --> J2[dcat_validation_report.ttl]
+  WF --> J3[gold_governance.csv<br/>curada y validada]
+  SUITE[run_validation_suite.ps1] --> S1[runtime_validation_report.json]
+  SUITE --> S2[validation_suite_summary.json]
+  SUITE --> S3[validation_suite_catalog.jsonld]
+  SUITE --> S4[validation_suite_shacl_report.ttl]
+  SUITE --> S5[pre_push_checks.json]
+  J1 --> MEM[Memoria + defensa]
+  J2 --> MEM
+  S2 --> MEM
+  S4 --> MEM
+```
+
+Todos los artefactos viven en `tmp_pytest/`, ignorado por Git pero regenerable de forma determinista desde el repositorio limpio.

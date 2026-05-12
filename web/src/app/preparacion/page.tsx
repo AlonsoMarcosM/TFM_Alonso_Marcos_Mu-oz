@@ -5,23 +5,30 @@ const setupCommands = [
 ];
 
 const future = [
-  "Autenticación y permisos",
-  "GitHub Project",
-  "Edición avanzada de YAML",
-  "Nuevos datasets dinámicos",
-  "Base de datos propia",
+  "Orquestación diaria con Airflow u otro planificador",
+  "Subida automática a un CKAN externo",
+  "Envío por correo del informe RDF/SHACL",
+  "Informe PDF o HTML además de JSON/TTL",
+  "Autenticación, permisos y auditoría avanzada",
 ];
 
 export default function PreparacionPage() {
   return (
     <div className="stack">
       <header>
-        <h1 className="page-title">Preparación de demo</h1>
+        <h1 className="page-title">Preparación del caso de uso de validación</h1>
         <p className="lead">
-          Estos comandos preparan el entorno base. La gestión de infraestructura y reset ya está disponible como
-          botones dentro del menú Infraestructura.
+          Estos comandos preparan el entorno base. La gestión de infraestructura y reset también está disponible como
+          botones dentro del menú Infraestructura; todos invocan scripts versionados del repositorio.
         </p>
       </header>
+      <section className="panel">
+        <h2>Lectura operativa</h2>
+        <p className="muted">
+          La preparación deja disponible OpenMetadata, PostgreSQL de referencia y la consola web. A partir de ahí, el
+          operador trabaja con botones y evidencias sin construir comandos manuales.
+        </p>
+      </section>
       <section className="panel">
         <h2>Comandos previos</h2>
         {setupCommands.map((command) => (
@@ -29,7 +36,7 @@ export default function PreparacionPage() {
         ))}
       </section>
       <section className="panel">
-        <h2>Fuera de alcance para esta demo</h2>
+        <h2>Trabajo futuro fuera de esta iteración</h2>
         <ul>
           {future.map((item) => (
             <li key={item}>{item}</li>

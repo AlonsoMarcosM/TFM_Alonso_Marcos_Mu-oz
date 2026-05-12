@@ -26,7 +26,7 @@ No se renombran ahora módulos como `workflow_service.py`, `governance_service.p
 - Sí: permite usar una hoja CSV para que una persona no técnica mantenga título, descripción, publicador, temática, categoría HVD y URL de acceso.
 - Sí: exporta `Catalog`, `Dataset`, `Distribution`, `DataService` y `Agent`.
 - No: no implementa GeoDCAT-AP ni HealthDCAT-AP.
-- No: no sustituye a una API productiva real; el `DataService` de la PoC es una representación metadata reproducible del canal de acceso.
+- No: no sustituye a una API productiva real; el `DataService` de la plataforma es una representación metadata reproducible del canal de acceso.
 
 ## Instalación
 
@@ -47,10 +47,9 @@ Archivos principales:
 - `tfm_ingestor/config/operational_profile.yaml`
 - `tfm_ingestor/config/governance_defaults.yaml`
 - `tfm_ingestor/config/mapping_rules.yaml`
-- `tfm_ingestor/config/ckan_harvest.yaml`
 - `tfm_ingestor/config/gold_governance.csv`
 
-Estos nombres quedan como contrato técnico estable. En castellano equivalen a: perfil operativo, defaults de gobierno, reglas de mapeo, configuración CKAN y hoja de gobierno gold. La traducción se usa en texto, no en el nombre físico del fichero, para no duplicar rutas ni romper automatización.
+Estos nombres quedan como contrato técnico estable. En castellano equivalen a: perfil operativo, defaults de gobierno, reglas de mapeo y hoja de gobierno gold. La traducción se usa en texto, no en el nombre físico del fichero, para no duplicar rutas ni romper automatización.
 
 Prerequisitos en OpenMetadata:
 
@@ -80,6 +79,7 @@ Comportamiento esperado:
 - descubre automáticamente las tablas `gold` visibles en OpenMetadata;
 - genera o refresca `tfm_ingestor/config/gold_governance.csv`;
 - conserva la curación manual previa;
+- usa `gold_governance.csv` como fuente canónica para sincronizar los metadatos funcionales de cada dataset `gold`;
 - serializa un plan reproducible cuando se usa `--plan-output`;
 - si la hoja aún no cumple obligatorios editoriales, devuelve `sheet_valid=false` y el motivo exacto sin aplicar cambios.
 
@@ -117,12 +117,12 @@ No debería tocar:
 - `table_name`
 - `table_fqn`
 
-Valores temáticos admitidos en la PoC demo:
+Valores temáticos admitidos en la plataforma de validación:
 
 - los sectores NTI-RISP definidos en las SHACL locales congeladas, usando alias de hoja en `snake_case`;
 - ejemplos: `transporte`, `cultura_ocio`, `medio_ambiente`, `sector_publico`.
 
-Valores HVD admitidos en la PoC demo:
+Valores HVD admitidos en la plataforma de validación:
 
 - las seis categorías superiores del vocabulario europeo HVD;
 - ejemplos: `movilidad`, `estadisticas`, `geoespacial`, `observacion_de_la_tierra_y_medio_ambiente`.
@@ -157,23 +157,11 @@ python -m om_dcat_sync --sheet tfm_ingestor/config/gold_governance.csv --dry-run
 python -m om_dcat_sync --sheet tfm_ingestor/config/gold_governance.csv
 ```
 
-## Harvesting CKAN
+## Origen de metadatos
 
-Uso opcional:
+El origen canónico de la plataforma es PostgreSQL de referencia ingerido por OpenMetadata. El CLI trabaja sobre activos técnicos ya descubiertos (`Table/View`) y completa los metadatos funcionales necesarios para exportar DCAT-AP-ES.
 
-```powershell
-python -m om_dcat_sync harvest-ckan --dry-run
-python -m om_dcat_sync harvest-ckan
-```
-
-Puede completar:
-
-- `displayName`
-- `description`
-- `dcat_publisher_name`
-- `dcat_hvd_category` si la temática CKAN mapea a una categoría HVD configurada
-- `dcat_access_url`
-- temática
+El planteamiento de cosechar CKAN se descarta como vía operativa del TFM: CKAN es útil como catálogo de publicación e interoperabilidad de metadatos, pero cosecharlo solo replica metadatos ya publicados. Para evidenciar gobierno de datos según DAMA resulta más sólido partir de sistemas fuente gobernables, capturar metadatos técnicos en OpenMetadata y completar después propietario, descripción, temática, categoría HVD y URL de acceso.
 
 ## Exportación DCAT-AP-ES
 
@@ -225,7 +213,7 @@ $env:PYTEST_DISABLE_PLUGIN_AUTOLOAD="1"; python -m pytest
 
 ## Validación estructural del estado vivo
 
-Validar la instancia real de OpenMetadata contra el contrato técnico del SQL demo y la hoja funcional:
+Validar la instancia real de OpenMetadata contra el contrato técnico del SQL de referencia y la hoja funcional:
 
 ```powershell
 python -m om_dcat_sync validate-runtime --strict --output tmp_pytest/runtime_validation_report.json

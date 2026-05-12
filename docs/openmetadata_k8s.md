@@ -1,6 +1,6 @@
 # Despliegue local de OpenMetadata en Kubernetes
 
-Objetivo: levantar OpenMetadata en Kubernetes local de la forma más simple posible para una PoC de TFM, manteniendo una ruta razonablemente portable hacia un VPS o cloud.
+Objetivo: levantar OpenMetadata en Kubernetes local de la forma más simple posible para una plataforma de TFM, manteniendo una ruta razonablemente portable hacia un VPS o cloud.
 
 Este documento también sirve como explicación de infraestructura para defensa, memoria y portfolio. Está escrito pensando en una persona que llega al repositorio sin experiencia previa en DevOps.
 
@@ -42,7 +42,7 @@ Traducción sencilla:
 
 Docker Desktop es la base local. Permite ejecutar contenedores en el portátil.
 
-En este proyecto Docker no ejecuta directamente todos los servicios de la PoC, como ocurriría con un `docker-compose.yml`. Aquí Docker ejecuta principalmente el nodo de Kind.
+En este proyecto Docker no ejecuta directamente todos los servicios de la plataforma, como ocurriría con un `docker-compose.yml`. Aquí Docker ejecuta principalmente el nodo de Kind.
 
 Comprobación:
 
@@ -166,7 +166,7 @@ Acceso local:
 http://localhost:8585
 ```
 
-Credenciales demo:
+Credenciales de referencia:
 
 ```text
 admin@open-metadata.org / admin
@@ -187,7 +187,7 @@ Guarda el estado funcional de OpenMetadata:
 - owners;
 - metadatos enriquecidos.
 
-No debe confundirse con el PostgreSQL demo.
+No debe confundirse con el PostgreSQL de referencia.
 
 ### OpenSearch
 
@@ -195,11 +195,11 @@ OpenSearch es el motor de búsqueda usado por OpenMetadata.
 
 OpenMetadata guarda su estado en MySQL, pero usa OpenSearch para buscar entidades de forma eficiente en la interfaz y en algunas operaciones internas.
 
-### PostgreSQL demo
+### PostgreSQL de referencia
 
-`postgres-demo` es una base de datos de ejemplo creada por el repositorio.
+`postgres-demo` es una base de datos de referencia creada por el repositorio.
 
-Su función es actuar como fuente técnica de datos para la PoC. OpenMetadata la ingiere como si fuera una fuente real.
+Su función es actuar como fuente técnica de datos para la plataforma. OpenMetadata la ingiere como si fuera una fuente real.
 
 El SQL inicial está en:
 
@@ -216,7 +216,7 @@ scripts/infra/deploy_postgres_k8s.ps1
 Resumen conceptual:
 
 ```text
-PostgreSQL demo = fuente de datos que se cataloga
+PostgreSQL de referencia = fuente de datos que se cataloga
 OpenMetadata = catálogo donde se registran los metadatos
 MySQL = base interna de OpenMetadata
 OpenSearch = buscador interno de OpenMetadata
@@ -253,17 +253,17 @@ k8s/openmetadata.values.yaml
 
 Para este TFM, Kind es una decisión pragmática.
 
-El objetivo no es demostrar alta disponibilidad ni operación avanzada de plataforma. El objetivo es demostrar un flujo reproducible de metadatos con OpenMetadata, PostgreSQL, DCAT-AP-ES y validación SHACL.
+El objetivo no es cubrir alta disponibilidad ni operación avanzada de plataforma. El objetivo es evidenciar un flujo reproducible de metadatos con OpenMetadata, PostgreSQL, DCAT-AP-ES y validación SHACL.
 
 Kind encaja porque permite usar Kubernetes y Helm sin añadir coste ni complejidad innecesaria.
 
 Alternativas posibles:
 
-- Docker Compose: más simple, pero no demuestra Kubernetes + Helm.
+- Docker Compose: más simple, pero no cubre Kubernetes + Helm.
 - Kubernetes de Docker Desktop: válido, pero menos portable como receta explícita del repo.
 - Minikube: también válido, parecido a Kind, aunque suele añadir más superficie de configuración.
 - k3s en VPS: buena evolución si se quiere desplegar fuera del portátil.
-- Clúster gestionado cloud: opción habitual en empresas, pero excesiva para una PoC de 6 ECTS.
+- Clúster gestionado cloud: opción habitual en empresas, pero excesiva para una plataforma de 6 ECTS.
 
 ## Cómo lo haría una empresa
 
@@ -281,13 +281,13 @@ Lo habitual sería:
 - ingress corporativo;
 - control de acceso y autenticación integrada.
 
-La PoC de este repositorio conserva la parte transferible:
+La plataforma de este repositorio conserva la parte transferible:
 
 - Kubernetes como plataforma;
 - Helm como mecanismo de despliegue;
 - configuración por YAML;
 - scripts reproducibles;
-- separación entre aplicación, dependencias y fuente demo;
+- separación entre aplicación, dependencias y fuente de referencia;
 - evidencias ejecutables.
 
 Lo que no se incluye por alcance del TFM:
@@ -303,7 +303,7 @@ Lo que no se incluye por alcance del TFM:
 
 ## Trabajo futuro de contenerización
 
-La PoC actual no necesita un `Dockerfile` propio porque no se construye una imagen personalizada. Kind utiliza la imagen estándar `kindest/node` para crear el nodo Kubernetes local, y OpenMetadata, MySQL y OpenSearch se despliegan desde charts Helm e imágenes ya existentes.
+La plataforma actual no necesita un `Dockerfile` propio porque no se construye una imagen personalizada. Kind utiliza la imagen estándar `kindest/node` para crear el nodo Kubernetes local, y OpenMetadata, MySQL y OpenSearch se despliegan desde charts Helm e imágenes ya existentes.
 
 Como evolución futura, sí tendría sentido añadir contenerización propia en estos casos:
 
@@ -421,4 +421,4 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\status_infra.ps1
 
 ## Frase útil para memoria o tribunal
 
-La PoC utiliza Kind para disponer de un clúster Kubernetes local, reproducible y de bajo coste. Sobre ese clúster se despliega OpenMetadata mediante Helm, junto con sus dependencias mínimas, MySQL y OpenSearch. Además, se despliega un PostgreSQL demo dentro del mismo clúster como fuente técnica de datos. Esta arquitectura no pretende cubrir requisitos productivos avanzados, sino demostrar un flujo portable de despliegue, ingesta, gobierno de metadatos, exportación DCAT-AP-ES y validación SHACL.
+La plataforma utiliza Kind para disponer de un clúster Kubernetes local, reproducible y de bajo coste. Sobre ese clúster se despliega OpenMetadata mediante Helm, junto con sus dependencias mínimas, MySQL y OpenSearch. Además, se despliega un PostgreSQL de referencia dentro del mismo clúster como fuente técnica de datos. Esta arquitectura no pretende cubrir requisitos productivos avanzados, sino evidenciar un flujo portable de despliegue, ingesta, gobierno de metadatos, exportación DCAT-AP-ES y validación SHACL.

@@ -23,10 +23,27 @@ export default async function HomePage() {
   return (
     <div className="stack">
       <header>
-        <h1 className="page-title">PoC DCAT-AP-ES sobre OpenMetadata</h1>
-        <p className="lead">Consola simple para ejecutar el flujo ya construido: gobierno gold, workflow, exportación, validación y evidencias.</p>
+        <h1 className="page-title">Plataforma de Gobierno del Dato sobre OpenMetadata</h1>
+        <p className="lead">
+          Consola operativa para ejecutar el caso de uso de validación: conectar activos técnicos, gobernar datasets
+          gold, exportar el catálogo UCLM en JSON-LD DCAT-AP-ES y revisar evidencias.
+        </p>
       </header>
       <section className="grid">
+        <article className="card">
+          <h2>Qué hace la consola</h2>
+          <p className="muted">
+            Cada botón lanza una operación cerrada del repositorio: scripts PowerShell o <code>python -m om_dcat_sync</code>.
+            La web no ejecuta comandos arbitrarios ni habla directamente con OpenMetadata.
+          </p>
+        </article>
+        <article className="card">
+          <h2>Resultado de negocio</h2>
+          <p className="muted">
+            Los servicios conectados a OpenMetadata forman un catálogo gobernado. La hoja gold aporta la curación por
+            dataset y los defaults globales completan las propiedades DCAT-AP-ES/HVD del catálogo UCLM.
+          </p>
+        </article>
         <article className="card">
           <h2>Configuración</h2>
           <p>.env: {env.exists ? "detectado" : "no detectado"}</p>
@@ -44,7 +61,7 @@ export default async function HomePage() {
         </article>
       </section>
       <section>
-        <h2>Acciones principales</h2>
+        <h2>Acciones principales del caso de uso</h2>
         <OperationGrid operations={quick} />
       </section>
     </div>

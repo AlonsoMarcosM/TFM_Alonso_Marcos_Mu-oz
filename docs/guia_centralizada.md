@@ -6,7 +6,11 @@ Objetivo: ejecutar el flujo completo sin dispersarse y con el orden correcto.
 
 Primero se ingieren metadatos técnicos en OpenMetadata. Después se enriquecen con metadatos de gobierno `DCAT-AP-ES` y finalmente se exportan y validan con SHACL.
 
-Perfil activo de la PoC:
+Cada servicio conectado a OpenMetadata aporta activos al catálogo gobernado. En este caso de uso, PostgreSQL de referencia genera el inventario técnico, `gold_governance.csv` aporta la curación funcional por dataset y `governance_defaults.yaml` completa las propiedades globales del catálogo UCLM: publicador, URI de organismo, licencias, contacto, legislación HVD y URLs base.
+
+La salida interoperable es RDF serializado en JSON-LD. Queda preparada para publicación o federación hacia `datos.gob.es` y catálogos europeos compatibles, aunque esta iteración no realiza la subida automática a un portal externo.
+
+Perfil activo de la plataforma:
 
 - solo tablas `gold` como datasets publicables;
 - caso `hvd` activo;
@@ -114,25 +118,20 @@ npm run dev
 
 Abrir `http://localhost:3000` y seguir:
 
-1. `Infraestructura`: comprobar prerrequisitos y, si procede, ejecutar `Reset limpio y recrear PoC`.
-2. `Ingesta`: ejecutar `Ingestar PostgreSQL demo` y `Preparar tags y custom properties`.
-3. `Gobierno`: revisar, autorrellenar si se quiere para demo y guardar `gold_governance.csv`.
+1. `Infraestructura`: comprobar prerrequisitos y, si procede, ejecutar `Reset limpio y recrear plataforma`.
+2. `Ingesta`: ejecutar `Ingestar PostgreSQL de referencia` y `Preparar tags y custom properties`.
+3. `Gobierno`: revisar, autorrellenar si se quiere para el caso de uso de validación y guardar `gold_governance.csv`.
 4. `Workflow`: ejecutar `Dry-run del workflow` y después `Aplicar workflow`.
 5. `DCAT`, `Estado vivo` y `Validación`: exportar, validar y cerrar evidencias.
 6. `Artefactos` y `Ejecuciones`: revisar resultados, logs, resúmenes y ficheros generados.
 
 Cada ejecución desde la web queda registrada como job en `state/web_jobs/` y muestra un resultado visible: mensaje final, duración, código de salida, resumen de la salida JSON y artefactos generados.
 
-## Harvesting CKAN
+La web actúa como consola operativa: no habla con OpenMetadata directamente ni ejecuta comandos arbitrarios. Sus botones invocan una lista cerrada de scripts o comandos `om_dcat_sync`, que a su vez usan el núcleo Python común.
 
-Opcional:
+## Comandos detallados
 
-```powershell
-python -m om_dcat_sync harvest-ckan --dry-run
-python -m om_dcat_sync harvest-ckan
-```
-
-Comandos detallados para depuración o uso avanzado:
+Comandos para depuración o uso avanzado:
 
 ```powershell
 python -m om_dcat_sync generate-governance-sheet
