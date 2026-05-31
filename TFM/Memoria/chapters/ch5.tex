@@ -175,7 +175,7 @@ El resultado del gobierno es directamente observable en \ac{OM}: tras el workflo
 
 \figuraMemoria{fig_om_tabla_propiedades.png}{Propiedades personalizadas DCAT y etiquetas \texttt{dcat\_theme.*} aplicadas a una tabla \texttt{gold} en OpenMetadata tras ejecutar el workflow. Elaboración propia.}{fig:om-tabla-propiedades}
 
-\subsection{Exportador \ac{DCATAPES}}
+\subsection{Exportador \texorpdfstring{\ac{DCATAPES}}{DCAT-AP-ES}}
 
 \texttt{dcat\_export.py} compone el grafo conceptual a partir de las clases activas: \texttt{dcat:Catalog}, \texttt{dcat:Dataset}, \texttt{dcat:Distribution}, \texttt{dcat:DataService} y \texttt{foaf:Agent}. La construcción se hace en Python puro mediante diccionarios anidados que respetan el contexto \ac{JSONLD}; cuando es necesario manipular el grafo (normalización, deduplicación), se delega en RDFLib~\cite{rdflib}.
 
