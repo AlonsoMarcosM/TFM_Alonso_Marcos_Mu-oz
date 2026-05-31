@@ -21,6 +21,16 @@ F:\DISCO DURO PORTABLE\INGENIERIA\MASTER\TFM\TFM_Alonso_Marcos_Mu-oz
 
 Kind es la opción recomendada para el clúster local reproducible. Helm 3 puede estar instalado en `PATH` o ser descargado automáticamente por los scripts del repo en `.tools/`.
 
+## Versión de OpenMetadata
+
+La versión de OpenMetadata desplegada y validada en este entorno es **1.12.9**, instalada con los charts oficiales de Helm. Puede comprobarse en cualquier momento contra la instancia viva:
+
+```powershell
+Invoke-RestMethod http://localhost:8585/api/v1/system/version
+```
+
+La lógica de gobierno usa entidades estables de la API REST (servicios, bases de datos, esquemas, tablas, custom properties y tags), por lo que es compatible con la rama 1.12.x y versiones próximas que conserven esas entidades.
+
 ## Comprobación rápida recomendada
 
 Comando canónico del repositorio:

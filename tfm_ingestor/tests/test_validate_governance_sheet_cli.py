@@ -11,7 +11,7 @@ def test_cli_validate_governance_sheet_reports_valid_sheet(tmp_path: Path, capsy
         "\n".join(
             [
                 "publicar;schema_name;table_name;table_fqn;titulo_dataset;descripcion_dataset;publicador;tematica_dcat;categoria_hvd;access_url_distribucion",
-                "si;gold;movilidad_resumen_municipio;svc.db.gold.movilidad_resumen_municipio;Movilidad;Descripcion;UCLM;transporte;movilidad;https://example.org/datos/poc/gold/movilidad",
+                "si;gold;movilidad_resumen_municipio;svc.db.gold.movilidad_resumen_municipio;Movilidad;Descripcion;UCLM;transporte;movilidad;https://example.org/datos/plataforma-gobierno-dato/gold/movilidad",
             ]
         ),
         encoding="utf-8-sig",
@@ -29,7 +29,7 @@ def test_cli_validate_governance_sheet_reports_invalid_sheet(tmp_path: Path, cap
         "\n".join(
             [
                 "publicar;schema_name;table_name;table_fqn;titulo_dataset;descripcion_dataset;publicador;tematica_dcat;categoria_hvd;access_url_distribucion",
-                "si;gold;movilidad_resumen_municipio;svc.db.gold.movilidad_resumen_municipio;Movilidad;;;;movilidad;https://example.org/datos/poc/gold/movilidad",
+                "si;gold;movilidad_resumen_municipio;svc.db.gold.movilidad_resumen_municipio;Movilidad;;;;movilidad;https://example.org/datos/plataforma-gobierno-dato/gold/movilidad",
             ]
         ),
         encoding="utf-8-sig",

@@ -95,7 +95,7 @@ class GitHubApi:
             "Authorization": f"Bearer {token}",
             "Accept": "application/vnd.github+json",
             "X-GitHub-Api-Version": "2022-11-28",
-            "User-Agent": "tfm-github-project-mvp",
+            "User-Agent": "tfm-github-project-planificacion",
         }
 
     def rest(
@@ -1232,9 +1232,9 @@ def build_dry_run_summary(
 
 
 def parse_args() -> argparse.Namespace:
-    default_cfg = Path(__file__).with_name("github_project_mvp.json")
+    default_cfg = Path(__file__).with_name("github_project_planificacion.json")
     load_dotenv(Path.cwd() / ".env")
-    p = argparse.ArgumentParser(description="MVP: crear/actualizar GitHub Project del TFM de forma idempotente.")
+    p = argparse.ArgumentParser(description="Planificación: crear o actualizar GitHub Project del TFM de forma idempotente.")
     p.add_argument("--config", type=Path, default=default_cfg)
     p.add_argument("--owner", default=os.getenv("GITHUB_OWNER"))
     p.add_argument("--repo", default=os.getenv("GITHUB_REPO"))

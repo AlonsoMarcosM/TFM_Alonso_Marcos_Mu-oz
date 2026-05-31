@@ -84,10 +84,12 @@ El fichero `.env` del root debe existir y contener las variables necesarias. La 
 
 ## Arranque local
 
+Gestor de paquetes canónico: **pnpm** (no usar `npm`).
+
 ```powershell
 cd .\web
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Abrir `http://localhost:3000`.
@@ -95,7 +97,7 @@ Abrir `http://localhost:3000`.
 Tests de la app:
 
 ```powershell
-npm test
+pnpm test
 ```
 
 ## Flujo operativo recomendado
@@ -153,6 +155,7 @@ python -m om_dcat_sync export-dcat --output .\tmp_pytest\web_catalog.jsonld
 python -m om_dcat_sync validate-dcat --input .\tmp_pytest\web_catalog.jsonld --profile-case hvd --allow-warnings --report-output .\tmp_pytest\web_shacl_report.ttl
 python -m om_dcat_sync validate-runtime --strict --output .\tmp_pytest\web_runtime_report.json
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_validation_suite.ps1
+python -m om_dcat_sync render-report --input .\tmp_pytest\validation_suite_summary.json --html-output .\tmp_pytest\validation_report.html --pdf-output .\tmp_pytest\validation_report.pdf
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\validate_live_dcat.ps1
 ```
 
@@ -170,12 +173,14 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\validate_live_dcat.ps1
 - `tmp_pytest/validation_suite_summary.json`
 - `tmp_pytest/validation_suite_catalog.jsonld`
 - `tmp_pytest/validation_suite_shacl_report.ttl`
+- `tmp_pytest/validation_report.html`
+- `tmp_pytest/validation_report.pdf`
 - `tmp_pytest/workflow_first_plan.json`
 - `tmp_pytest/workflow_second_plan.json`
 
 ## Despliegue básico
 
-La ruta recomendada para el caso de uso de validación es local con `npm run dev`. Se incluye `web/Dockerfile` como base para VPS o contenedor controlador, asumiendo que el repositorio completo se monta o copia en `/workspace` y que la infraestructura ya está disponible.
+La ruta recomendada para el caso de uso de validación es local con `pnpm dev`. Se incluye `web/Dockerfile` como base para VPS o contenedor controlador, asumiendo que el repositorio completo se monta o copia en `/workspace` y que la infraestructura ya está disponible.
 
 ## Trabajo futuro
 

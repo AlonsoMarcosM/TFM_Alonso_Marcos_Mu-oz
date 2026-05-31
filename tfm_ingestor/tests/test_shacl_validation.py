@@ -18,8 +18,8 @@ from tfm_ingestor.shacl_validation import (
 def _defaults() -> DefaultsConfig:
     return DefaultsConfig(
         catalog=CatalogDefaults(
-            title="Open Data Demo",
-            description="Catálogo demo",
+            title="Plataforma de Gobierno del Dato",
+            description="Catálogo de validación",
             publisher_name="UCLM",
             publisher_uri="http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001",
             homepage="https://example.org",
@@ -30,7 +30,7 @@ def _defaults() -> DefaultsConfig:
             license_default="https://example.org/legal",
         ),
         dataset_defaults={
-            "access_url_base": "https://example.org/datos/poc",
+            "access_url_base": "https://example.org/datos/plataforma-gobierno-dato",
             "hvd_category_by_theme_tag": {
                 "dcat_theme.transporte": "movilidad",
             },
@@ -45,9 +45,9 @@ def _defaults() -> DefaultsConfig:
             "service_documentation_base": "https://example.org/docs",
             "contact": {
                 "organization_name": "UCLM",
-                "fn": "Oficina demo de datos abiertos",
+                "fn": "Oficina de datos abiertos",
                 "has_uid": "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001",
-                "has_email": "mailto:opendata-demo@example.org",
+                "has_email": "mailto:opendata-gobierno-dato@example.org",
                 "has_url": "https://example.org/contacto",
                 "has_telephone": "tel:+34902000000",
             },

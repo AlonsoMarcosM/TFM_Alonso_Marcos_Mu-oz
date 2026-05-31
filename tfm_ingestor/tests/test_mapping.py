@@ -36,11 +36,11 @@ def test_merge_tag_fqns_is_idempotent():
 def test_build_distribution_access_url_is_deterministic():
     assert (
         build_distribution_access_url(
-            base_url="https://example.org/datos/poc",
+            base_url="https://example.org/datos/plataforma-gobierno-dato",
             schema_name="gold",
             table_name="movilidad_resumen_municipio",
         )
-        == "https://example.org/datos/poc/gold/movilidad-resumen-municipio"
+        == "https://example.org/datos/plataforma-gobierno-dato/gold/movilidad-resumen-municipio"
     )
 
 
@@ -67,11 +67,11 @@ def test_build_governance_spec_adds_mandatory_hvd_category_when_mapping_exists()
         tags_by_prefix={"movilidad_": ["dcat_theme.transporte"]},
         catalog_defaults={"publisher_name": "UCLM"},
         dataset_defaults={
-            "access_url_base": "https://example.org/datos/poc",
+            "access_url_base": "https://example.org/datos/plataforma-gobierno-dato",
             "hvd_category_by_theme_tag": {"dcat_theme.transporte": "movilidad"},
         },
     )
     assert spec.tag_fqns == ["dcat_theme.transporte"]
     assert spec.custom_properties["dcat_publisher_name"] == "UCLM"
-    assert spec.custom_properties["dcat_access_url"] == "https://example.org/datos/poc/gold/movilidad-resumen-municipio"
+    assert spec.custom_properties["dcat_access_url"] == "https://example.org/datos/plataforma-gobierno-dato/gold/movilidad-resumen-municipio"
     assert spec.custom_properties["dcat_hvd_category"] == "http://data.europa.eu/bna/c_b79e35eb"

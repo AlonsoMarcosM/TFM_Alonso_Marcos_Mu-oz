@@ -1,6 +1,6 @@
 # Refactor de orquestación operativa
 
-Objetivo: preparar la PoC para que el flujo pueda ejecutarse de forma automática por CLI, scripts y app web, sin duplicar lógica ni multiplicar configuraciones manuales.
+Objetivo: preparar la plataforma para que el flujo pueda ejecutarse de forma automática por CLI, scripts y app web, sin duplicar lógica ni multiplicar configuraciones manuales.
 
 ## Problema que se quería resolver
 
@@ -12,7 +12,7 @@ El sistema ya funcionaba, pero la operación estaba demasiado repartida:
 - lógica de orquestación mezclada en `main.py`;
 - dependencia implícita de que el operador conociera el orden correcto.
 
-Eso era suficiente para una PoC temprana, pero no para:
+Eso era suficiente para una plataforma temprana, pero no para:
 
 - automatizar desde ETL o CI;
 - preparar y mantener una UI operativa;
@@ -90,7 +90,7 @@ python -m om_dcat_sync workflow run --allow-warnings
 
 ## Comportamiento del primer arranque
 
-El workflow se ha hecho tolerante al caso normal de una PoC donde la hoja todavía no está completa.
+El workflow se ha hecho tolerante al caso normal de una plataforma donde la hoja todavía no está completa.
 
 Si después de refrescar `gold_governance.csv` faltan obligatorios editoriales, el comando en `dry-run`:
 
@@ -112,7 +112,6 @@ flowchart LR
   UI[UI futura] --> ADP[Adaptadores de entrada]
   CSV[Hoja CSV actual] --> ADP
   YAML[Defaults y perfil] --> ADP
-  CKAN[Harvesting CKAN] --> ADP
   OM[OpenMetadata] --> DISC[Descubrimiento técnico]
   DISC --> MODEL[Modelo canónico de gobierno]
   ADP --> MODEL
@@ -171,7 +170,7 @@ Alternativa aceptable si se quisiera un frontend mínimo y totalmente desacoplad
 
 - `React + Vite + TypeScript`.
 
-No es la opción elegida porque el objetivo aquí no es solo una demo visual ligera, sino preparar una interfaz futura mantenible y suficientemente estándar para seguir evolucionando con Codex.
+No es la opción elegida porque el objetivo aquí no es solo una interfaz visual ligera, sino preparar una interfaz futura mantenible y suficientemente estándar para seguir evolucionando con Codex.
 
 ## Scripts finos, no inteligentes
 

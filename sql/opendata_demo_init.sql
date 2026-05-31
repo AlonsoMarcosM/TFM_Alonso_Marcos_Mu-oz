@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS gold.agenda_cultural_publica (
   asistentes_est  INT
 );
 
--- DATOS INVENTADOS (pocos, solo para demo)
+-- DATOS INVENTADOS (pocos, solo para validación)
 INSERT INTO bronze.bici_uso_raw (ts, estacion_id, viajes, fuente) VALUES
 ('2026-01-10 08:00:00', 101, 12, 'sensor'),
 ('2026-01-10 09:00:00', 101, 18, 'sensor'),

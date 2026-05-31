@@ -112,7 +112,7 @@ class OmApi:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Create OpenMetadata classifications/tags/custom properties for TFM PoC")
+    parser = argparse.ArgumentParser(description="Create OpenMetadata classifications/tags/custom properties for Plataforma de Gobierno del Dato")
     parser.add_argument("--base-url", default="http://localhost:8585/api/v1")
     parser.add_argument("--token", required=True)
     args = parser.parse_args()
@@ -120,7 +120,7 @@ def main() -> int:
     api = OmApi(base_url=args.base_url, token=args.token)
 
     required_classifications = [
-        ("dcat_theme", "Tags temáticos DCAT-AP-ES para la PoC del TFM"),
+        ("dcat_theme", "Tags temáticos DCAT-AP-ES para la plataforma del TFM"),
     ]
     required_tags = [
         ("dcat_theme", tag_name, f"Sector NTI-RISP DCAT-AP-ES: {label}")

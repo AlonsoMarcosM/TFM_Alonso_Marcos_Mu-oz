@@ -7,7 +7,9 @@ param(
   [string]$ExportOutput = ".\\tmp_pytest\\validation_suite_catalog.jsonld",
   [string]$ShaclReportOutput = ".\\tmp_pytest\\validation_suite_shacl_report.ttl",
   [string]$PrePushReportOutput = ".\\tmp_pytest\\pre_push_checks.json",
-  [string]$SummaryOutput = ".\\tmp_pytest\\validation_suite_summary.json"
+  [string]$SummaryOutput = ".\\tmp_pytest\\validation_suite_summary.json",
+  [string]$HtmlReportOutput = ".\\tmp_pytest\\validation_report.html",
+  [string]$PdfReportOutput = ".\\tmp_pytest\\validation_report.pdf"
 )
 
 $ErrorActionPreference = "Stop"
@@ -85,7 +87,7 @@ try {
   $env:OPENMETADATA_JWT_TOKEN = $token
 
   $first = python -m om_dcat_sync workflow run --allow-warnings --plan-output $FirstWorkflowPlanOutput --export-output $ExportOutput --report-output $ShaclReportOutput | ConvertFrom-Json
-  $runtime = python -m om_dcat_sync validate-runtime --strict --output $RuntimeReportOutput | ConvertFrom-Json
+  $runtime = python -m om_dcat_sync validate-runtime --strict --service-name "postgres_demo_service,postgres_validation_service" --output $RuntimeReportOutput | ConvertFrom-Json
   $second = python -m om_dcat_sync workflow run --allow-warnings --plan-output $SecondWorkflowPlanOutput --export-output $ExportOutput --report-output $ShaclReportOutput | ConvertFrom-Json
 
   $idempotenceOk = ($second.sync.applied -eq 0) -and (($second.sync.planned | Measure-Object).Count -eq 0) -and ($second.validation.conforms -eq $true)
@@ -115,7 +117,18 @@ $summary = @{
 }
 
 $summaryJson = $summary | ConvertTo-Json -Depth 8
-Set-Content -Path $SummaryOutput -Value $summaryJson -Encoding utf8
+# Escribir sin BOM: Set-Content -Encoding utf8 añade BOM en Windows PowerShell 5.1,
+# lo que rompe JSON.parse en la consola web y json.loads del renderizador de informes.
+$summaryAbs = [System.IO.Path]::GetFullPath((Join-Path $repoRoot $SummaryOutput))
+[System.IO.File]::WriteAllText($summaryAbs, $summaryJson, (New-Object System.Text.UTF8Encoding($false)))
+
+# Informe legible (HTML + PDF) a partir del resumen JSON. No es bloqueante.
+try {
+  python -m om_dcat_sync render-report --input $SummaryOutput --html-output $HtmlReportOutput --pdf-output $PdfReportOutput | Out-Null
+  Write-Host "Informe de validación generado: $HtmlReportOutput y $PdfReportOutput"
+} catch {
+  Write-Warning "No se pudo generar el informe HTML/PDF: $($_.Exception.Message)"
+}
 $consoleSummary = @{
   output = $SummaryOutput
   runtime_conforms = $runtime.conforms

@@ -1,0 +1,11 @@
+\chapter{Conclusiones}
+
+El TFM ha diseñado e implementado una Plataforma de Gobierno del Dato que permite gobernar metadatos técnicos en OpenMetadata y exportarlos como catálogo DCAT-AP-ES validable. El trabajo cumple el objetivo general porque no se queda en una configuración conceptual: proporciona infraestructura reproducible, flujo de ingesta, curación funcional, sincronización de gobierno, exportación JSON-LD y validación SHACL.
+
+Los objetivos específicos también se han cubierto. Se ha analizado DCAT-AP-ES y su relación con DCAT-AP y HVD; se ha definido un mapeo entre OpenMetadata y las clases activas del perfil; se han configurado custom properties y tags; se ha implementado un workflow idempotente; se ha generado una salida interoperable; y se ha validado el resultado mediante pruebas, validación runtime y SHACL.
+
+La aportación más relevante es la separación entre tres responsabilidades: OpenMetadata como catálogo técnico, una hoja funcional como punto de curación editorial y un núcleo Python como mecanismo de sincronización, exportación y validación. Esta separación permite que la consola web opere la plataforma sin convertirse en una segunda fuente de reglas de negocio.
+
+El cambio de CKAN a PostgreSQL de referencia se considera una decisión metodológica adecuada. Permite demostrar gobierno de metadatos desde activos técnicos reales y reproducibles, en lugar de cosechar metadatos ya publicados por otro catálogo. CKAN mantiene sentido como posible destino o federación futura, pero no como origen canónico del caso de uso de validación.
+
+El trabajo presenta limitaciones explícitas: opera sobre datos sintéticos, cubre un subconjunto controlado de DCAT-AP-ES, no publica automáticamente en portales externos y no evalúa calidad del dato de negocio. Estas limitaciones se han diseñado conscientemente como frontera de alcance, no como déficit técnico, y no afectan al resultado principal: una solución reproducible, trazable y defendible que transforma activos técnicos gobernados en un catálogo interoperable validado formalmente.

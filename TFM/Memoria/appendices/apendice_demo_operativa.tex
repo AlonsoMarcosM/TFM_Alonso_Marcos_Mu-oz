@@ -1,0 +1,129 @@
+\chapter{Demostración guiada de la plataforma}\label{ap:demo-operativa}
+
+Este anexo describe el recorrido completo que sigue un operario para gobernar metadatos en la plataforma desde el navegador, sin invocar comandos directamente sobre el núcleo Python. Su objetivo es triple: servir de referencia para reproducir la solución, soportar una defensa visual del trabajo y dejar trazado qué artefacto se obtiene en cada paso, hasta el archivo final \ac{RDF} que un harvester externo puede consumir.
+
+\section{Propósito y supuestos iniciales}\label{sec:demo-supuestos}
+
+La demostración asume que el entorno se ha preparado siguiendo el Anexo~\ref{ap:reproduccion}: el clúster Kind está activo con \ac{OM} y sus dependencias desplegados mediante Helm, el PostgreSQL de referencia está inicializado con los esquemas \texttt{bronze}, \texttt{silver} y \texttt{gold}, los dos servicios de ingesta están registrados en \ac{OM} y la consola web se sirve localmente con \texttt{pnpm dev} desde \texttt{web/}. La verificación rápida de prerrequisitos se realiza con el listado~\ref{code:demo-prereq}.
+
+\begin{lstlisting}[language=PowerShell, caption={Comprobación rápida del entorno antes de iniciar la demostración.}, label=code:demo-prereq, captionpos=b]
+kubectl get pods                       # OpenMetadata, MySQL, OpenSearch, Postgres
+curl http://localhost:8585/api/v1/health-check
+cd .\web; pnpm dev                     # consola web en http://localhost:3000
+\end{lstlisting}
+
+A partir de aquí toda la operación discurre por el navegador. La consola web no implementa lógica de gobierno: invoca los mismos servicios Python que el \ac{CLI} (sección~\ref{sec:implementacion-nucleo}) y los scripts de \texttt{scripts/infra/}. La equivalencia entre acción visual y comando subyacente queda recogida en la tabla resumen al cierre del anexo (tabla~\ref{tab:demo-resumen}).
+
+\section{Apertura de la consola}\label{sec:demo-apertura}
+
+La página inicial muestra el resumen de la plataforma y un \emph{sidebar} con las once secciones de operación. El orden recomendado de uso reproduce el flujo lógico: \emph{Infraestructura} $\to$ \emph{Ingesta} $\to$ \emph{Gobierno} $\to$ \emph{Workflow} $\to$ \emph{DCAT} $\to$ \emph{Validación} $\to$ \emph{SHACL} $\to$ \emph{Artefactos}. Las dos secciones complementarias, \emph{Estado vivo} y \emph{Ejecuciones}, permiten consultar respectivamente la situación actual de \ac{OM} y el historial de \emph{jobs} versionados.
+
+\figuraMemoria{fig_web_home.png}{Pantalla inicial de la consola web y \emph{sidebar} con las secciones operativas. Elaboración propia.}{fig:demo-web-home}
+
+\section{Estado de la infraestructura}\label{sec:demo-infra}
+
+La pantalla \emph{Infraestructura} expone dos acciones: comprobar prerrequisitos y, opcionalmente, ejecutar un reset limpio. La comprobación lanza un \emph{job} que verifica la presencia de los binarios (\texttt{docker}, \texttt{kubectl}, \texttt{helm}, \texttt{kind}) y la accesibilidad de los servicios desplegados. Tras unos segundos se muestra el resultado con código de salida, log completo y duración. En la demostración solo se ejecuta la comprobación, ya que el entorno está listo.
+
+\figuraMemoria{fig_web_pantalla_infraestructura.png}{Pantalla \emph{Infraestructura}: comprobación de prerrequisitos y opciones de reset limpio. Elaboración propia.}{fig:demo-infra}
+
+\section{Servicios y datasets ingeridos}\label{sec:demo-ingesta}
+
+En la pantalla \emph{Ingesta} se observa el resultado de la doble ingesta técnica. Aparecen los dos \texttt{DatabaseService} en \ac{OM}, \texttt{postgres\_demo\_service} y \texttt{postgres\_validation\_service}, cada uno con la misma estructura interna: la base de datos \texttt{opendata\_demo}, los esquemas \texttt{bronze}, \texttt{silver} y \texttt{gold}, y las tablas descubiertas en cada esquema. La demostración confirma que las dos tablas \texttt{gold} se han registrado en ambos servicios y, por tanto, generan cuatro datasets publicables identificados por su \ac{FQN}.
+
+\figuraMemoria{fig_web_pantalla_ingesta.png}{Pantalla \emph{Ingesta}: servicios PostgreSQL y datasets \texttt{gold} descubiertos por OpenMetadata. Elaboración propia.}{fig:demo-ingesta}
+
+\section{Curación funcional en la pantalla \emph{Gobierno}}\label{sec:demo-gobierno}
+
+Esta pantalla es el centro del recorrido. Concentra toda la curación funcional sobre la hoja \fqn{gold_governance.csv} (tabla~\ref{tab:hoja-gobierno-columnas}) y se utiliza en cuatro pasos.
+
+\paragraph{1. Refrescar hoja desde OpenMetadata.} La acción descubre las tablas \texttt{gold} de los dos servicios y añade las filas correspondientes a la hoja, preservando la curación previa. El operario ve cómo aparece la lista de datasets con su \fqn{table_fqn} único.
+
+\paragraph{2. Editar metadatos DCAT-AP-ES.} Por cada dataset publicable se completa título funcional, descripción, publicador, temática \ac{NTIRISP}, categoría \ac{HVD} y \ac{URL} de la distribución. La pantalla ofrece listas desplegables para las taxonomías controladas y validación inmediata de los campos obligatorios.
+
+\paragraph{3. Validar la hoja.} Una segunda acción ejecuta la validación funcional y marca cualquier fila incompleta o inconsistente; el operario puede corregir y volver a validar antes de aplicar nada en \ac{OM}.
+
+\paragraph{4. Guardar.} El guardado persiste la hoja \ac{CSV} en disco. Hasta este punto no se ha modificado el estado de \ac{OM}: solo se han preparado los datos editoriales que el \emph{workflow} aplicará en el siguiente paso.
+
+\figuraMemoria{fig_web_pantalla_gobierno.png}{Pantalla \emph{Gobierno}: edición de la hoja \fqn{gold_governance.csv} con listas controladas para temática y categoría \ac{HVD}. Elaboración propia.}{fig:demo-gobierno}
+
+\section{Aplicación del workflow}\label{sec:demo-workflow}
+
+La pantalla \emph{Workflow} ofrece dos botones equivalentes al listado~\ref{code:workflow-run}. La demostración los ejecuta en secuencia para mostrar el comportamiento idempotente.
+
+\paragraph{Dry-run.} El primer botón ejecuta \texttt{workflow run -{}-dry-run}. El núcleo Python descubre las tablas, fusiona los \emph{defaults} \ac{YAML} con la hoja editada y genera un plan en \ac{JSON} con la lista exacta de operaciones que se aplicarían sobre \ac{OM} (\texttt{PATCH}, \texttt{POST}, etiquetas a añadir). El operario revisa el plan sin que nada haya cambiado todavía.
+
+\paragraph{Apply.} El segundo botón ejecuta \texttt{workflow run -{}-allow-warnings} y aplica el plan. Al completarse, el resumen muestra el número de cambios realmente aplicados y los artefactos producidos: el catálogo \ac{JSONLD} y el informe \ac{SHACL}.
+
+\paragraph{Idempotencia.} Repetir el botón \emph{Apply} una segunda vez es ilustrativo: el resumen indica \emph{0 cambios aplicados}, lo que evidencia visualmente la propiedad de idempotencia que el capítulo~\ref{cap:validacion} valida formalmente.
+
+\figuraMemoria{fig_web_pantalla_workflow.png}{Pantalla \emph{Workflow}: dry-run y aplicación con resumen de cambios. Elaboración propia.}{fig:demo-workflow}
+
+\section{Exportación DCAT-AP-ES}\label{sec:demo-dcat}
+
+La pantalla \emph{DCAT} dispara la exportación independiente del catálogo. Aunque el \emph{workflow} ya produce el mismo artefacto, esta pantalla permite regenerar el \ac{JSONLD} sin reaplicar el gobierno: útil si se ajusta únicamente algún \emph{default} global. El resultado es el archivo \texttt{tmp\_pytest/dcat\_catalog.jsonld} con las cinco clases \ac{DCAT} activas (\texttt{Catalog}, \texttt{Dataset}, \texttt{Distribution}, \texttt{DataService}, \texttt{Agent}).
+
+\figuraMemoria{fig_web_pantalla_dcat.png}{Pantalla \emph{DCAT}: exportación del catálogo \ac{JSONLD} y previsualización. Elaboración propia.}{fig:demo-dcat}
+
+\section{Validación SHACL y suite reproducible}\label{sec:demo-validacion}
+
+La pantalla \emph{Validación} ejecuta la suite reproducible completa (\fqn{run_validation_suite.ps1}): comprueba el estado vivo de \ac{OM}, lanza el \emph{workflow} dos veces para verificar la idempotencia y valida el catálogo exportado contra las \emph{shapes} \ac{SHACL} \ac{HVD} vendorizadas. El resumen final consolida los códigos de salida de cada etapa en un único informe \ac{JSON}.
+
+\figuraMemoria{fig_web_pantalla_validacion.png}{Pantalla \emph{Validación}: ejecución de la suite reproducible y resumen consolidado. Elaboración propia.}{fig:demo-validacion}
+
+La pantalla \emph{SHACL}, complementaria, muestra el \emph{manifiesto de las shapes \ac{DCATAPES} congeladas} en el repositorio (\fqn{resources/shacl/manifest.json}): origen, versión y \emph{commit} de las \emph{shapes}. Su función es evidenciar que la validación no descarga \emph{shapes} en tiempo de ejecución, sino que usa exclusivamente las locales. El informe \ac{SHACL} propiamente dicho —el Turtle con severidades (\texttt{sh:Violation}, \texttt{sh:Warning}, \texttt{sh:Info}), nodo afectado y mensaje— se genera como artefacto \fqn{*_shacl_report.ttl} y se consulta desde la pantalla \emph{Artefactos}; en la demostración no presenta violaciones bloqueantes, en línea con el capítulo~\ref{cap:validacion}.
+
+\figuraMemoria{fig_web_pantalla_shacl.png}{Pantalla \emph{SHACL}: manifiesto de las \emph{shapes} DCAT-AP-ES congeladas (sin descarga en tiempo de ejecución). Elaboración propia.}{fig:demo-shacl}
+
+\section{Artefactos y descarga del catálogo RDF}\label{sec:demo-artefactos}
+
+La pantalla \emph{Artefactos} expone todos los ficheros generados en \texttt{tmp\_pytest/} con vista previa estructurada para \ac{JSONLD}, Turtle, \ac{YAML}, \ac{CSV} y \ac{JSON}. El operario descarga directamente \texttt{dcat\_catalog.jsonld}, que es el artefacto final del recorrido. La pantalla \emph{Ejecuciones} (complementaria) lista cada \emph{job} con estado, duración, código de salida y enlace a sus artefactos asociados.
+
+\figuraMemoria{fig_web_pantalla_artefactos.png}{Pantalla \emph{Artefactos}: previsualización y descarga del catálogo \ac{JSONLD} final. Elaboración propia.}{fig:demo-artefactos}
+
+\section{Federación del catálogo}\label{sec:demo-federacion}
+
+El archivo \texttt{dcat\_catalog.jsonld} es \ac{RDF} válido conforme a \ac{DCATAPES} 1.0.0 con perfil \ac{HVD}, comprobado por \ac{SHACL}. A partir de ese punto el operario puede llevarlo a cualquiera de los destinos compatibles del ecosistema español o europeo de datos abiertos.
+
+\begin{itemize}
+    \item \textbf{Harvester CKAN con extensión \texttt{ckanext-dcat}}: subir el \ac{JSONLD} a través del endpoint \texttt{/dataset/import} del portal destino. CKAN reconoce las clases \ac{DCAT} y crea los datasets correspondientes.
+    \item \textbf{Portal nacional datos.gob.es}: el archivo cumple los requisitos publicados de \ac{DCATAPES} y puede ofrecerse al equipo de federación como entrada del proceso editorial del portal.
+    \item \textbf{Triplestore RDF (Apache Jena Fuseki o equivalente)}: cargar el catálogo en un \emph{dataset} del \emph{store} y consultarlo con \ac{SPARQL} para auditoría o integración con otras fuentes \ac{RDF}.
+    \item \textbf{rdflib en Python}: cargar localmente el grafo con \fqn{rdflib.Graph().parse('dcat_catalog.jsonld', format='json-ld')} para análisis programático.
+\end{itemize}
+
+El listado~\ref{code:demo-harvest} ilustra cómo se entregaría el archivo a un harvester compatible.
+
+\begin{lstlisting}[language=bash, caption={Envío del catálogo a un harvester CKAN con extensión DCAT.}, label=code:demo-harvest, captionpos=b]
+curl -X POST https://harvester.example.org/api/dataset/import \
+     -H "Authorization: Bearer $TOKEN" \
+     -H "Content-Type: application/ld+json" \
+     --data-binary @tmp_pytest/dcat_catalog.jsonld
+\end{lstlisting}
+
+La plataforma, por tanto, no se limita a producir un \ac{JSONLD} formalmente válido: lo entrega listo para integrarse con la cadena editorial real que se utiliza hoy en datos.gob.es, data.europa.eu y los portales basados en CKAN.
+
+\section{Resumen del recorrido}\label{sec:demo-resumen}
+
+\begin{table}[h]
+\footnotesize
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|L{1.0cm}|L{3.2cm}|L{4.0cm}|L{3.7cm}|}
+\hline
+\rowcolor{tema!10}
+\bft{Paso} & \bft{Pantalla / acción} & \bft{Artefacto producido} & \bft{Sección que lo formaliza} \\ \hline
+1 & Infraestructura — comprobar & Estado de pods                       & §~\ref{sec:implementacion-k8s} \\ \hline
+2 & Ingesta — revisar           & Tablas \texttt{gold} en OM            & §~\ref{sec:implementacion-ingesta} \\ \hline
+3 & Gobierno — editar + guardar & \fqn{gold_governance.csv}             & §~\ref{sec:implementacion-hoja} \\ \hline
+4 & Workflow — dry-run          & Plan \ac{JSON}                        & §~\ref{sec:implementacion-nucleo} \\ \hline
+5 & Workflow — apply            & Cambios aplicados en \ac{OM}          & §~\ref{sec:implementacion-nucleo} \\ \hline
+6 & DCAT — exportar             & \texttt{dcat\_catalog.jsonld}         & §~\ref{sec:rdf-semantica} \\ \hline
+7 & Validación — suite          & Informe consolidado \ac{JSON}         & cap.~\ref{cap:validacion} \\ \hline
+8 & SHACL — manifiesto congelado & \texttt{manifest.json} (informe \texttt{.ttl} en Artefactos) & §~\ref{sec:shacl} \\ \hline
+9 & Artefactos — descargar      & Catálogo \ac{RDF} entregable          & §~\ref{sec:demo-federacion} \\ \hline
+\end{tabular}
+\caption{Mapa del recorrido demo: acción del operario, artefacto producido y sección de la memoria donde se justifica formalmente. Elaboración propia.}
+\label{tab:demo-resumen}
+\end{table}
+
+Este recorrido es la demostración mínima defendible de la plataforma: parte de un entorno reproducible, opera íntegramente desde la consola web sin abandonar el navegador, recorre las nueve etapas con artefactos versionados y termina con un archivo \ac{RDF} listo para entrar en la cadena editorial real de datos abiertos.

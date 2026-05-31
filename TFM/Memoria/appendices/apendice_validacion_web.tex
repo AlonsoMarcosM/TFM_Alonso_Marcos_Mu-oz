@@ -1,0 +1,21 @@
+\chapter{Validación y consola web}\label{ap:validacion-web}
+
+\section{Comandos de validación}
+
+\begin{lstlisting}[language=PowerShell, caption={Validación independiente y por suite.}, label=code:ap-validacion, captionpos=b]
+python -m om_dcat_sync validate-runtime --strict `
+    --output tmp_pytest/runtime_validation_report.json
+python -m om_dcat_sync validate-dcat --profile-case hvd --allow-warnings `
+    --report-output tmp_pytest/dcat_validation_report.ttl
+\end{lstlisting}
+
+\section{Estructura de la consola web}
+
+La consola web en \texttt{web/} es una aplicación Next.js con rutas independientes por etapa. El listado~\ref{code:web-job-state} muestra cómo persisten los jobs. Documentación operativa completa: \texttt{docs/app\_web.md}.
+
+\section{Pruebas de la consola web}
+
+\begin{lstlisting}[language=PowerShell, caption={Pruebas Vitest de la consola web.}, label=code:ap-pnpm-test, captionpos=b]
+cd .\web
+pnpm test
+\end{lstlisting}

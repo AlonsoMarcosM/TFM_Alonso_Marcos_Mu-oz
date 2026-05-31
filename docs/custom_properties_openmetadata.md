@@ -22,7 +22,7 @@ Uso:
 
 ## Qué no forma parte del contrato activo
 
-Estas propiedades no forman parte del contrato vivo de la PoC:
+Estas propiedades no forman parte del contrato vivo de la plataforma:
 
 - `dct_license`
 - `tfm_layer`
@@ -42,7 +42,7 @@ Interpretación:
 
 - `dct:license` sigue siendo obligatoria en `Catalog` y en el caso HVD se aplica también a `Distribution` y `DataService`, pero se gobierna por configuración global del sistema, no por tabla;
 - `dcat_access_url` sí permanece activa porque es obligatoria a través de `Distribution`;
-- `dcat_hvd_category` permanece activa porque la PoC ha activado el caso HVD;
+- `dcat_hvd_category` permanece activa porque la plataforma ha activado el caso HVD;
 - `dcat_endpoint_url` no se guarda en OpenMetadata porque el `DataService` se deriva por configuración del publicador.
 
 ## Creación vía API

@@ -35,8 +35,8 @@ if (-not $SkipPipInstall) {
 Write-Host "[1/5] Infraestructura base (kind + helm + postgres en k8s)..."
 powershell -ExecutionPolicy Bypass -File ".\scripts\infra\launch_infra.ps1"
 
-Write-Host "[2/5] Ingesta tecnica Postgres..."
-powershell -ExecutionPolicy Bypass -File ".\scripts\infra\ingest_postgres.ps1"
+Write-Host "[2/5] Doble ingesta tecnica Postgres..."
+powershell -ExecutionPolicy Bypass -File ".\scripts\infra\ingest_postgres_double.ps1"
 
 Write-Host "[3/5] Custom properties + tags..."
 $pfJob = $null

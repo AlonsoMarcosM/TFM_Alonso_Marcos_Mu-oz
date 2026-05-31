@@ -132,6 +132,19 @@ Estado validado en este entorno el 4 de febrero de 2026:
 - `openmetadata-dependencies` en estado `deployed`
 - pods principales en `Running`
 
+## Cliente con OpenMetadata propio (instalación portable)
+
+La plataforma es portable y **no exige desplegar su propio OpenMetadata**. Si un organismo o empresa ya dispone de una instancia de OpenMetadata, no hace falta crear clúster ni ejecutar `launch_infra.ps1`. Basta con apuntar la plataforma a la instancia existente mediante el `.env` de la raíz:
+
+```text
+OPENMETADATA_BASE_URL=https://catalogo.organismo.es/api/v1
+OPENMETADATA_TOKEN=<JWT de un bot de ingesta del propio OpenMetadata>
+```
+
+Con esa configuración, el CLI `python -m om_dcat_sync` y la consola web ejecutan el mismo flujo (gobierno funcional, exportación DCAT-AP-ES y validación SHACL HVD) contra el catálogo técnico que el cliente ya mantiene. El despliegue Kind/Helm descrito arriba solo construye el entorno autocontenido y reproducible del caso de uso de validación; la lógica de negocio vive en el núcleo Python y únicamente necesita acceso a la API REST y un token JWT válido.
+
+Compatibilidad verificada con OpenMetadata 1.12.x. El token puede generarse desde el propio OpenMetadata del cliente (bot de ingesta) o, en el entorno de referencia, con `scripts/infra/generate_om_jwt.py`.
+
 ## Comentario para VPS/cloud
 
 El flujo es portable: los mismos charts Helm y la misma lógica aplican en un Kubernetes de VPS/cloud, por ejemplo k3s en un VPS o un clúster gestionado.

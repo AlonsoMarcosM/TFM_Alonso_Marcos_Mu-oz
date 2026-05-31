@@ -1,0 +1,79 @@
+\chapter{Mapeo DCAT-AP-ES y entregables}\label{ap:mapeo-dcat}
+
+Este anexo resume el mapeo entre el catálogo técnico de \ac{OM} y el perfil
+\ac{DCATAPES}, y enumera los entregables del caso de uso de validación. La
+referencia completa y canónica del mapeo, con la matriz íntegra de propiedades,
+cardinalidades y elevaciones de obligatoriedad respecto a \ac{DCATAP}, se
+mantiene en \fqn{docs/dcat_mapping.md}.
+
+\section{Correspondencia OpenMetadata \texorpdfstring{$\rightarrow$}{->} DCAT-AP-ES}
+
+El exportador traduce un subconjunto deliberadamente mínimo de elementos de
+\ac{OM} a clases y propiedades \ac{DCATAPES}, completando el resto por
+configuración (tabla~\ref{tab:correspondencia-mapeo}).
+
+\begin{table}[h]
+\footnotesize
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|L{6.0cm}|L{6.0cm}|}
+\hline
+\rowcolor{tema!10}
+\bft{Elemento en OpenMetadata} & \bft{Destino en DCAT-AP-ES} \\ \hline
+\texttt{Table}/\texttt{View} (capa \texttt{gold}) & \texttt{dcat:Dataset} \\ \hline
+\emph{custom property} \fqn{dcat_access_url} & \texttt{dcat:Distribution} / \texttt{dcat:accessURL} \\ \hline
+\emph{custom property} \fqn{dcat_hvd_category} & \texttt{dcatap:hvdCategory} \\ \hline
+\emph{custom property} \fqn{dcat_publisher_name} & \texttt{foaf:name} del publicador \\ \hline
+\emph{tags} \fqn{dcat_theme.*} & \texttt{dcat:theme} \\ \hline
+\emph{defaults} del catálogo (\ac{YAML}) & \texttt{dcat:Catalog} \\ \hline
+\emph{defaults} \ac{HVD} (\ac{YAML}) & \texttt{dcat:DataService} y restricciones \ac{HVD} derivadas \\ \hline
+\end{tabular}
+\caption{Correspondencia mínima OpenMetadata $\rightarrow$ DCAT-AP-ES. Elaboración propia a partir de \fqn{docs/dcat_mapping.md}.}
+\label{tab:correspondencia-mapeo}
+\end{table}
+
+\section{Qué gobierna OpenMetadata y qué deriva el sistema}
+
+En \ac{OM} solo se mantienen los metadatos personalizados imprescindibles para
+no alargar artificialmente el modelo: \texttt{displayName}, \texttt{description},
+\fqn{dcat_publisher_name}, \fqn{dcat_hvd_category}, \fqn{dcat_access_url} y los
+\emph{tags} \fqn{dcat_theme.*}. El resto del perfil activo se deriva durante la
+exportación: el \texttt{dcat:Catalog} completo desde \fqn{governance_defaults.yaml};
+la legislación aplicable, las licencias \ac{HVD} y los derechos de acceso; el
+\texttt{dcat:DataService} con su punto de acceso, descripción, contacto y página
+de documentación; y los enlaces \texttt{dcat:accessService} y
+\texttt{dcat:servesDataset} entre distribución, servicio y dataset.
+
+\section{Qué aporta activar el caso HVD}
+
+Activar el caso \ac{HVD} no se limita a añadir una clasificación. En el perfil
+activo implica \texttt{dcatap:hvdCategory} en dataset y servicio,
+\texttt{dcatap:applicableLegislation} derivada para dataset, distribución y
+servicio, \texttt{dct:license} en distribución y servicio, un
+\texttt{dcat:DataService} explícito, \texttt{dcat:contactPoint} y
+\texttt{dct:accessRights} derivados de la configuración global, y la validación
+\ac{SHACL} específica del caso \texttt{hvd}.
+
+\section{Entregables del caso de uso}\label{sec:entregables}
+
+El flujo produce un conjunto cerrado de entregables reproducibles, todos
+regenerables en \fqn{tmp_pytest/} y visualizados a lo largo de la memoria
+(tabla~\ref{tab:entregables}).
+
+\begin{table}[h]
+\footnotesize
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|L{4.3cm}|L{2.2cm}|L{5.5cm}|}
+\hline
+\rowcolor{tema!10}
+\bft{Entregable} & \bft{Formato} & \bft{Dónde se visualiza} \\ \hline
+Catálogo gobernado & \ac{JSONLD} & Listados~\ref{code:jsonld-dataset} y~\ref{code:dcat-export-context}; pantalla \emph{DCAT} (fig.~\ref{fig:demo-dcat}) \\ \hline
+Informe de validación \ac{SHACL} & Turtle & Listado~\ref{code:shacl-dataset}; pantalla \emph{SHACL} (fig.~\ref{fig:demo-shacl}) \\ \hline
+Informe del estado vivo & \ac{JSON} & Sección~\ref{cap:validacion}, validación \emph{runtime} \\ \hline
+Resumen de la suite & \ac{JSON} & Tabla~\ref{tab:resultados}; pantalla \emph{Validación} (fig.~\ref{fig:demo-validacion}) \\ \hline
+Informe legible de validación & HTML y PDF & Generado por \texttt{render-report}; pantalla \emph{Artefactos} (fig.~\ref{fig:demo-artefactos}) \\ \hline
+\end{tabular}
+\caption{Entregables del caso de uso de validación y su visualización en la memoria. Elaboración propia.}
+\label{tab:entregables}
+\end{table}

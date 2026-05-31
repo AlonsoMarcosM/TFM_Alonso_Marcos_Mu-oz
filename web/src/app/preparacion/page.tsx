@@ -1,7 +1,7 @@
 const setupCommands = [
   "powershell -ExecutionPolicy Bypass -File .\\scripts\\infra\\launch_infra.ps1",
   "powershell -ExecutionPolicy Bypass -File .\\scripts\\infra\\port_forward_openmetadata.ps1",
-  "cd .\\web && npm install && npm run dev",
+  "cd .\\web; pnpm install; pnpm dev",
 ];
 
 const future = [

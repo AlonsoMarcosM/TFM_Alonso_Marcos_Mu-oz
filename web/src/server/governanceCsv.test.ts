@@ -44,7 +44,7 @@ describe("validateGovernanceRows", () => {
     expect(errors.join("\n")).toContain("categoria_hvd debe ser una de");
   });
 
-  it("accepts controlled vocabulary values beyond the two demo rows", () => {
+  it("accepts controlled vocabulary values beyond the two reference rows", () => {
     expect(
       validateGovernanceRows([
         row({ tematica_dcat: "medio_ambiente", categoria_hvd: "observacion_de_la_tierra_y_medio_ambiente" }),

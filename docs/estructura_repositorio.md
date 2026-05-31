@@ -28,7 +28,7 @@ Esta mezcla es intencional. Renombrar ahora `tfm_ingestor`, `om_dcat_sync`, los 
 | Documentación | `docs/` | Fuente principal para memoria, defensa y operación. |
 | Anexos replicables | `docs/anexos_instalacion/` | Pasos de instalación orientados a memoria y evidencia. |
 | Kubernetes | `k8s/` | Values Helm y configuración declarativa de despliegue. |
-| SQL demo | `sql/` | Fuente reproducible de los esquemas `bronze`, `silver` y `gold`. |
+| SQL de referencia | `sql/` | Fuente reproducible de los esquemas `bronze`, `silver` y `gold`. |
 
 ## Configuración principal
 
@@ -40,7 +40,6 @@ Los ficheros siguientes no se renombran porque están integrados en CLI, scripts
 | `tfm_ingestor/config/governance_defaults.yaml` | Defaults globales de catálogo, HVD, licencias y servicios. |
 | `tfm_ingestor/config/mapping_rules.yaml` | Reglas de selección, tags y mapeo sobre tablas OpenMetadata. |
 | `tfm_ingestor/config/gold_governance.csv` | Hoja funcional editable por persona responsable del catálogo. |
-| `tfm_ingestor/config/ckan_harvest.yaml` | Configuración opcional de harvesting CKAN. |
 
 En documentación en español se debe explicar su función, no traducir su nombre de fichero.
 

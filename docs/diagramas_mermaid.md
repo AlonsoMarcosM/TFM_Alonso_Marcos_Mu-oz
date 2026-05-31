@@ -184,3 +184,62 @@ flowchart LR
 ```
 
 Todos los artefactos viven en `tmp_pytest/`, ignorado por Git pero regenerable de forma determinista desde el repositorio limpio.
+
+## 10) Arquitectura lógica por capas y responsabilidades
+
+```mermaid
+flowchart TB
+  subgraph L1["1 - Fuente técnica"]
+    PG[(PostgreSQL de referencia<br/>esquemas bronze / silver / gold)]
+  end
+  subgraph L2["2 - Catálogo técnico"]
+    OM[OpenMetadata<br/>dos servicios PostgreSQL ingeridos]
+  end
+  subgraph L3["3 - Gobierno funcional"]
+    SHEET[(gold_governance.csv<br/>curación por dataset)]
+    CFG[(governance_defaults.yaml<br/>defaults del catálogo)]
+  end
+  subgraph L4["4 - Núcleo Python (om_dcat_sync)"]
+    WF[workflow: descubrir, sincronizar,<br/>exportar y validar]
+  end
+  subgraph L5["5 - Operación"]
+    CLI[CLI]
+    SCR[Scripts PowerShell]
+    WEB[Consola web Next.js]
+  end
+  OUT[Catálogo DCAT-AP-ES / HVD<br/>JSON-LD validado con SHACL]
+
+  PG -->|ingesta técnica| OM
+  OM -->|activos descubiertos| L3
+  L3 -->|metadatos + defaults| WF
+  WF -->|gobierno idempotente| OM
+  WF -->|exporta y valida| OUT
+  L5 -->|invocan el mismo núcleo| WF
+```
+
+## 11) Arquitectura física de despliegue
+
+```mermaid
+flowchart TB
+  OPER[Operario de negocio / técnico]
+  subgraph HOST["Host local (portátil, VPS o nube)"]
+    DOCKER[Docker Engine]
+    WEB[Consola web Next.js<br/>localhost:3000]
+    CLI[om_dcat_sync CLI]
+    subgraph KIND["Clúster Kubernetes (Kind)"]
+      OM[OpenMetadata<br/>svc :8585]
+      MY[(MySQL)]
+      OSE[(OpenSearch)]
+      PG[(postgres-demo :5432)]
+    end
+  end
+  OPER -->|navegador| WEB
+  OPER -->|terminal| CLI
+  WEB -->|invoca lista cerrada| CLI
+  CLI -->|port-forward 8585<br/>API REST + JWT| OM
+  OM --> MY
+  OM --> OSE
+  OM -->|ingesta técnica| PG
+```
+
+Los diagramas 10 y 11 se reutilizan en el capítulo de arquitectura de la memoria como vista lógica por capas y vista física de despliegue, respectivamente.

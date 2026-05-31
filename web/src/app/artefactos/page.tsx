@@ -7,7 +7,7 @@ export default async function ArtefactosPage({ searchParams }: { searchParams: P
     <div className="stack">
       <header>
         <h1 className="page-title">Artefactos</h1>
-        <p className="lead">Ficheros reproducibles generados por los comandos y scripts de la PoC.</p>
+        <p className="lead">Ficheros reproducibles generados por los comandos y scripts de la plataforma.</p>
       </header>
       <ArtifactViewer initialPath={params.path} />
     </div>

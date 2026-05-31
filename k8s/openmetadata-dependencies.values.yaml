@@ -1,5 +1,5 @@
 # Overrides para entorno local (kind / Docker Desktop Kubernetes)
-# Objetivo: stack minimo y estable para PoC (sin Airflow interno).
+# Objetivo: stack mínimo y estable para la plataforma (sin Airflow interno).
 
 airflow:
   enabled: false

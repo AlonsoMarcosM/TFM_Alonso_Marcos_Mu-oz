@@ -16,7 +16,7 @@ export const publishOptions: ControlledOption[] = [
   {
     value: "no",
     label: "no - dejar fuera de la publicación",
-    hint: "La fila queda documentada, pero no entra en el contrato publicable de la PoC.",
+    hint: "La fila queda documentada, pero no entra en el contrato publicable de la plataforma.",
   },
 ];
 
@@ -85,7 +85,7 @@ export const hvdCategoryOptions: ControlledOption[] = [
 export const fieldGuidance = [
   {
     field: "publicar",
-    text: "Usa si para datasets que se van a defender y validar en la PoC. Usa no si la fila está incompleta o no debe salir en el catálogo.",
+    text: "Usa si para datasets que se van a defender y validar en la plataforma. Usa no si la fila está incompleta o no debe salir en el catálogo.",
   },
   {
     field: "titulo_dataset",
@@ -97,7 +97,7 @@ export const fieldGuidance = [
   },
   {
     field: "publicador",
-    text: "Nombre de la organización responsable. Si está vacío se sugiere el publicador demo configurado.",
+    text: "Nombre de la organización responsable. Si está vacío se sugiere el publicador configurado.",
   },
   {
     field: "tematica_dcat",
@@ -105,11 +105,11 @@ export const fieldGuidance = [
   },
   {
     field: "categoria_hvd",
-    text: "Categoría superior del vocabulario europeo HVD. En la PoC se usan Movilidad y Estadística, pero la app ofrece las seis categorías oficiales.",
+    text: "Categoría superior del vocabulario europeo HVD. En la plataforma se usan Movilidad y Estadística, pero la app ofrece las seis categorías oficiales.",
   },
   {
     field: "access_url_distribucion",
-    text: "URL http(s) de acceso a la distribución. Para la demo puede ser una URL estable de evidencia o documentación publicable.",
+    text: "URL http(s) de acceso a la distribución. Para el caso de uso puede ser una URL estable de evidencia o documentación publicable.",
   },
 ];
 
@@ -126,7 +126,7 @@ export type GovernanceSuggestion = {
   access_url_distribucion: string;
 };
 
-export const defaultPublisher = "UCLM (Demo)";
+export const defaultPublisher = "UCLM";
 
 export const defaultSuggestionsByTable: Record<string, GovernanceSuggestion> = {
   agenda_cultural_publica: {
@@ -137,7 +137,7 @@ export const defaultSuggestionsByTable: Record<string, GovernanceSuggestion> = {
     publicador: defaultPublisher,
     tematica_dcat: "cultura_ocio",
     categoria_hvd: "estadisticas",
-    access_url_distribucion: "https://www.uclm.es/datos/poc/gold/agenda-cultural-publica",
+    access_url_distribucion: "https://www.uclm.es/datos/plataforma-gobierno-dato/gold/agenda-cultural-publica",
   },
   movilidad_resumen_municipio: {
     publicar: "si",
@@ -147,7 +147,7 @@ export const defaultSuggestionsByTable: Record<string, GovernanceSuggestion> = {
     publicador: defaultPublisher,
     tematica_dcat: "transporte",
     categoria_hvd: "movilidad",
-    access_url_distribucion: "https://www.uclm.es/datos/poc/gold/movilidad-resumen-municipio",
+    access_url_distribucion: "https://www.uclm.es/datos/plataforma-gobierno-dato/gold/movilidad-resumen-municipio",
   },
 };
 
@@ -158,11 +158,11 @@ export function fallbackSuggestion(tableName: string, schemaName = "gold"): Gove
   const urlSlug = tableName.replaceAll("_", "-").toLowerCase();
   return {
     publicar: "si",
-    titulo_dataset: normalizedTitle || "Dataset gold de la PoC",
-    descripcion_dataset: `Dataset publicable de la PoC para ${tableName || "una tabla gold"}.`,
+    titulo_dataset: normalizedTitle || "Dataset gold de la plataforma",
+    descripcion_dataset: `Dataset publicable de la plataforma para ${tableName || "una tabla gold"}.`,
     publicador: defaultPublisher,
     tematica_dcat: "transporte",
     categoria_hvd: "movilidad",
-    access_url_distribucion: `https://www.uclm.es/datos/poc/${schemaName || "gold"}/${urlSlug || "dataset"}`,
+    access_url_distribucion: `https://www.uclm.es/datos/plataforma-gobierno-dato/${schemaName || "gold"}/${urlSlug || "dataset"}`,
   };
 }

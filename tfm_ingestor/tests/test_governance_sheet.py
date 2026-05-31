@@ -7,8 +7,8 @@ from tfm_ingestor.governance_sheet import generate_governance_sheet, load_govern
 def _defaults() -> DefaultsConfig:
     return DefaultsConfig(
         catalog=CatalogDefaults(
-            title="Demo",
-            description="Demo",
+            title="Plataforma de Gobierno del Dato",
+            description="Catálogo de validación",
             publisher_name="UCLM",
             publisher_uri="http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001",
             homepage="https://example.org",
@@ -19,7 +19,7 @@ def _defaults() -> DefaultsConfig:
             license_default="https://example.org/legal",
         ),
         dataset_defaults={
-            "access_url_base": "https://example.org/datos/poc",
+            "access_url_base": "https://example.org/datos/plataforma-gobierno-dato",
             "hvd_category_by_theme_tag": {
                 "dcat_theme.transporte": "movilidad",
                 "dcat_theme.cultura_ocio": "estadisticas",
@@ -35,7 +35,7 @@ def test_load_governance_sheet_parses_excel_friendly_csv(tmp_path: Path):
         "\n".join(
             [
                 "publicar;schema_name;table_name;table_fqn;titulo_dataset;descripcion_dataset;publicador;tematica_dcat;categoria_hvd;access_url_distribucion",
-                "si;gold;movilidad_resumen_municipio;svc.db.gold.movilidad_resumen_municipio;Movilidad;Descripcion;UCLM;transporte;movilidad;https://example.org/datos/poc/gold/movilidad",
+                "si;gold;movilidad_resumen_municipio;svc.db.gold.movilidad_resumen_municipio;Movilidad;Descripcion;UCLM;transporte;movilidad;https://example.org/datos/plataforma-gobierno-dato/gold/movilidad",
                 "no;gold;agenda_cultural_publica;svc.db.gold.agenda_cultural_publica;;;;cultura_ocio;;",
             ]
         ),
@@ -47,7 +47,7 @@ def test_load_governance_sheet_parses_excel_friendly_csv(tmp_path: Path):
     assert rows[0].publish is True
     assert rows[0].theme_tag_fqns == ["dcat_theme.transporte"]
     assert rows[0].hvd_category_uri == "http://data.europa.eu/bna/c_b79e35eb"
-    assert rows[0].distribution_access_url == "https://example.org/datos/poc/gold/movilidad"
+    assert rows[0].distribution_access_url == "https://example.org/datos/plataforma-gobierno-dato/gold/movilidad"
     assert rows[1].publish is False
 
 
@@ -57,7 +57,7 @@ def test_load_governance_sheet_accepts_official_controlled_vocabularies(tmp_path
         "\n".join(
             [
                 "publicar;schema_name;table_name;table_fqn;titulo_dataset;descripcion_dataset;publicador;tematica_dcat;categoria_hvd;access_url_distribucion",
-                "si;gold;observacion;svc.db.gold.observacion;Observacion;Descripcion;UCLM;medio_ambiente;observacion_de_la_tierra_y_medio_ambiente;https://example.org/datos/poc/gold/observacion",
+                "si;gold;observacion;svc.db.gold.observacion;Observacion;Descripcion;UCLM;medio_ambiente;observacion_de_la_tierra_y_medio_ambiente;https://example.org/datos/plataforma-gobierno-dato/gold/observacion",
             ]
         ),
         encoding="utf-8-sig",
@@ -81,7 +81,7 @@ def test_generate_governance_sheet_writes_only_gold_tables(tmp_path: Path):
             "tags": [{"tagFQN": "dcat_theme.transporte"}],
             "extension": {
                 "dcat_publisher_name": "UCLM",
-                "dcat_access_url": "https://example.org/datos/poc/gold/movilidad-resumen-municipio",
+                "dcat_access_url": "https://example.org/datos/plataforma-gobierno-dato/gold/movilidad-resumen-municipio",
             },
             "databaseSchema": {"name": "gold"},
         },
@@ -97,20 +97,94 @@ def test_generate_governance_sheet_writes_only_gold_tables(tmp_path: Path):
     content = output.read_text(encoding="utf-8-sig")
     assert "movilidad_resumen_municipio" in content
     assert "movilidad" in content
-    assert "https://example.org/datos/poc/gold/movilidad-resumen-municipio" in content
+    assert "https://example.org/datos/plataforma-gobierno-dato/gold/movilidad-resumen-municipio" in content
     assert "bici_uso_diario" not in content
 
 
-def test_match_sheet_row_resolves_by_schema_and_table():
+def test_generate_governance_sheet_prefills_theme_from_prefix_rules(tmp_path: Path):
+    defaults = _defaults()
+    output = tmp_path / "sheet.csv"
+    tables = [
+        {
+            "fullyQualifiedName": "svc.db.gold.movilidad_resumen_municipio",
+            "name": "movilidad_resumen_municipio",
+            "displayName": "Movilidad",
+            "description": "Resumen de movilidad",
+            "tags": [],
+            "extension": {},
+            "databaseSchema": {"name": "gold"},
+        }
+    ]
+
+    written = generate_governance_sheet(
+        tables=tables,
+        defaults=defaults,
+        output_path=output,
+        tags_by_prefix={"movilidad_": ["dcat_theme.transporte"]},
+    )
+
+    assert written == 1
+    content = output.read_text(encoding="utf-8-sig")
+    assert ";transporte;movilidad;" in content
+
+
+def test_match_sheet_row_resolves_by_fqn_before_schema_and_table():
     rows = load_governance_sheet(Path(__file__).resolve().parents[1] / "config" / "gold_governance.csv")
     table = {
-        "fullyQualifiedName": "svc.db.gold.movilidad_resumen_municipio",
+        "fullyQualifiedName": "postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio",
         "name": "movilidad_resumen_municipio",
         "databaseSchema": {"name": "gold"},
     }
     row = match_sheet_row(rows=rows, table=table)
     assert row is not None
     assert row.table_name == "movilidad_resumen_municipio"
+    assert row.table_fqn.startswith("postgres_validation_service.")
+
+
+def test_match_sheet_row_does_not_cross_apply_curation_between_services():
+    rows = load_governance_sheet(Path(__file__).resolve().parents[1] / "config" / "gold_governance.csv")
+    table = {
+        "fullyQualifiedName": "unknown_service.opendata_demo.gold.movilidad_resumen_municipio",
+        "name": "movilidad_resumen_municipio",
+        "databaseSchema": {"name": "gold"},
+    }
+
+    assert match_sheet_row(rows=rows, table=table) is None
+
+
+def test_generate_governance_sheet_keeps_duplicate_gold_tables_by_fqn(tmp_path: Path):
+    defaults = _defaults()
+    output = tmp_path / "sheet.csv"
+    tables = [
+        {
+            "fullyQualifiedName": "postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio",
+            "name": "movilidad_resumen_municipio",
+            "displayName": "Movilidad demo",
+            "description": "Resumen demo",
+            "tags": [{"tagFQN": "dcat_theme.transporte"}],
+            "extension": {},
+            "databaseSchema": {"name": "gold"},
+        },
+        {
+            "fullyQualifiedName": "postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio",
+            "name": "movilidad_resumen_municipio",
+            "displayName": "Movilidad validacion",
+            "description": "Resumen validacion",
+            "tags": [{"tagFQN": "dcat_theme.transporte"}],
+            "extension": {},
+            "databaseSchema": {"name": "gold"},
+        },
+    ]
+
+    written = generate_governance_sheet(tables=tables, defaults=defaults, output_path=output)
+    rows = load_governance_sheet(output)
+
+    assert written == 2
+    assert len(rows) == 2
+    assert {row.table_fqn for row in rows} == {
+        "postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio",
+        "postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio",
+    }
 
 
 def test_generate_governance_sheet_preserves_existing_manual_curation(tmp_path: Path):

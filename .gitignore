@@ -1,7 +1,15 @@
 # --- Local private folders ---
-/TFM/
+
+/TFM/memoria_latex/
+/TFM/memoria_plantilla/
+/TFM/TFG_AlonsoMarcosMuñoz
+/TFM/redaccion_tfm_instrucciones.local.md
 /private_local/
 /docs_private/
+
+# --- Agent / assistant instructions (local only) ---
+/CLAUDE.md
+/AGENTS.md
 
 # --- Python ---
 __pycache__/
@@ -46,3 +54,4 @@ state/
 
 # --- Local agent instructions ---
 AGENTS.md
+CLAUDE.md

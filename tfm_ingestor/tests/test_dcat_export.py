@@ -6,8 +6,8 @@ from tfm_ingestor.om_api import OpenMetadataApiError
 def _defaults() -> DefaultsConfig:
     return DefaultsConfig(
         catalog=CatalogDefaults(
-            title="Open Data Demo",
-            description="Catálogo demo",
+            title="Plataforma de Gobierno del Dato",
+            description="Catálogo de validación",
             publisher_name="UCLM",
             publisher_uri="http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001",
             homepage="https://example.org",
@@ -18,7 +18,7 @@ def _defaults() -> DefaultsConfig:
             license_default="https://example.org/legal",
         ),
         dataset_defaults={
-            "access_url_base": "https://example.org/datos/poc",
+            "access_url_base": "https://example.org/datos/plataforma-gobierno-dato",
             "hvd_category_by_theme_tag": {
                 "dcat_theme.transporte": "movilidad",
                 "dcat_theme.cultura_ocio": "estadisticas",
@@ -34,9 +34,9 @@ def _defaults() -> DefaultsConfig:
             "service_documentation_base": "https://example.org/docs",
             "contact": {
                 "organization_name": "UCLM",
-                "fn": "Oficina demo de datos abiertos",
+                "fn": "Oficina de datos abiertos",
                 "has_uid": "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001",
-                "has_email": "mailto:opendata-demo@example.org",
+                "has_email": "mailto:opendata-gobierno-dato@example.org",
                 "has_url": "https://example.org/contacto",
                 "has_telephone": "tel:+34902000000",
             },
@@ -69,7 +69,7 @@ def test_build_catalog_jsonld_contains_catalog_datasets_distributions_and_hvd_se
     assert graph and graph[0].get("@type") == "dcat:Catalog"
 
     catalog = graph[0]
-    assert catalog["dct:title"] == {"@value": "Open Data Demo", "@language": "es"}
+    assert catalog["dct:title"] == {"@value": "Plataforma de Gobierno del Dato", "@language": "es"}
     assert catalog["dct:language"] == {"@id": "http://publications.europa.eu/resource/authority/language/SPA"}
     assert catalog["dct:license"] == {"@id": "https://example.org/legal"}
 
@@ -198,3 +198,37 @@ def test_export_catalog_falls_back_when_schema_field_is_not_supported():
     assert result["tables_total"] == 1
     assert result["tables_exported"] == 1
     assert result["preview_dataset_count"] == 1
+
+
+def test_build_catalog_jsonld_exports_duplicate_gold_tables_as_distinct_service_datasets():
+    defaults = _defaults()
+    tables = []
+    for service_name, title, access_url in [
+        ("postgres_demo_service", "Movilidad demo", "https://example.org/demo/gold/movilidad"),
+        ("postgres_validation_service", "Movilidad validacion", "https://example.org/validation/gold/movilidad"),
+    ]:
+        tables.append(
+            {
+                "fullyQualifiedName": f"{service_name}.opendata_demo.gold.movilidad_resumen_municipio",
+                "name": "movilidad_resumen_municipio",
+                "displayName": title,
+                "description": f"{title} descripcion",
+                "tags": [{"tagFQN": "dcat_theme.transporte"}],
+                "extension": {
+                    "dcat_publisher_name": "UCLM",
+                    "dcat_hvd_category": "http://data.europa.eu/bna/c_b79e35eb",
+                    "dcat_access_url": access_url,
+                },
+                "databaseSchema": {"name": "gold"},
+            }
+        )
+
+    doc = build_catalog_jsonld(tables=tables, defaults=defaults)
+    datasets = [x for x in doc["@graph"] if isinstance(x, dict) and x.get("@type") == "dcat:Dataset"]
+    dataset_ids = {dataset["@id"] for dataset in datasets}
+
+    assert len(datasets) == 2
+    assert dataset_ids == {
+        "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio",
+        "urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio",
+    }

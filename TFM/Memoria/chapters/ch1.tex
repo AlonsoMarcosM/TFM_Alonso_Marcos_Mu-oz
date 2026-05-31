@@ -1,0 +1,48 @@
+\chapter{Introducción}
+
+\section{Contexto}
+
+El Trabajo Fin de Máster se enmarca en el diseño y despliegue de una configuración de metadatos en OpenMetadata alineada con DCAT-AP, con el objetivo de mejorar la interoperabilidad de catálogos de datos en entornos Big Data y de computación en la nube. La ficha oficial del TFE define explícitamente el análisis de DCAT-AP, su correspondencia con OpenMetadata, la configuración de taxonomías y metadatos personalizados, y la validación mediante exportación en RDF, JSON-LD o formato equivalente \cite{uclmFichaTfe2026}.
+
+El trabajo se concreta en una \textbf{Plataforma de Gobierno del Dato}. La plataforma no procesa datos de negocio con finalidad analítica, sino que gobierna metadatos: identifica activos técnicos, completa metadatos funcionales, genera un catálogo interoperable y valida su conformidad. Esta distinción es importante porque el valor técnico del proyecto no reside en calcular métricas sobre las tablas de ejemplo, sino en demostrar un ciclo reproducible de gobierno e interoperabilidad de metadatos.
+
+En el ámbito de los datos abiertos, DCAT permite describir catálogos, conjuntos de datos, distribuciones y servicios de datos mediante RDF, facilitando el intercambio de metadatos entre sistemas \cite{w3cDcat3}. En España, DCAT-AP-ES concreta este enfoque para el contexto nacional, tomando como referencia DCAT-AP 2.1.1 e incorporando elementos de DCAT-AP HVD 2.2.0 para conjuntos de datos de alto valor \cite{datosGobDcatApEs2025}. Esta evolución justifica que el trabajo no se limite a crear campos personalizados en OpenMetadata, sino que produzca una salida interoperable y validable.
+
+\section{Problema abordado}
+
+OpenMetadata proporciona capacidades de catálogo, descubrimiento y gobierno de metadatos, pero no resuelve de forma nativa, en el repositorio de este TFM, la generación de un catálogo DCAT-AP-ES completo y validado a partir de activos técnicos gobernados. El problema consiste en cerrar esa separación entre dos mundos:
+
+\begin{itemize}
+  \item por un lado, el catálogo técnico gestionado en OpenMetadata, con servicios, bases de datos, esquemas, tablas, columnas, descripciones, etiquetas y metadatos personalizados;
+  \item por otro lado, el modelo DCAT-AP-ES, que espera un grafo RDF con clases y propiedades específicas para catálogos, datasets, distribuciones, servicios de datos y agentes.
+\end{itemize}
+
+La dificultad no es únicamente transformar nombres de campos. También hay que decidir qué activos se consideran publicables, qué metadatos deben ser curados por una persona responsable del catálogo, qué valores pueden derivarse por configuración y cómo validar que la salida cumple un perfil semántico externo. Por ello, el trabajo combina infraestructura, integración con API, modelado de metadatos, exportación semántica, validación SHACL y una consola web operativa.
+
+\section{Solución propuesta}
+
+La solución implementada parte de un PostgreSQL de referencia desplegado junto a OpenMetadata. Ese PostgreSQL contiene tres capas, \texttt{bronze}, \texttt{silver} y \texttt{gold}. Para el caso de uso de validación se realiza una doble ingesta de la misma fuente técnica bajo dos servicios de OpenMetadata: \texttt{postgres\_demo\_service} y \texttt{postgres\_validation\_service}. Esta decisión permite mostrar gobierno multi-fuente sin introducir una segunda base de datos artificial ni aumentar innecesariamente la complejidad de infraestructura.
+
+OpenMetadata ingiere los activos técnicos de ambos servicios y la plataforma gobierna únicamente las tablas \texttt{gold}, que representan los datasets publicables. Las capas \texttt{bronze} y \texttt{silver} permanecen visibles en el catálogo técnico pero quedan fuera del catálogo de publicación; la justificación detallada de esta frontera, alineada con la arquitectura \emph{medallion} y con el marco DAMA, se desarrolla en la sección~\ref{sec:decision-gold-only}. Como existen dos servicios y dos tablas \texttt{gold} por servicio, el catálogo exportado contiene cuatro datasets publicables. La hoja \texttt{gold\_governance.csv} identifica cada fila por su \texttt{table\_fqn}, de modo que dos tablas con el mismo nombre funcional no se mezclan.
+
+El núcleo de la solución es el paquete Python \texttt{om\_dcat\_sync}, conservado internamente como \texttt{tfm\_ingestor}. Este componente descubre activos técnicos en OpenMetadata, refresca una hoja funcional de gobierno, aplica metadatos de forma idempotente, exporta un catálogo JSON-LD y valida la salida con SHACL. La app web situada en \texttt{web/} no duplica la lógica, sino que ejecuta los mismos scripts y comandos versionados desde una interfaz operativa.
+
+\figuraMemoria{fig_arquitectura_logica_capas.png}{Flujo lógico de la Plataforma de Gobierno del Dato. Elaboración propia.}{fig:arquitectura-logica}
+
+\section{Aportación del trabajo}
+
+La aportación principal es una capa reproducible de gobierno e interoperabilidad construida sobre OpenMetadata. El trabajo aporta:
+
+\begin{itemize}
+  \item un despliegue reproducible de OpenMetadata y PostgreSQL mediante Kubernetes, Helm y scripts versionados;
+  \item una doble ingesta PostgreSQL que permite validar gobierno multi-fuente con activos técnicos reales;
+  \item un modelo operativo que separa activos técnicos ingeridos de datasets funcionalmente publicables;
+  \item una hoja de gobierno para curar título, descripción, publicador, temática, categoría HVD y URL de acceso por dataset;
+  \item un exportador JSON-LD que genera las clases activas \texttt{dcat:Catalog}, \texttt{dcat:Dataset}, \texttt{dcat:Distribution}, \texttt{dcat:DataService} y \texttt{foaf:Agent};
+  \item una validación reproducible mediante SHACL, con shapes DCAT-AP-ES locales y congeladas;
+  \item una consola web que permite ejecutar el caso de uso de validación, revisar logs y consultar artefactos sin introducir comandos arbitrarios.
+\end{itemize}
+
+\section{Estructura del documento}
+
+El capítulo 2 define objetivos, alcance y trazabilidad. El capítulo 3 presenta el marco técnico y el estado del arte antes de describir la implementación propia. El capítulo 4 concreta requisitos, decisiones de diseño y arquitectura de la plataforma. El capítulo 5 detalla la implementación. El capítulo 6 recoge la metodología de validación y los resultados. El capítulo 7 discute beneficios, limitaciones y amenazas a la validez. El capítulo 8 presenta las conclusiones.

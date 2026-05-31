@@ -6,9 +6,9 @@ export type OperationId =
   | "deploy-postgres-k8s"
   | "launch-infra"
   | "delete-cluster-preserve-state"
-  | "reset-poc-clean"
+  | "reset-platform-clean"
   | "run-full-flow"
-  | "clear-openmetadata-postgres-demo"
+  | "clear-openmetadata-postgres-source"
   | "ingest-postgres"
   | "bootstrap-governance"
   | "refresh-governance-sheet"
@@ -20,6 +20,7 @@ export type OperationId =
   | "validate-dcat"
   | "validate-runtime"
   | "run-validation-suite"
+  | "render-validation-report"
   | "validate-live-dcat";
 
 export type Operation = {
@@ -44,7 +45,7 @@ export const operations: Operation[] = [
     id: "check-prereqs",
     title: "Comprobar prerrequisitos",
     group: "Infraestructura",
-    description: "Valida herramientas locales necesarias para la PoC con el script estricto del repositorio.",
+    description: "Valida herramientas locales necesarias para la plataforma con el script estricto del repositorio.",
     command: powershell,
     args: ["-ExecutionPolicy", "Bypass", "-File", ".\\scripts\\infra\\check_prereqs.ps1", "-Strict"],
     artifacts: [],
@@ -54,7 +55,7 @@ export const operations: Operation[] = [
     id: "status-infra",
     title: "Estado de infraestructura",
     group: "Infraestructura",
-    description: "Muestra contexto Kubernetes, releases Helm, pods, servicios y PostgreSQL demo.",
+    description: "Muestra contexto Kubernetes, releases Helm, pods, servicios y PostgreSQL de referencia.",
     command: powershell,
     args: ["-ExecutionPolicy", "Bypass", "-File", ".\\scripts\\infra\\status_infra.ps1"],
     artifacts: [],
@@ -64,7 +65,7 @@ export const operations: Operation[] = [
     id: "backup-openmetadata-state",
     title: "Backup estado OpenMetadata",
     group: "Infraestructura",
-    description: "Guarda un snapshot SQL local del estado de OpenMetadata antes de resetear o recrear la demo.",
+    description: "Guarda un snapshot SQL local del estado de OpenMetadata antes de resetear o recrear el caso de uso.",
     command: powershell,
     args: ["-ExecutionPolicy", "Bypass", "-File", ".\\scripts\\infra\\backup_openmetadata_state.ps1"],
     artifacts: ["state/openmetadata/mysql/openmetadata_db.sql"],
@@ -84,7 +85,7 @@ export const operations: Operation[] = [
   },
   {
     id: "deploy-postgres-k8s",
-    title: "Desplegar PostgreSQL demo",
+    title: "Desplegar PostgreSQL de referencia",
     group: "Infraestructura",
     description: "Aplica los manifiestos del PostgreSQL dummy dentro del cluster Kubernetes.",
     command: powershell,
@@ -115,16 +116,16 @@ export const operations: Operation[] = [
     confirmText: "Eliminar el cluster kind y conservar snapshot local?",
   },
   {
-    id: "reset-poc-clean",
-    title: "Reset limpio y recrear PoC",
+    id: "reset-platform-clean",
+    title: "Reset limpio y recrear la plataforma",
     group: "Infraestructura",
     description: "Elimina el cluster, aparta el snapshot para no restaurar datos anteriores y ejecuta el flujo completo.",
     command: powershell,
-    args: ["-ExecutionPolicy", "Bypass", "-File", ".\\scripts\\infra\\reset_poc_clean.ps1", "-RunFullFlow", "-SkipPipInstall"],
+    args: ["-ExecutionPolicy", "Bypass", "-File", ".\\scripts\\infra\\reset_platform_clean.ps1", "-RunFullFlow", "-SkipPipInstall"],
     artifacts: ["tmp_pytest/workflow_first_plan.json"],
     timeoutMs: 3_600_000,
-    risk: "Recrea la PoC desde infraestructura limpia. Los datos activos del cluster se eliminan; el snapshot previo se archiva si existe.",
-    confirmText: "Resetear infraestructura y datos para recrear la PoC limpia?",
+    risk: "Recrea la plataforma desde infraestructura limpia. Los datos activos del cluster se eliminan; el snapshot previo se archiva si existe.",
+    confirmText: "Resetear infraestructura y datos para recrear la plataforma limpia?",
   },
   {
     id: "run-full-flow",
@@ -137,25 +138,25 @@ export const operations: Operation[] = [
     timeoutMs: 3_600_000,
   },
   {
-    id: "clear-openmetadata-postgres-demo",
-    title: "Vaciar PostgreSQL demo en OpenMetadata",
+    id: "clear-openmetadata-postgres-source",
+    title: "Vaciar ingestas PostgreSQL en OpenMetadata",
     group: "Ingesta",
-    description: "Borra solo el servicio postgres_demo_service y sus tablas en OpenMetadata, manteniendo la infraestructura levantada.",
+    description: "Borra los servicios postgres_demo_service y postgres_validation_service y sus tablas en OpenMetadata, manteniendo la infraestructura levantada.",
     command: powershell,
-    args: ["-ExecutionPolicy", "Bypass", "-File", ".\\scripts\\infra\\clear_openmetadata_postgres_demo.ps1"],
+    args: ["-ExecutionPolicy", "Bypass", "-File", ".\\scripts\\infra\\clear_openmetadata_postgres_sources.ps1"],
     artifacts: [],
     timeoutMs: 180_000,
     requiresOpenMetadataToken: true,
-    risk: "Elimina de OpenMetadata el servicio PostgreSQL demo y sus entidades hijas. No borra Kubernetes, PostgreSQL demo ni reinstala OpenMetadata.",
-    confirmText: "Vaciar postgres_demo_service y sus tablas en OpenMetadata?",
+    risk: "Elimina de OpenMetadata el servicio PostgreSQL de referencia y sus entidades hijas. No borra Kubernetes, PostgreSQL de referencia ni reinstala OpenMetadata.",
+    confirmText: "Vaciar las dos ingestas PostgreSQL y sus tablas en OpenMetadata?",
   },
   {
     id: "ingest-postgres",
-    title: "Ingestar PostgreSQL demo",
+    title: "Ingestar PostgreSQL doble",
     group: "Ingesta",
-    description: "Crea o verifica el servicio postgres_demo_service en OpenMetadata y ejecuta la ingesta técnica.",
+    description: "Crea o verifica postgres_demo_service y postgres_validation_service en OpenMetadata y ejecuta la doble ingesta técnica.",
     command: powershell,
-    args: ["-ExecutionPolicy", "Bypass", "-File", ".\\scripts\\infra\\ingest_postgres.ps1"],
+    args: ["-ExecutionPolicy", "Bypass", "-File", ".\\scripts\\infra\\ingest_postgres_double.ps1"],
     artifacts: [],
     timeoutMs: 900_000,
   },
@@ -249,9 +250,9 @@ export const operations: Operation[] = [
     id: "validate-runtime",
     title: "Validar estado vivo",
     group: "Runtime",
-    description: "Comprueba el estado técnico y de gobierno frente al contrato de demo.",
+    description: "Comprueba el estado técnico y de gobierno frente al contrato de referencia.",
     command: python,
-    args: ["-m", "om_dcat_sync", "validate-runtime", "--strict", "--output", ".\\tmp_pytest\\web_runtime_report.json"],
+    args: ["-m", "om_dcat_sync", "validate-runtime", "--strict", "--service-name", "postgres_demo_service,postgres_validation_service", "--output", ".\\tmp_pytest\\web_runtime_report.json"],
     artifacts: ["tmp_pytest/web_runtime_report.json"],
     timeoutMs: 180_000,
     requiresOpenMetadataToken: true,
@@ -260,11 +261,21 @@ export const operations: Operation[] = [
     id: "run-validation-suite",
     title: "Suite completa",
     group: "Validacion",
-    description: "Ejecuta la suite versionada de validación de la PoC.",
+    description: "Ejecuta la suite versionada de validación de la plataforma.",
     command: powershell,
     args: ["-ExecutionPolicy", "Bypass", "-File", ".\\scripts\\infra\\run_validation_suite.ps1"],
-    artifacts: ["tmp_pytest/validation_suite_summary.json", "tmp_pytest/validation_suite_catalog.jsonld", "tmp_pytest/validation_suite_shacl_report.ttl"],
+    artifacts: ["tmp_pytest/validation_suite_summary.json", "tmp_pytest/validation_suite_catalog.jsonld", "tmp_pytest/validation_suite_shacl_report.ttl", "tmp_pytest/validation_report.html", "tmp_pytest/validation_report.pdf"],
     timeoutMs: 900_000,
+  },
+  {
+    id: "render-validation-report",
+    title: "Generar informe HTML/PDF",
+    group: "Validacion",
+    description: "Genera un informe legible en HTML y PDF a partir del resumen JSON de la suite de validación, para consultar desde la consola o adjuntar como evidencia.",
+    command: python,
+    args: ["-m", "om_dcat_sync", "render-report", "--input", ".\\tmp_pytest\\validation_suite_summary.json", "--html-output", ".\\tmp_pytest\\validation_report.html", "--pdf-output", ".\\tmp_pytest\\validation_report.pdf"],
+    artifacts: ["tmp_pytest/validation_report.html", "tmp_pytest/validation_report.pdf"],
+    timeoutMs: 120_000,
   },
   {
     id: "validate-live-dcat",
@@ -280,7 +291,7 @@ export const operations: Operation[] = [
 
 export const excludedOperations = [
   "scripts/planning/bootstrap_github_project.py",
-  "scripts/planning/github_project_mvp.json",
+  "scripts/planning/github_project_planificacion.json",
   "scripts/infra/port_forward_openmetadata.ps1",
   "scripts/infra/generate_om_jwt.py",
 ];

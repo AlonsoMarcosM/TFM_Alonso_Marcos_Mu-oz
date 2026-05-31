@@ -1,6 +1,6 @@
 # A04 - Custom properties, tags y dry-run de gobierno
 
-## 1) Custom properties mínimas de la PoC
+## 1) Custom properties mínimas de la plataforma
 
 En entidad `table` (tipo `string`):
 

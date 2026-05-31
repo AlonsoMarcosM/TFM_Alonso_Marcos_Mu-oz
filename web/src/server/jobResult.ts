@@ -398,7 +398,9 @@ export function summarizeArtifact(relativePath: string): JobArtifactResult {
   try {
     const content = fs.readFileSync(absolutePath, "utf8");
     if (extension === ".json" || extension === ".jsonld") {
-      const parsed = JSON.parse(content) as unknown;
+      // Algunos artefactos se escriben con BOM UTF-8 (Set-Content -Encoding utf8
+      // en Windows PowerShell). JSON.parse falla con el BOM inicial, así que se elimina.
+      const parsed = JSON.parse((content.charCodeAt(0) === 0xFEFF ? content.slice(1) : content)) as unknown;
       const preview = truncate(JSON.stringify(parsed, null, 2));
       return {
         ...base,

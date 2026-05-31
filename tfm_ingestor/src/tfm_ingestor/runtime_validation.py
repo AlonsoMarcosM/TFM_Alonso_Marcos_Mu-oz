@@ -57,6 +57,15 @@ def _table_key(*, schema_name: str, table_name: str) -> str:
     return f"{schema_name}.{table_name}"
 
 
+def _table_contract_key(*, service_name: str, database_name: str, schema_name: str, table_name: str) -> str:
+    return f"{service_name}.{database_name}.{schema_name}.{table_name}"
+
+
+def _split_service_names(raw: str) -> list[str]:
+    names = [part.strip() for part in re.split(r"[,;]", raw) if part.strip()]
+    return names or [raw.strip()]
+
+
 def _parse_table_fqn(fqn: str) -> tuple[str | None, str | None, str | None, str | None]:
     parts = [part.strip() for part in fqn.split(".") if part.strip()]
     if len(parts) < 4:
@@ -137,6 +146,7 @@ def validate_runtime_state(
     rules = load_rules(rules_path)
     sheet_rows = load_governance_sheet(sheet_path)
     tables = [item for item in tables_input if isinstance(item, dict)] if tables_input is not None else _list_tables_for_validation(api=api, limit=limit)  # type: ignore[arg-type]
+    expected_service_names = _split_service_names(service_name)
 
     service_names_from_api: list[str] = []
     database_names_from_api: list[str] = []
@@ -168,6 +178,7 @@ def validate_runtime_state(
             schema_names_from_api = []
 
     actual_tables_by_key: dict[str, dict[str, Any]] = {}
+    actual_tables_by_fqn: dict[str, dict[str, Any]] = {}
     detected_service_names: set[str] = set()
     detected_database_names: set[str] = set()
     detected_schema_names: set[str] = set()
@@ -176,17 +187,35 @@ def validate_runtime_state(
         schema_name = _schema_name(table)
         if not schema_name or not table_name:
             continue
-        key = _table_key(schema_name=schema_name, table_name=table_name)
-        actual_tables_by_key[key] = table
+        fqn = str(table.get("fullyQualifiedName") or "").strip()
+        if fqn:
+            actual_tables_by_fqn[fqn] = table
         detected_schema_names.add(schema_name)
-        service, database, _, _ = _parse_table_fqn(str(table.get("fullyQualifiedName") or ""))
+        service, database, parsed_schema, parsed_table = _parse_table_fqn(fqn)
         if service:
             detected_service_names.add(service)
         if database:
             detected_database_names.add(database)
+        if service in expected_service_names and database == database_name:
+            key = _table_contract_key(
+                service_name=service,
+                database_name=database,
+                schema_name=parsed_schema or schema_name,
+                table_name=parsed_table or table_name,
+            )
+            actual_tables_by_key[key] = table
 
     expected_tables = contract["tables"]
-    expected_keys = {_table_key(schema_name=item["schema_name"], table_name=item["table_name"]) for item in expected_tables}
+    expected_keys = {
+        _table_contract_key(
+            service_name=expected_service,
+            database_name=database_name,
+            schema_name=item["schema_name"],
+            table_name=item["table_name"],
+        )
+        for expected_service in expected_service_names
+        for item in expected_tables
+    }
     actual_keys = set(actual_tables_by_key.keys())
 
     missing_tables = sorted(expected_keys - actual_keys)
@@ -194,41 +223,49 @@ def validate_runtime_state(
 
     column_checks: list[dict[str, Any]] = []
     technical_issues: list[str] = []
-    for expected in expected_tables:
-        key = _table_key(schema_name=expected["schema_name"], table_name=expected["table_name"])
-        actual_table = actual_tables_by_key.get(key)
-        if actual_table is None:
+    for expected_service in expected_service_names:
+        for expected in expected_tables:
+            key = _table_contract_key(
+                service_name=expected_service,
+                database_name=database_name,
+                schema_name=expected["schema_name"],
+                table_name=expected["table_name"],
+            )
+            actual_table = actual_tables_by_key.get(key)
+            if actual_table is None:
+                column_checks.append(
+                    {
+                        "table": key,
+                        "conforms": False,
+                        "reason": "missing_table",
+                        "expected_columns": expected["columns"],
+                        "actual_columns": [],
+                    }
+                )
+                continue
+            actual_columns = _columns_for_table(actual_table)
+            conforms = actual_columns == expected["columns"]
+            if not conforms:
+                technical_issues.append(f"Column mismatch in {key}")
             column_checks.append(
                 {
                     "table": key,
-                    "conforms": False,
-                    "reason": "missing_table",
+                    "conforms": conforms,
                     "expected_columns": expected["columns"],
-                    "actual_columns": [],
+                    "actual_columns": actual_columns,
                 }
             )
-            continue
-        actual_columns = _columns_for_table(actual_table)
-        conforms = actual_columns == expected["columns"]
-        if not conforms:
-            technical_issues.append(f"Column mismatch in {key}")
-        column_checks.append(
-            {
-                "table": key,
-                "conforms": conforms,
-                "expected_columns": expected["columns"],
-                "actual_columns": actual_columns,
-            }
-        )
 
     expected_schemas = sorted(contract["schemas"])
     actual_schema_source = schema_names_from_api or sorted(detected_schema_names)
     missing_schemas = sorted(set(expected_schemas) - set(actual_schema_source))
 
-    service_present = service_name in (service_names_from_api or sorted(detected_service_names))
+    detected_service_source = service_names_from_api or sorted(detected_service_names)
+    missing_services = sorted(set(expected_service_names) - set(detected_service_source))
+    service_present = not missing_services
     database_present = database_name in (database_names_from_api or sorted(detected_database_names))
-    if not service_present:
-        technical_issues.append(f"Missing database service: {service_name}")
+    if missing_services:
+        technical_issues.append(f"Missing database services: {', '.join(missing_services)}")
     if not database_present:
         technical_issues.append(f"Missing database: {database_name}")
     if missing_schemas:
@@ -243,14 +280,22 @@ def validate_runtime_state(
     governance_issues: list[str] = []
     legacy_managed_keys = [key for key in MANAGED_DCAT_CUSTOM_PROPERTIES if key not in ACTIVE_GOVERNANCE_CUSTOM_PROPERTIES]
     for row in published_rows:
-        key = _table_key(schema_name=row.schema_name, table_name=row.table_name)
-        table = actual_tables_by_key.get(key)
+        key = row.table_fqn or _table_key(schema_name=row.schema_name, table_name=row.table_name)
+        table = actual_tables_by_fqn.get(row.table_fqn) if row.table_fqn else None
         issues: list[str] = []
         if table is None and row.table_fqn:
             for candidate in tables:
                 if str(candidate.get("fullyQualifiedName") or "").strip() == row.table_fqn:
                     table = candidate
                     break
+        if table is None and len(expected_service_names) == 1:
+            fallback_key = _table_contract_key(
+                service_name=expected_service_names[0],
+                database_name=database_name,
+                schema_name=row.schema_name,
+                table_name=row.table_name,
+            )
+            table = actual_tables_by_key.get(fallback_key)
         if table is None:
             issues.append("missing_live_table")
             governance_issues.append(f"Missing live table for governance row: {key}")
@@ -307,8 +352,10 @@ def validate_runtime_state(
     technical_summary = {
         "conforms": not technical_issues,
         "service_name_expected": service_name,
+        "service_names_expected": expected_service_names,
         "service_name_present": service_present,
-        "service_names_detected": sorted(service_names_from_api or detected_service_names),
+        "service_names_detected": sorted(detected_service_source),
+        "missing_services": missing_services,
         "database_name_expected": database_name,
         "database_name_present": database_present,
         "database_names_detected": sorted(database_names_from_api or detected_database_names),

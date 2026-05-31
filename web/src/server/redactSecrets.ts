@@ -2,7 +2,6 @@ const SECRET_KEYS = [
   "OPENMETADATA_JWT_TOKEN",
   "GITHUB_TOKEN",
   "GH_TOKEN",
-  "CKAN_API_KEY",
 ];
 
 export function redactSecrets(value: string, env: Partial<NodeJS.ProcessEnv> = process.env): string {

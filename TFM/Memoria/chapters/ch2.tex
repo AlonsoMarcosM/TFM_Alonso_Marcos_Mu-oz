@@ -1,0 +1,130 @@
+\chapter{Objetivos, alcance y trazabilidad}\label{cap:objetivos}
+
+\section{Objetivo general}
+
+El objetivo general del TFM es diseñar y desplegar una configuración de metadatos en OpenMetadata alineada con DCAT-AP, concretada en este repositorio como DCAT-AP-ES, para mejorar la interoperabilidad y la gestión semántica de catálogos de datos en entornos Big Data y de computación en la nube \cite{uclmFichaTfe2026}.
+
+En términos implementados, este objetivo se materializa en una Plataforma de Gobierno del Dato capaz de descubrir activos técnicos, enriquecerlos con metadatos funcionales, exportar un catálogo JSON-LD y validar su conformidad mediante SHACL. La validación se apoya en dos servicios PostgreSQL ingeridos en OpenMetadata, lo que permite demostrar que el gobierno no depende de una única fuente ni de nombres de tabla globalmente únicos.
+
+\section{Objetivos específicos}
+
+Los objetivos específicos se formulan de forma verificable:
+
+\begin{enumerate}
+  \item Analizar DCAT-AP y su concreción DCAT-AP-ES, incluyendo clases, propiedades, vocabularios controlados y validación SHACL.
+  \item Mapear las entidades de OpenMetadata con las clases principales de DCAT-AP-ES.
+  \item Configurar en OpenMetadata los metadatos mínimos necesarios para representar datasets publicables.
+  \item Implementar un workflow reproducible de sincronización de metadatos desde activos técnicos reales.
+  \item Ejecutar doble ingesta PostgreSQL para validar gobierno multi-fuente con tablas homónimas.
+  \item Exportar el catálogo gobernado en JSON-LD compatible con DCAT-AP-ES.
+  \item Validar la salida con SHACL y evaluar beneficios, limitaciones, idempotencia y mantenibilidad.
+  \item Proporcionar una consola web operativa que ejecute el mismo flujo sin duplicar reglas de negocio.
+\end{enumerate}
+
+\section{Alcance}
+
+El alcance del trabajo queda delimitado por el caso de uso de validación. La plataforma gobierna metadatos generados a partir de un PostgreSQL de referencia, no datos de negocio reales. Las tablas se organizan en capas \texttt{bronze}, \texttt{silver} y \texttt{gold}; solo \texttt{gold} se considera publicable.
+
+La implementación activa cubre:
+
+\begin{itemize}
+  \item despliegue local reproducible con Kubernetes, Helm y scripts PowerShell;
+  \item doble ingesta técnica de PostgreSQL en OpenMetadata bajo los servicios \texttt{postgres\_demo\_service} y \texttt{postgres\_validation\_service};
+  \item gobierno funcional de las tablas \texttt{gold} de ambos servicios, con cuatro datasets publicables;
+  \item custom properties y etiquetas DCAT en OpenMetadata;
+  \item exportación JSON-LD;
+  \item validación SHACL con el caso HVD;
+  \item pruebas automatizadas y validación estructural;
+  \item consola web operativa basada en Next.js.
+\end{itemize}
+
+\section{Exclusiones}
+
+Quedan fuera del alcance:
+
+\begin{itemize}
+  \item publicación automática en un portal externo CKAN o datos.gob.es;
+  \item certificación jurídica de datasets de alto valor fuera del caso de uso de validación;
+  \item calidad fila a fila de los datos de negocio;
+  \item alta disponibilidad, SSO, RBAC avanzado, cifrado avanzado, backups productivos y observabilidad avanzada;
+  \item flujos editoriales complejos propios de plataformas comerciales completas.
+\end{itemize}
+
+\section{Cambio de alcance respecto a CKAN}
+
+La ficha oficial proponía implementar un pipeline de ingesta o sincronización de metadatos desde una fuente externa, por ejemplo CKAN \cite{uclmFichaTfe2026}. Durante el desarrollo se descartó CKAN como origen operativo principal. La razón es metodológica: CKAN actúa principalmente como catálogo de publicación e intercambio de metadatos ya elaborados, mientras que el objetivo académico de este TFM requiere demostrar cómo se generan, gobiernan y validan metadatos desde activos técnicos reproducibles.
+
+Desde el punto de vista de gobierno del dato, el enfoque DAMA enfatiza control, roles, metadatos, calidad e interoperabilidad como funciones coordinadas de gestión \cite{datosGobDama2021,damaDmbok}. Por ello, partir de PostgreSQL y OpenMetadata permite evidenciar mejor el ciclo completo: descubrimiento técnico, curación funcional, aplicación de gobierno, exportación y validación. CKAN se mantiene como posible destino o punto de federación futura, no como fuente canónica del caso de uso de validación.
+
+\section{Trazabilidad entre objetivos y evidencias}
+
+\begin{table}[h]
+\footnotesize
+\centering
+\begin{tabular}{|L{3.6cm}|L{4.6cm}|L{5.2cm}|}
+\hline
+\rowcolor{tema!10}
+\bft{Objetivo} & \bft{Capítulo} & \bft{Evidencia del repositorio} \\ \hline
+Análisis DCAT-AP-ES & Marco técnico & \texttt{docs/dcat\_mapping.md}, bibliografía oficial \\ \hline
+Mapeo OpenMetadata & Diseño e implementación & \texttt{dcat\_export.py}, \texttt{governance\_service.py} \\ \hline
+Configuración de gobierno & Implementación & \texttt{gold\_governance.csv}, \texttt{governance\_defaults.yaml} \\ \hline
+Doble ingesta PostgreSQL & Implementación y validación & \texttt{ingest\_postgres\_double.ps1}, \texttt{gold\_governance.csv} \\ \hline
+Workflow reproducible & Implementación y validación & \texttt{workflow\_service.py}, \texttt{run\_validation\_suite.ps1} \\ \hline
+Exportación JSON-LD & Validación & \texttt{dcat\_export.py}, artefactos \texttt{*.jsonld} \\ \hline
+Validación SHACL & Validación & \texttt{shacl\_validation.py}, shapes vendorizadas \\ \hline
+Consola operativa & Implementación & \texttt{web/}, \texttt{operations.ts}, \texttt{jobRunner.ts} \\ \hline
+\end{tabular}
+\caption{Trazabilidad entre objetivos, capítulos y evidencias. Elaboración propia.}
+\label{tab:trazabilidad}
+\end{table}
+
+\section{Metodología de trabajo}\label{sec:metodologia}
+
+\subsection{Enfoque general}
+
+El TFM se ha gestionado con un enfoque \emph{lean} basado en \textbf{Kanban}~\cite{andersonKanban}, complementado con los procesos de planificación, seguimiento y cierre del \ac{PMBOK}~\cite{pmiPmbok7} adaptados a un trabajo individual. La elección no es ornamental: Kanban encaja con un trabajo de alcance acotado y entrega incremental, mientras que el \ac{PMBOK} aporta vocabulario y disciplina para los hitos académicos (planificación, ejecución, validación, cierre). Esta combinación se alinea con las prácticas habituales del sector cuando un único responsable cubre los roles de analista, desarrollador y revisor.
+
+Las reglas operativas se han fijado de manera explícita para evitar deriva:
+
+\begin{itemize}
+    \item \textbf{Límite de trabajo en curso (WIP)}: máximo 2-3 tareas simultáneas, una sola en \texttt{En curso} cuando incluye despliegue o cambios de infraestructura.
+    \item \textbf{Revisión semanal}: cierre y replanificación cada lunes; revisión adicional al cierre de cada fase.
+    \item \textbf{Definición de Hecho (DoD)}: una tarea solo se mueve a \texttt{Hecho} cuando existe evidencia versionada en el repositorio (código, configuración, documentación o artefacto regenerable) y, en su caso, tests verdes.
+\end{itemize}
+
+\subsection{Tablero y vistas en GitHub Project}
+
+La herramienta canónica de seguimiento es \textbf{GitHub Projects v2}~\cite{githubProjects}, sincronizada con los \emph{issues} del propio repositorio. El tablero combina seis estados (\texttt{Backlog}, \texttt{Por definir}, \texttt{En curso}, \texttt{Bloqueado}, \texttt{En revisión}, \texttt{Hecho}) con campos personalizados de fase, tipo de tarea, fecha de inicio y fecha de fin. Esta estructura permite obtener simultáneamente una vista Kanban, un \emph{roadmap} cronológico (Gantt) y un listado de evidencias por tarea.
+
+La sincronización no es manual: el archivo declarativo \fqn{scripts/planning/github_project_planificacion.json} contiene la fuente de verdad del roadmap completo. El script \fqn{scripts/planning/bootstrap_github_project.py} aplica ese archivo contra el Project remoto de forma idempotente, creando o actualizando \emph{milestones}, \emph{issues}, etiquetas y campos del Project sin duplicar items. Esta automatización garantiza que el tablero refleja el estado real del trabajo planificado y evita la deriva entre documentación y herramienta.
+
+\subsection{Fases del roadmap}
+
+El trabajo se ha organizado en seis fases secuenciales con superposición controlada. La tabla~\ref{tab:fases-metodologia} resume cada fase con su ventana temporal real, las áreas \ac{DMBOK}~\cite{damaDmbok} implicadas y el estado al cierre del cuerpo de la memoria.
+
+\begin{table}[h]
+\footnotesize
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|L{4.4cm}|L{3.0cm}|L{4.6cm}|}
+\hline
+\rowcolor{tema!10}
+\bft{Fase} & \bft{Ventana} & \bft{Área DMBOK implicada} \\ \hline
+01 Planificación              & feb–abr 2026 & Gobierno, arquitectura     \\ \hline
+02 Modelo DCAT-AP-ES          & mar–abr 2026 & Metadatos, interoperabilidad \\ \hline
+03 Configuración OpenMetadata & abr 2026     & Metadatos, integración     \\ \hline
+04 Pipeline de ingesta        & abr–may 2026 & Integración, gobierno      \\ \hline
+05 Validación                 & may 2026     & Calidad, gobierno          \\ \hline
+06 Memoria y defensa          & may–jul 2026 & Documentación              \\ \hline
+\end{tabular}
+\caption{Fases del roadmap del TFM con su área DAMA-DMBOK predominante. Elaboración propia, sincronizada con \fqn{scripts/planning/github_project_planificacion.json}.}
+\label{tab:fases-metodologia}
+\end{table}
+
+\subsection{Vista temporal del trabajo}
+
+La figura~\ref{fig:gantt-metodologia} muestra el diagrama de Gantt derivado del Project. Las fases se solapan donde la naturaleza del trabajo lo permitía (por ejemplo, la fase 02 de modelo \ac{DCATAPES} arrancó mientras se cerraban riesgos de la fase 01). El bloque de redacción de la memoria está reservado a las últimas semanas, con la defensa en julio de 2026 como hito final.
+
+\figuraMemoria{fig_gantt_planificacion.png}{Diagrama de Gantt del roadmap del TFM, derivado del archivo declarativo \fqn{scripts/planning/github_project_planificacion.json}. Elaboración propia.}{fig:gantt-metodologia}
+
+\figuraMemoria{fig_kanban_board.png}{Vista Kanban del GitHub Project del TFM al cierre de la fase 05. Elaboración propia.}{fig:kanban-board}

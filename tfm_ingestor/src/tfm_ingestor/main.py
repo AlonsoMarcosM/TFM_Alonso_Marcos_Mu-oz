@@ -5,13 +5,13 @@ import json
 import os
 import sys
 
-from tfm_ingestor.config import load_ckan_harvest, load_defaults, load_rules
+from tfm_ingestor.config import load_defaults, load_rules
 from tfm_ingestor.dcat_export import export_catalog
 from tfm_ingestor.governance_service import discover_tables, load_tables_input, run_governance_sync
 from tfm_ingestor.governance_sheet import generate_governance_sheet, load_governance_sheet
-from tfm_ingestor.harvest_ckan import run_harvest
 from tfm_ingestor.om_api import OpenMetadataApi, OpenMetadataApiError
 from tfm_ingestor.operational_profile import load_operational_profile
+from tfm_ingestor.report_render import render_validation_report
 from tfm_ingestor.runtime import repo_paths
 from tfm_ingestor.runtime_validation import validate_runtime_state, write_runtime_validation_report
 from tfm_ingestor.shacl_validation import export_and_validate_catalog, validate_jsonld_file
@@ -33,7 +33,7 @@ def cli_enrich(argv: list[str] | None = None) -> int:
         help="OpenMetadata base URL (api/v1)",
     )
     parser.add_argument("--token", default=os.getenv("OPENMETADATA_JWT_TOKEN"), help="OpenMetadata JWT token")
-    parser.add_argument("--limit", type=int, default=1000, help="Max tables to read from OM (PoC)")
+    parser.add_argument("--limit", type=int, default=1000, help="Max tables to read from OM (platform)")
     parser.add_argument("--tables-in", default=None, help="Read OpenMetadata tables from a JSON file (offline mode)")
     parser.add_argument("--plan-output", default=None, help="Write reproducible JSON plan to a file")
     parser.add_argument("--dry-run", action="store_true", help="Print plan, do not PATCH anything")
@@ -143,56 +143,6 @@ def cli_validate_governance_sheet(argv: list[str] | None = None) -> int:
     return 0
 
 
-def cli_harvest_ckan(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="TFM: harvest CKAN metadata and enrich OpenMetadata tables")
-    paths = repo_paths()
-
-    parser.add_argument("--config", default=str(paths.harvest_config_path), help="CKAN harvest YAML config")
-    parser.add_argument("--defaults", default=str(paths.defaults_path), help="Defaults YAML path (catalog)")
-    parser.add_argument(
-        "--base-url",
-        default=os.getenv("OPENMETADATA_BASE_URL", "http://localhost:8585/api/v1"),
-        help="OpenMetadata base URL (api/v1)",
-    )
-    parser.add_argument("--token", default=os.getenv("OPENMETADATA_JWT_TOKEN"), help="OpenMetadata JWT token")
-    parser.add_argument("--limit-tables", type=int, default=1000, help="Max tables to read from OM")
-    parser.add_argument("--dry-run", action="store_true", help="Print plan, do not PATCH anything")
-    parser.add_argument("--max-datasets", type=int, default=None, help="Limit number of CKAN datasets fetched")
-    parser.add_argument("--datasets-in", default=None, help="Read CKAN datasets from a JSON file (offline mode)")
-    parser.add_argument("--datasets-out", default=None, help="Write harvested CKAN datasets to a JSON file")
-    parser.add_argument("--ckan-api-key", default=os.getenv("CKAN_API_KEY"), help="CKAN API key (optional)")
-    args = parser.parse_args(argv)
-
-    defaults = load_defaults(args.defaults)
-    ckan_cfg = load_ckan_harvest(args.config)
-    datasets_input = None
-    if args.datasets_in:
-        with open(args.datasets_in, "r", encoding="utf-8-sig") as file_obj:
-            datasets_input = json.load(file_obj)
-        if not isinstance(datasets_input, list):
-            raise SystemExit("ERROR: --datasets-in must be a JSON array of CKAN datasets")
-
-    api = OpenMetadataApi(base_url=args.base_url, jwt_token=args.token)
-
-    try:
-        result = run_harvest(
-            ckan_cfg=ckan_cfg,
-            defaults=defaults,
-            om_api=api,
-            dry_run=bool(args.dry_run),
-            limit_tables=int(args.limit_tables),
-            datasets_input=datasets_input,
-            write_datasets_path=args.datasets_out,
-            ckan_api_key=args.ckan_api_key,
-            max_datasets=args.max_datasets,
-        )
-    except (OpenMetadataApiError, ValueError) as exc:
-        raise SystemExit(f"ERROR: {exc}") from exc
-
-    print(json.dumps(result, indent=2, ensure_ascii=False))
-    return 0
-
-
 def cli_export_dcat(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="TFM: export OpenMetadata catalog to DCAT-AP-ES JSON-LD (active HVD profile)"
@@ -286,14 +236,18 @@ def cli_validate_dcat(argv: list[str] | None = None) -> int:
 
 def cli_validate_runtime(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="TFM: validate live OpenMetadata state against SQL demo contract and governed metadata"
+        description="TFM: validate live OpenMetadata state against SQL reference contract and governed metadata"
     )
     paths = repo_paths()
 
     parser.add_argument("--rules", default=str(paths.rules_path), help="Rules YAML path")
     parser.add_argument("--sheet", default=str(paths.sheet_path), help="Governance sheet CSV path")
-    parser.add_argument("--sql", default=str(paths.sql_demo_path), help="SQL demo contract path")
-    parser.add_argument("--service-name", default="postgres_demo_service", help="Expected OpenMetadata database service name")
+    parser.add_argument("--sql", default=str(paths.sql_demo_path), help="SQL reference contract path")
+    parser.add_argument(
+        "--service-name",
+        default="postgres_demo_service",
+        help="Expected OpenMetadata database service name, or comma-separated names for double ingestion",
+    )
     parser.add_argument("--database-name", default="opendata_demo", help="Expected OpenMetadata database name")
     parser.add_argument(
         "--base-url",
@@ -333,6 +287,30 @@ def cli_validate_runtime(argv: list[str] | None = None) -> int:
     return 0
 
 
+def cli_render_report(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description="TFM: render an HTML and/or PDF report from a validation JSON file"
+    )
+    parser.add_argument("--input", required=True, help="Validation JSON file (runtime report or suite summary)")
+    parser.add_argument("--html-output", default=None, help="Output HTML path (default: alongside input)")
+    parser.add_argument("--pdf-output", default=None, help="Output PDF path (default: alongside input)")
+    parser.add_argument("--title", default=None, help="Override report title")
+    args = parser.parse_args(argv)
+
+    try:
+        result = render_validation_report(
+            args.input,
+            html_output=args.html_output,
+            pdf_output=args.pdf_output,
+            title=args.title,
+        )
+    except (FileNotFoundError, ValueError, RuntimeError) as exc:
+        raise SystemExit(f"ERROR: {exc}") from exc
+
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    return 0
+
+
 def cli_workflow_run(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="TFM: canonical workflow for discover, plan, apply, export and validate"
@@ -369,7 +347,6 @@ def cli_workflow_run(argv: list[str] | None = None) -> int:
             defaults_path=paths.defaults_path,
             rules_path=paths.rules_path,
             sheet_path=paths.sheet_path,
-            harvest_config_path=paths.harvest_config_path,
         )
         result = run_workflow(
             WorkflowRunConfig(
@@ -404,14 +381,14 @@ def cli(argv: list[str] | None = None) -> int:
         return cli_generate_governance_sheet(args[1:])
     if args and args[0] == "validate-governance-sheet":
         return cli_validate_governance_sheet(args[1:])
-    if args and args[0] == "harvest-ckan":
-        return cli_harvest_ckan(args[1:])
     if args and args[0] == "export-dcat":
         return cli_export_dcat(args[1:])
     if args and args[0] == "validate-dcat":
         return cli_validate_dcat(args[1:])
     if args and args[0] == "validate-runtime":
         return cli_validate_runtime(args[1:])
+    if args and args[0] == "render-report":
+        return cli_render_report(args[1:])
     if args and args[0] == "workflow":
         if len(args) > 1 and args[1] == "run":
             return cli_workflow_run(args[2:])

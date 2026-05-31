@@ -40,11 +40,10 @@ class OperationalProfile:
     defaults_path: Path
     rules_path: Path
     sheet_path: Path
-    harvest_config_path: Path
     workflow: OperationalWorkflowDefaults
 
 
-def load_operational_profile(path: str | Path, *, repo_root: Path, defaults_path: Path, rules_path: Path, sheet_path: Path, harvest_config_path: Path) -> OperationalProfile:
+def load_operational_profile(path: str | Path, *, repo_root: Path, defaults_path: Path, rules_path: Path, sheet_path: Path) -> OperationalProfile:
     profile_path = Path(path).resolve()
     raw = _load_yaml(profile_path)
 
@@ -71,7 +70,6 @@ def load_operational_profile(path: str | Path, *, repo_root: Path, defaults_path
         defaults_path=_resolve_path(raw_value=raw.get("defaults_path"), repo_root=repo_root, fallback=defaults_path),
         rules_path=_resolve_path(raw_value=raw.get("rules_path"), repo_root=repo_root, fallback=rules_path),
         sheet_path=_resolve_path(raw_value=raw.get("sheet_path"), repo_root=repo_root, fallback=sheet_path),
-        harvest_config_path=_resolve_path(raw_value=raw.get("harvest_config_path"), repo_root=repo_root, fallback=harvest_config_path),
         workflow=OperationalWorkflowDefaults(
             profile_case=profile_case,
             allow_warnings=allow_warnings,

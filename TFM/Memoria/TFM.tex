@@ -1,0 +1,57 @@
+% -------------------------------
+% Memoria del TFM en la ESIIAB/ESICR de la UCLM
+% Compilar con XeLaTeX
+% -------------------------------
+\documentclass[12pt, a4paper]{book}
+
+\input{include/opciones}
+\input{include/configuracion}
+
+\begin{document}
+
+\input{elements/portada}
+
+\setmainfont[Ligatures={NoRequired,NoCommon,NoContextual}]{Calibri}
+
+\frontmatter
+\input{elements/preambulo}
+
+\singlespacing
+\tableofcontents
+\listoffigures
+\listoftables
+\lstlistoflistings
+\input{elements/acronimos}
+\cleardoublepage
+\onehalfspacing
+
+\mainmatter
+\pagestyle{fancy}
+
+\input{chapters/ch1}
+\input{chapters/ch2}
+\input{chapters/ch3}
+\input{chapters/ch4}
+\input{chapters/ch5}
+\input{chapters/ch6}
+\input{chapters/ch7}
+\input{chapters/ch8}
+
+\appendix
+\input{appendices/apendice_reproduccion}
+\input{appendices/apendice_infraestructura}
+\input{appendices/apendice_ingesta_gobierno}
+\input{appendices/apendice_mapeo_dcat}
+\input{appendices/apendice_validacion_web}
+\input{appendices/apendice_demo_operativa}
+
+\cleardoublepage
+\thispagestyle{empty}
+
+\begin{sloppypar}
+\bibliographystyle{unsrt}
+\bibliography{bib/ref}
+\addcontentsline{toc}{chapter}{Referencia bibliográfica}
+\end{sloppypar}
+
+\end{document}

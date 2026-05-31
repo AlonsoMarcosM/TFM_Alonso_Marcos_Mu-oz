@@ -117,6 +117,7 @@ Write-Host "`n[4/5] Instalando dependencias OpenMetadata (Helm)..."
 & $helm repo update
 Ensure-NoPendingRelease -helmPath $helm -releaseName "openmetadata-dependencies"
 & $helm upgrade --install openmetadata-dependencies open-metadata/openmetadata-dependencies `
+  --version 1.12.9 `
   -f "k8s/openmetadata-dependencies.values.yaml" `
   --wait --timeout 25m
 
@@ -134,6 +135,7 @@ if (-not $SkipOpenMetadata) {
   Write-Host "`n[5/5] Instalando OpenMetadata (Helm)..."
   Ensure-NoPendingRelease -helmPath $helm -releaseName "openmetadata"
   & $helm upgrade --install openmetadata open-metadata/openmetadata `
+    --version 1.12.9 `
     -f "k8s/openmetadata.values.yaml" `
     --wait --timeout 20m
 }

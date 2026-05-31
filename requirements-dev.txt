@@ -1,1 +1,1 @@
--e ./tfm_ingestor[dev,infra,validation]
+-e ./tfm_ingestor[dev,infra,validation,report]

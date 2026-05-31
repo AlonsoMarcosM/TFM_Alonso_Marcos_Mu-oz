@@ -4,8 +4,8 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "TFM PoC",
-  description: "Consola web simple para operar la PoC del TFM.",
+  title: "Plataforma de Gobierno del Dato",
+  description: "Consola web operativa de la Plataforma de Gobierno del Dato del TFM.",
 };
 
 const links = [
@@ -29,7 +29,31 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <div className="shell">
           <aside className="sidebar">
-            <h1>TFM PoC<br />Consola operativa</h1>
+            <div className="brand">
+              <svg
+                className="brand-logo"
+                viewBox="0 0 64 64"
+                role="img"
+                aria-label="Logotipo de la Plataforma de Gobierno del Dato"
+              >
+                <defs>
+                  <linearGradient id="brand-gpgd" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stopColor="#1d7f5f" />
+                    <stop offset="1" stopColor="#116046" />
+                  </linearGradient>
+                </defs>
+                <rect width="64" height="64" rx="14" fill="url(#brand-gpgd)" />
+                <g stroke="#ffffff" strokeWidth="3.2" strokeLinecap="round" fill="#ffffff">
+                  <line x1="32" y1="22" x2="19" y2="44" />
+                  <line x1="32" y1="22" x2="45" y2="44" />
+                  <line x1="19" y1="44" x2="45" y2="44" />
+                  <circle cx="32" cy="22" r="6.4" />
+                  <circle cx="19" cy="44" r="6.4" />
+                  <circle cx="45" cy="44" r="6.4" />
+                </g>
+              </svg>
+              <h1>Plataforma de Gobierno del Dato<br />Consola operativa</h1>
+            </div>
             <nav aria-label="Navegación principal">
               {links.map(([href, label]) => (
                 <Link key={href} href={href}>

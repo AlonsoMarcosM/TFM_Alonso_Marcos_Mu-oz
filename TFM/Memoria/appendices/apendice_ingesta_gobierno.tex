@@ -1,0 +1,22 @@
+\chapter{Esquema de gobierno funcional}\label{ap:ingesta-gobierno}
+
+\section{Estructura de la hoja \texttt{gold\_governance.csv}}
+
+La hoja \texttt{tfm\_ingestor/config/gold\_governance.csv} usa separador \texttt{;} y las siguientes columnas:
+
+\begin{itemize}
+    \item \texttt{publicar}: \texttt{si} o \texttt{no}; controla la inclusión en el catálogo exportado.
+    \item \texttt{schema\_name}: esquema PostgreSQL (siempre \texttt{gold} en el caso de uso de validación).
+    \item \texttt{table\_name}: nombre de tabla en PostgreSQL.
+    \item \texttt{table\_fqn}: identificador completo en \ac{OM} (\texttt{service.database.schema.table}).
+    \item \texttt{titulo\_dataset}: título funcional del dataset.
+    \item \texttt{descripcion\_dataset}: descripción de la fila desde la perspectiva editorial.
+    \item \texttt{publicador}: nombre del organismo publicador (\texttt{UCLM} en el caso de uso).
+    \item \texttt{tematica\_dcat}: tema NTI-RISP del dataset (\texttt{cultura\_ocio}, \texttt{transporte}, etc.).
+    \item \texttt{categoria\_hvd}: categoría \ac{HVD} del Reglamento (UE) 2023/138.
+    \item \texttt{access\_url\_distribucion}: URL pública o estable de la distribución.
+\end{itemize}
+
+\section{Defaults globales}
+
+El archivo \texttt{tfm\_ingestor/config/governance\_defaults.yaml} centraliza los valores constantes del catálogo. Su edición altera el comportamiento de todos los datasets simultáneamente, principio clave de la sección~\ref{sec:gobierno-centralizado-vs-distribuido}.

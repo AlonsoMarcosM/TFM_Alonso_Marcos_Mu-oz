@@ -24,6 +24,9 @@ infra = [
 validation = [
   "pyshacl>=0.28",
 ]
+report = [
+  "fpdf2>=2.7",
+]
 
 [project.scripts]
 tfm-ingestor = "tfm_ingestor.main:cli"

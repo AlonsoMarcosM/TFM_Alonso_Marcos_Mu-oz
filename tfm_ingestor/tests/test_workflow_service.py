@@ -9,8 +9,8 @@ def _write_defaults(path: Path) -> None:
         "\n".join(
             [
                 "catalog:",
-                '  title: "Open Data Demo"',
-                '  description: "Catálogo demo"',
+                '  title: "Plataforma de Gobierno del Dato"',
+                '  description: "Catálogo de validación"',
                 '  publisher_name: "UCLM"',
                 '  publisher_uri: "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001"',
                 '  homepage: "https://example.org"',
@@ -20,7 +20,7 @@ def _write_defaults(path: Path) -> None:
                 '  language: "http://publications.europa.eu/resource/authority/language/SPA"',
                 '  license_default: "https://example.org/legal"',
                 "dataset_defaults:",
-                '  access_url_base: "https://example.org/datos/poc"',
+                '  access_url_base: "https://example.org/datos/plataforma-gobierno-dato"',
                 "  hvd_category_by_theme_tag:",
                 '    dcat_theme.transporte: "movilidad"',
                 "hvd_defaults:",
@@ -33,9 +33,9 @@ def _write_defaults(path: Path) -> None:
                 '  service_documentation_base: "https://example.org/docs"',
                 "  contact:",
                 '    organization_name: "UCLM"',
-                '    fn: "Oficina demo de datos abiertos"',
+                '    fn: "Oficina de datos abiertos"',
                 '    has_uid: "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001"',
-                '    has_email: "mailto:opendata-demo@example.org"',
+                '    has_email: "mailto:opendata-gobierno-dato@example.org"',
                 '    has_url: "https://example.org/contacto"',
                 '    has_telephone: "tel:+34902000000"',
             ]
@@ -113,6 +113,74 @@ def test_run_workflow_dry_run_refreshes_sheet_and_writes_plan(tmp_path: Path):
     assert result["validation"] is None
 
 
+def test_run_workflow_dry_run_handles_duplicate_gold_table_names_by_fqn(tmp_path: Path):
+    defaults_path = tmp_path / "defaults.yaml"
+    rules_path = tmp_path / "rules.yaml"
+    sheet_path = tmp_path / "gold_governance.csv"
+    tables_path = tmp_path / "tables.json"
+    plan_output = tmp_path / "plan.json"
+    _write_defaults(defaults_path)
+    _write_rules(rules_path)
+
+    sheet_path.write_text(
+        "\n".join(
+            [
+                "publicar;schema_name;table_name;table_fqn;titulo_dataset;descripcion_dataset;publicador;tematica_dcat;categoria_hvd;access_url_distribucion",
+                "si;gold;movilidad_resumen_municipio;postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio;Movilidad demo;Resumen demo;UCLM;transporte;movilidad;https://example.org/demo/gold/movilidad",
+                "si;gold;movilidad_resumen_municipio;postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio;Movilidad validacion;Resumen validacion;UCLM;transporte;movilidad;https://example.org/validation/gold/movilidad",
+            ]
+        ),
+        encoding="utf-8-sig",
+    )
+    tables_path.write_text(
+        json.dumps(
+            [
+                {
+                    "id": "table-1",
+                    "fullyQualifiedName": "postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio",
+                    "name": "movilidad_resumen_municipio",
+                    "description": "Resumen tecnico demo",
+                    "tags": [],
+                    "extension": {},
+                    "databaseSchema": {"name": "gold"},
+                },
+                {
+                    "id": "table-2",
+                    "fullyQualifiedName": "postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio",
+                    "name": "movilidad_resumen_municipio",
+                    "description": "Resumen tecnico validacion",
+                    "tags": [],
+                    "extension": {},
+                    "databaseSchema": {"name": "gold"},
+                },
+            ],
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_workflow(
+        WorkflowRunConfig(
+            defaults_path=str(defaults_path),
+            rules_path=str(rules_path),
+            sheet_path=str(sheet_path),
+            base_url="http://localhost:8585/api/v1",
+            token=None,
+            dry_run=True,
+            refresh_sheet=True,
+            plan_output=str(plan_output),
+            tables_input_path=str(tables_path),
+        )
+    )
+
+    assert result["workflow"]["tables_discovered"] == 2
+    assert result["workflow"]["sheet_rows_loaded"] == 2
+    assert result["sync"] is not None
+    assert result["sync"]["intents"] == 2
+    assert len(result["sync"]["planned"]) == 2
+
+
 def test_run_workflow_dry_run_reports_sheet_curation_needed(tmp_path: Path):
     defaults_path = tmp_path / "defaults.yaml"
     rules_path = tmp_path / "rules.yaml"
@@ -161,6 +229,57 @@ def test_run_workflow_dry_run_reports_sheet_curation_needed(tmp_path: Path):
     assert result["validation"] is None
 
 
+def test_run_workflow_dry_run_without_matching_sheet_row_does_not_fallback_to_rules(tmp_path: Path):
+    defaults_path = tmp_path / "defaults.yaml"
+    rules_path = tmp_path / "rules.yaml"
+    sheet_path = tmp_path / "gold_governance.csv"
+    tables_path = tmp_path / "tables.json"
+    _write_defaults(defaults_path)
+    _write_rules(rules_path)
+    sheet_path.write_text(
+        "publicar;schema_name;table_name;table_fqn;titulo_dataset;descripcion_dataset;publicador;tematica_dcat;categoria_hvd;access_url_distribucion\n",
+        encoding="utf-8-sig",
+    )
+
+    tables_path.write_text(
+        json.dumps(
+            [
+                {
+                    "id": "table-1",
+                    "fullyQualifiedName": "svc.db.gold.movilidad_resumen_municipio",
+                    "name": "movilidad_resumen_municipio",
+                    "description": "Resumen de movilidad por municipio",
+                    "tags": [],
+                    "extension": {},
+                    "databaseSchema": {"name": "gold"},
+                }
+            ],
+            ensure_ascii=False,
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+
+    result = run_workflow(
+        WorkflowRunConfig(
+            defaults_path=str(defaults_path),
+            rules_path=str(rules_path),
+            sheet_path=str(sheet_path),
+            base_url="http://localhost:8585/api/v1",
+            token=None,
+            dry_run=True,
+            refresh_sheet=False,
+            tables_input_path=str(tables_path),
+        )
+    )
+
+    assert result["workflow"]["sheet_valid"] is True
+    assert result["workflow"]["sheet_rows_loaded"] == 0
+    assert result["sync"] is not None
+    assert result["sync"]["intents"] == 0
+    assert result["sync"]["planned"] == []
+
+
 def test_run_workflow_apply_and_export_uses_canonical_service_layer(monkeypatch, tmp_path: Path):
     defaults_path = tmp_path / "defaults.yaml"
     rules_path = tmp_path / "rules.yaml"
@@ -172,7 +291,7 @@ def test_run_workflow_apply_and_export_uses_canonical_service_layer(monkeypatch,
         "\n".join(
             [
                 "publicar;schema_name;table_name;table_fqn;titulo_dataset;descripcion_dataset;publicador;tematica_dcat;categoria_hvd;access_url_distribucion",
-                "si;gold;movilidad_resumen_municipio;svc.db.gold.movilidad_resumen_municipio;Movilidad municipal;Resumen de movilidad por municipio;UCLM;transporte;movilidad;https://example.org/datos/poc/gold/movilidad-resumen-municipio",
+                "si;gold;movilidad_resumen_municipio;svc.db.gold.movilidad_resumen_municipio;Movilidad municipal;Resumen de movilidad por municipio;UCLM;transporte;movilidad;https://example.org/datos/plataforma-gobierno-dato/gold/movilidad-resumen-municipio",
             ]
         ),
         encoding="utf-8-sig",
@@ -225,7 +344,7 @@ def test_run_workflow_apply_and_export_uses_canonical_service_layer(monkeypatch,
             rules_path=str(rules_path),
             sheet_path=str(sheet_path),
             base_url="http://localhost:8585/api/v1",
-            token="token-demo",
+            token="token-validacion",
             dry_run=False,
             refresh_sheet=False,
             export_output=str(export_output),

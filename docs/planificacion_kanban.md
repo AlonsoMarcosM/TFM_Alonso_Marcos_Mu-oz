@@ -1,11 +1,11 @@
 # Planificación Del TFM
 
-Enfoque: **Kanban** + hitos académicos. Es adecuado para un TFM individual de 6 ECTS, con alcance acotado y orientado a una PoC reproducible.
+Enfoque: **Kanban** + hitos académicos. Es adecuado para un TFM individual de 6 ECTS, con alcance acotado y orientado a una plataforma reproducible.
 
 Alcance recordatorio:
 
 - Se gobiernan **metadatos**, no datos de negocio.
-- La PoC usa `DCAT-AP-ES` con el caso `hvd` activo para los datasets `gold`.
+- La plataforma usa `DCAT-AP-ES` con el caso `hvd` activo para los datasets `gold`.
 - El flujo técnico es ingesta -> enriquecimiento -> exportación -> validación.
 
 ## Metodología
@@ -38,7 +38,7 @@ En GitHub Projects estos valores se sincronizan sobre el campo nativo `Status`.
 
 ## Estado Actual
 
-El estado canónico está en `scripts/planning/github_project_mvp.json`.
+El estado canónico está en `scripts/planning/github_project_planificacion.json`.
 
 - `01_Planificacion`: `Hecho`
 - `02_Modelo_DCAT-AP-ES`: `Hecho`
@@ -47,7 +47,7 @@ El estado canónico está en `scripts/planning/github_project_mvp.json`.
 - `05_Validacion`: `Hecho`
 - `06_Memoria`: `Backlog`
 
-Con este estado, la funcionalidad técnica de la PoC queda cerrada y la siguiente fase es redactar y consolidar la memoria.
+Con este estado, la funcionalidad técnica de la plataforma queda cerrada y la siguiente fase es redactar y consolidar la memoria.
 
 ## Backlog Maestro Por Fase
 
@@ -62,10 +62,10 @@ Con este estado, la funcionalidad técnica de la PoC queda cerrada y la siguient
 ### 02_Modelo_DCAT-AP-ES
 
 - Analizar `Catalog`, `Dataset`, `Distribution`, `DataService` y `Agent` en el perfil activo.
-- Justificar la activación del caso `hvd` en la PoC.
+- Justificar la activación del caso `hvd` en la plataforma.
 - Cerrar decisiones de mapeo `DCAT-AP-ES` -> OpenMetadata.
 - Definir el set mínimo de custom properties activas.
-- Documentar limitaciones y riesgo controlado: `Dataset` DCAT frente a tabla SQL, HVD demo y `DataService` derivado.
+- Documentar limitaciones y riesgo controlado: `Dataset` DCAT frente a tabla SQL, HVD de validación y `DataService` derivado.
 - Justificar la exclusión de GeoDCAT-AP y HealthDCAT-AP.
 
 ### 03_OpenMetadata_Config
@@ -78,16 +78,16 @@ Con este estado, la funcionalidad técnica de la PoC queda cerrada y la siguient
 
 ### 04_Pipeline_Ingesta
 
-- Desplegar PostgreSQL demo con capas `bronze`, `silver` y `gold`.
+- Desplegar PostgreSQL de referencia con capas `bronze`, `silver` y `gold`.
 - Ejecutar ingesta técnica oficial hacia OpenMetadata.
 - Ajustar `governance_defaults.yaml` y `mapping_rules.yaml`.
 - Definir un contrato canónico de entrada de gobierno desacoplado del formato `CSV`.
-- Separar adaptadores de entrada (`CSV`, `YAML`, `CKAN`, app web o API futura) del modelo interno.
+- Separar adaptadores de entrada (`CSV`, `YAML`, app web o API futura) del modelo interno.
 - Extraer una capa de servicios para planificación, aplicación y exportación.
 - Crear un workflow canónico único para CLI y ETL.
 - Centralizar la configuración operativa con `operational_profile.yaml`.
 - Ejecutar `python -m om_dcat_sync workflow run --dry-run` y después `python -m om_dcat_sync workflow run --allow-warnings`.
-- Implementar harvesting desde CKAN.
+- Justificar el descarte de CKAN como origen operativo y consolidar PostgreSQL de referencia como fuente técnica reproducible.
 - Exportar el catálogo a `DCAT-AP-ES` usando el perfil activo del repositorio.
 
 ### 05_Validacion
@@ -95,7 +95,7 @@ Con este estado, la funcionalidad técnica de la PoC queda cerrada y la siguient
 - Validar entidades técnicas creadas.
 - Verificar metadatos de gobierno aplicados.
 - Comprobar idempotencia en segunda ejecución.
-- Validar harvesting, exportación JSON-LD y SHACL HVD.
+- Validar workflow canónico, exportación JSON-LD y SHACL HVD.
 - Ejecutar `$env:PYTEST_DISABLE_PLUGIN_AUTOLOAD="1"; python -m pytest`.
 - Revisar higiene Git antes de push con `scripts/quality/pre_push_checks.ps1`.
 - Evaluar beneficios y limitaciones.

@@ -1,0 +1,531 @@
+{
+  "project_title": "TFM - Roadmap completo por fases v2",
+  "status_options": [
+    "Backlog",
+    "Por definir",
+    "En curso",
+    "Bloqueado",
+    "En revision",
+    "Hecho"
+  ],
+  "tipo_options": [
+    "Diseno",
+    "Implementacion",
+    "Validacion",
+    "Documentacion",
+    "Riesgo"
+  ],
+  "phases": [
+    {
+      "name": "01_Planificacion",
+      "milestone": "01_Planificacion",
+      "tasks": [
+        {
+          "title": "Definir alcance, objetivos y no-objetivos del TFM",
+          "tipo": "Diseno",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-04",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Acordar el alcance de 6 ECTS y los límites de la plataforma para evitar deriva.",
+          "evidencias": [
+            "README.md",
+            "docs/planificacion_kanban.md"
+          ]
+        },
+        {
+          "title": "Definir flujo Kanban, WIP y criterios DoR/DoD",
+          "tipo": "Diseno",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-04",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Fijar reglas de trabajo del tablero para seguimiento semanal.",
+          "evidencias": [
+            "docs/planificacion_kanban.md"
+          ]
+        },
+        {
+          "title": "Configurar GitHub Project y vistas base del TFM",
+          "tipo": "Implementacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-17",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Crear project, campos y vistas para gestionar el roadmap completo.",
+          "evidencias": [
+            "docs/github_projects_planificacion.md",
+            "scripts/planning/bootstrap_github_project.py"
+          ]
+        },
+        {
+          "title": "Definir metricas semanales e hitos academicos",
+          "tipo": "Validacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-04",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Establecer medicion de avance por semana e hitos de entrega.",
+          "evidencias": [
+            "docs/planificacion_kanban.md"
+          ]
+        },
+        {
+          "title": "Registrar riesgos iniciales y plan de mitigacion",
+          "tipo": "Riesgo",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-04",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Identificar riesgos tecnicos y de calendario con acciones de mitigacion.",
+          "evidencias": [
+            "docs/planificacion_kanban.md",
+            "AGENTS.md"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02_Modelo_DCAT-AP-ES",
+      "milestone": "02_Modelo_DCAT-AP-ES",
+      "tasks": [
+        {
+          "title": "Analizar entidades DCAT-AP-ES para la plataforma",
+          "tipo": "Diseno",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-04",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Revisar Catalog, Dataset, Distribution, DataService y HVD para cerrar el perfil activo de la plataforma.",
+          "evidencias": [
+            "docs/dcat_mapping.md"
+          ]
+        },
+        {
+          "title": "Definir mapeo Catalog y Dataset en OpenMetadata",
+          "tipo": "Diseno",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-04",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Cerrar decisiones Catalog->Domain y Dataset->Table/View para la plataforma.",
+          "evidencias": [
+            "docs/dcat_mapping.md"
+          ]
+        },
+        {
+          "title": "Definir mapeo Distribution/DataService y campos heredados a podar",
+          "tipo": "Diseno",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-04",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Acordar qué campos se gobiernan en OpenMetadata y qué campos HVD se derivan por configuración del sistema.",
+          "evidencias": [
+            "docs/dcat_mapping.md",
+            "docs/custom_properties_openmetadata.md"
+          ]
+        },
+        {
+          "title": "Documentar riesgos y limitaciones del modelo DCAT",
+          "tipo": "Documentacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-04",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Registrar trade-offs del mapeo para memoria y defensa.",
+          "evidencias": [
+            "docs/dcat_mapping.md",
+            "docs/diagramas_mermaid.md"
+          ]
+        },
+        {
+          "title": "Revisar extensiones DCAT-AP (GeoDCAT-AP/Health) y acotar alcance",
+          "tipo": "Diseno",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-17",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Revisar extensiones y justificar que entra/no entra en el alcance final del TFM.",
+          "evidencias": [
+            "docs/tfm_oficial_objetivos_decisiones.md",
+            "docs/dcat_mapping.md"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03_OpenMetadata_Config",
+      "milestone": "03_OpenMetadata_Config",
+      "tasks": [
+        {
+          "title": "Validar prerrequisitos locales de infraestructura",
+          "tipo": "Validacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-05",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Comprobar Docker, kubectl, kind, helm y python antes del despliegue.",
+          "evidencias": [
+            "docs/anexos_instalacion/A01_prerrequisitos.md",
+            "scripts/infra/check_prereqs.ps1"
+          ]
+        },
+        {
+          "title": "Desplegar OpenMetadata y dependencias con Helm",
+          "tipo": "Implementacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-05",
+          "fecha_fin": "2026-02-28",
+          "descripcion": "Levantar cluster y stack OpenMetadata desde scripts versionados.",
+          "evidencias": [
+            "scripts/infra/launch_infra.ps1",
+            "docs/openmetadata_k8s.md",
+            "docs/anexos_instalacion/A02_despliegue_infra_desde_repo.md"
+          ]
+        },
+        {
+          "title": "Verificar estado operativo de OpenMetadata",
+          "tipo": "Validacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-05",
+          "fecha_fin": "2026-02-28",
+          "descripcion": "Revisar pods, servicios y acceso UI tras el despliegue.",
+          "evidencias": [
+            "scripts/infra/status_infra.ps1",
+            "docs/openmetadata_k8s.md"
+          ]
+        },
+        {
+          "title": "Bootstrap de tags y custom properties base",
+          "tipo": "Implementacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-05",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Crear metadata de gobierno requerida por el ingestor de la plataforma.",
+          "evidencias": [
+            "scripts/infra/bootstrap_governance.py",
+            "docs/custom_properties_openmetadata.md",
+            "docs/anexos_instalacion/A04_custom_properties_tags_dry_run.md"
+          ]
+        },
+        {
+          "title": "Mitigar riesgo de drift en configuracion Helm",
+          "tipo": "Riesgo",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-05",
+          "fecha_fin": "2026-02-28",
+          "descripcion": "Mantener values declarativos y evitar cambios manuales no trazados.",
+          "evidencias": [
+            "k8s/openmetadata.values.yaml",
+            "k8s/openmetadata-dependencies.values.yaml"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04_Pipeline_Ingesta",
+      "milestone": "04_Pipeline_Ingesta",
+      "tasks": [
+        {
+          "title": "Desplegar PostgreSQL de referencia (`postgres-demo`) con esquema bronze/silver/gold",
+          "tipo": "Implementacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-04",
+          "fecha_fin": "2026-02-05",
+          "descripcion": "Levantar fuente dummy reproducible para ingesta tecnica.",
+          "evidencias": [
+            "scripts/infra/deploy_postgres_k8s.ps1",
+            "sql/opendata_demo_init.sql",
+            "docs/postgres_demo.md"
+          ]
+        },
+        {
+          "title": "Ejecutar ingesta tecnica de PostgreSQL en OpenMetadata",
+          "tipo": "Implementacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-05",
+          "fecha_fin": "2026-03-05",
+          "descripcion": "Crear/verificar el servicio y lanzar metadata ingest oficial.",
+          "evidencias": [
+            "scripts/infra/ingest_postgres.ps1",
+            "docs/ingesta_tecnica_postgres.md",
+            "docs/anexos_instalacion/A03_ingesta_tecnica_postgres.md"
+          ]
+        },
+        {
+          "title": "Ajustar defaults y reglas del tfm_ingestor",
+          "tipo": "Implementacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-04",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Configurar reglas por capa y defaults DCAT-AP-ES en YAML.",
+          "evidencias": [
+            "tfm_ingestor/config/governance_defaults.yaml",
+            "tfm_ingestor/config/mapping_rules.yaml",
+            "docs/tfm_ingestor.md"
+          ]
+        },
+        {
+          "title": "Definir contrato canónico de entrada de gobierno",
+          "tipo": "Diseno",
+          "status": "Hecho",
+          "fecha_inicio": "2026-04-13",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Separar el modelo interno de intención de gobierno del formato CSV para que CLI, ETL y futura UI usen el mismo contrato.",
+          "evidencias": [
+            "docs/refactor_orquestacion_operativa.md",
+            "docs/gobierno_funcional_gold.md",
+            "tfm_ingestor/src/tfm_ingestor/governance_model.py",
+            "tfm_ingestor/src/tfm_ingestor/governance_sheet.py"
+          ]
+        },
+        {
+          "title": "Separar adaptadores de entrada del núcleo de negocio",
+          "tipo": "Implementacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-17",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Aislar adaptadores CSV, YAML y app web del modelo interno para evitar que el CLI concentre reglas de negocio.",
+          "evidencias": [
+            "docs/refactor_orquestacion_operativa.md",
+            "tfm_ingestor/src/tfm_ingestor/main.py",
+            "tfm_ingestor/src/tfm_ingestor/governance_service.py",
+            "tfm_ingestor/src/tfm_ingestor/workflow_service.py"
+          ]
+        },
+        {
+          "title": "Extraer una capa de servicios para planificar, aplicar y exportar",
+          "tipo": "Implementacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-04-13",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Mover la lógica de orquestación fuera de main.py para reutilizarla desde CLI, ETL y futura UI.",
+          "evidencias": [
+            "docs/refactor_orquestacion_operativa.md",
+            "tfm_ingestor/src/tfm_ingestor/main.py",
+            "tfm_ingestor/src/tfm_ingestor/governance_service.py",
+            "tfm_ingestor/src/tfm_ingestor/workflow_service.py"
+          ]
+        },
+        {
+          "title": "Crear workflow canónico único para CLI y ETL",
+          "tipo": "Implementacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-05",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Introducir un comando de alto nivel con orden reproducible para descubrir, planificar, aplicar, exportar y validar.",
+          "evidencias": [
+            "docs/refactor_orquestacion_operativa.md",
+            "docs/guia_centralizada.md",
+            "tfm_ingestor/src/tfm_ingestor/main.py",
+            "tfm_ingestor/src/tfm_ingestor/workflow_service.py",
+            "scripts/infra/run_full_flow.ps1"
+          ]
+        },
+        {
+          "title": "Centralizar la configuración operativa del sistema",
+          "tipo": "Diseno",
+          "status": "Hecho",
+          "fecha_inicio": "2026-04-13",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Reducir el número de ficheros y flags que el operador debe conocer mediante un perfil operativo principal.",
+          "evidencias": [
+            "docs/refactor_orquestacion_operativa.md",
+            "tfm_ingestor/config/operational_profile.yaml",
+            "tfm_ingestor/src/tfm_ingestor/operational_profile.py",
+            "tfm_ingestor/src/tfm_ingestor/main.py"
+          ]
+        },
+        {
+          "title": "Ejecutar tfm_ingestor en modo dry-run",
+          "tipo": "Validacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-17",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Revisar cambios planeados antes de aplicar mutaciones.",
+          "evidencias": [
+            "docs/tfm_ingestor.md",
+            "docs/anexos_instalacion/A04_custom_properties_tags_dry_run.md",
+            "scripts/infra/run_full_flow.ps1"
+          ]
+        },
+        {
+          "title": "Aplicar tfm_ingestor sobre metadatos tecnicos",
+          "tipo": "Implementacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-03-05",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Ejecutar enriquecimiento real una vez validado el dry-run.",
+          "evidencias": [
+            "docs/tfm_ingestor.md",
+            "scripts/infra/run_validation_suite.ps1",
+            "scripts/infra/validate_live_dcat.ps1"
+          ]
+        },
+        {
+          "title": "Justificar cambio de harvesting CKAN a origen PostgreSQL",
+          "tipo": "Documentacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-17",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Documentar que CKAN es un catalogo de metadatos ya publicados y que el TFM demuestra mejor el gobierno desde activos tecnicos PostgreSQL ingeridos en OpenMetadata.",
+          "evidencias": [
+            "docs/tfm_oficial_objetivos_decisiones.md",
+            "docs/postgres_demo.md",
+            "docs/tfm_ingestor.md",
+            "docs/dcat_mapping.md"
+          ]
+        },
+        {
+          "title": "Prototipo exportacion DCAT-AP (RDF/JSON-LD) desde el catalogo",
+          "tipo": "Implementacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-17",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Exportar JSON-LD DCAT-AP-ES desde OpenMetadata, incluyendo Catalog, Dataset, Distribution, DataService y restricciones HVD activas.",
+          "evidencias": [
+            "tfm_ingestor/src/tfm_ingestor/dcat_export.py",
+            "tfm_ingestor/src/tfm_ingestor/resources/shacl/manifest.json",
+            "tfm_ingestor/config/governance_defaults.yaml",
+            "docs/dcat_mapping.md",
+            "docs/tfm_ingestor.md"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05_Validacion",
+      "milestone": "05_Validacion",
+      "tasks": [
+        {
+          "title": "Validar entidades tecnicas ingeridas",
+          "tipo": "Validacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-04",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Comprobar service/db/schema/table/column según el dataset de referencia.",
+          "evidencias": [
+            "docs/ingesta_tecnica_postgres.md",
+            "sql/opendata_demo_init.sql",
+            "tfm_ingestor/src/tfm_ingestor/runtime_validation.py",
+            "scripts/infra/run_validation_suite.ps1"
+          ]
+        },
+        {
+          "title": "Validar metadatos de gobierno aplicados",
+          "tipo": "Validacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-17",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Verificar domains, tags y custom properties esperadas.",
+          "evidencias": [
+            "docs/tfm_ingestor.md",
+            "docs/custom_properties_openmetadata.md",
+            "tfm_ingestor/src/tfm_ingestor/runtime_validation.py",
+            "tfm_ingestor/src/tfm_ingestor/resources/shacl/manifest.json",
+            "scripts/infra/run_validation_suite.ps1"
+          ]
+        },
+        {
+          "title": "Comprobar idempotencia en segunda ejecucion completa",
+          "tipo": "Validacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-05",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Repetir flujo para asegurar ausencia de duplicados y drift.",
+          "evidencias": [
+            "scripts/infra/run_full_flow.ps1",
+            "scripts/infra/run_validation_suite.ps1",
+            "docs/anexos_instalacion/README.md"
+          ]
+        },
+        {
+          "title": "Ejecutar pytest y revisar higiene Git antes de push",
+          "tipo": "Validacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-04",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Asegurar tests minimos y chequeo de ficheros ignorados/trazados.",
+          "evidencias": [
+            "tfm_ingestor/tests/test_rules_config.py",
+            "tfm_ingestor/tests/test_mapping.py",
+            "tfm_ingestor/tests/test_repo_hygiene.py",
+            "scripts/quality/pre_push_checks.ps1",
+            "AGENTS.md"
+          ]
+        },
+        {
+          "title": "Evaluar beneficios y limitaciones del enfoque (interoperabilidad/automatizacion/mantenimiento)",
+          "tipo": "Documentacion",
+          "status": "Hecho",
+          "fecha_inicio": "2026-02-17",
+          "fecha_fin": "2026-04-13",
+          "descripcion": "Sintetizar beneficios y limitaciones tecnicas del mapeo y la automatizacion propuesta.",
+          "evidencias": [
+            "docs/tfm_oficial_objetivos_decisiones.md",
+            "TFM/memoria_latex/sections/07_limitaciones_trabajo_futuro.tex"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06_Memoria",
+      "milestone": "06_Memoria",
+      "tasks": [
+        {
+          "title": "Consolidar anexos tecnicos A01-A04",
+          "tipo": "Documentacion",
+          "status": "Backlog",
+          "fecha_inicio": "2026-04-14",
+          "fecha_fin": "2026-04-20",
+          "descripcion": "Cerrar pasos reproducibles y evidencias tecnicas para la memoria.",
+          "evidencias": [
+            "docs/anexos_instalacion/README.md",
+            "docs/anexos_instalacion/A01_prerrequisitos.md",
+            "docs/anexos_instalacion/A02_despliegue_infra_desde_repo.md",
+            "docs/anexos_instalacion/A03_ingesta_tecnica_postgres.md",
+            "docs/anexos_instalacion/A04_custom_properties_tags_dry_run.md"
+          ]
+        },
+        {
+          "title": "Consolidar diagramas y capturas para defensa",
+          "tipo": "Documentacion",
+          "status": "Backlog",
+          "fecha_inicio": "2026-04-20",
+          "fecha_fin": "2026-04-24",
+          "descripcion": "Completar material visual de arquitectura, flujo y mapeo.",
+          "evidencias": [
+            "docs/diagramas_mermaid.md",
+            "README.md"
+          ]
+        },
+        {
+          "title": "Redactar resultados, limitaciones y trabajo futuro",
+          "tipo": "Documentacion",
+          "status": "Backlog",
+          "fecha_inicio": "2026-04-20",
+          "fecha_fin": "2026-04-27",
+          "descripcion": "Sintetizar valor técnico de la plataforma y líneas futuras.",
+          "evidencias": [
+            "README.md",
+            "docs/dcat_mapping.md",
+            "docs/guia_centralizada.md"
+          ]
+        },
+        {
+          "title": "Cerrar hitos y registrar avance final del TFM",
+          "tipo": "Documentacion",
+          "status": "Backlog",
+          "fecha_inicio": "2026-04-27",
+          "fecha_fin": "2026-04-28",
+          "descripcion": "Dejar trazabilidad final de progreso en proyecto y memoria.",
+          "evidencias": [
+            "docs/planificacion_kanban.md",
+            "docs/github_projects_planificacion.md"
+          ]
+        },
+        {
+          "title": "Relacionar contribuciones con competencias CN02/CP03",
+          "tipo": "Documentacion",
+          "status": "Backlog",
+          "fecha_inicio": "2026-04-24",
+          "fecha_fin": "2026-04-27",
+          "descripcion": "Explicitar cómo la plataforma y el proceso cubren CN02 (arquitecturas/pipelines) y CP03 (gobierno/calidad).",
+          "evidencias": [
+            "docs/tfm_oficial_objetivos_decisiones.md"
+          ]
+        }
+      ]
+    }
+  ]
+}

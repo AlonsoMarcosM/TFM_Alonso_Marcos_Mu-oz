@@ -20,11 +20,11 @@ class OmRef:
 
 class OpenMetadataApi:
     """
-    Minimal OpenMetadata REST client (api/v1) for the PoC.
+    Minimal OpenMetadata REST client (api/v1) for the platform.
 
     Notes:
     - Auth: JWT via `Authorization: Bearer <token>` (recommended for API operations).
-    - This client intentionally implements only the endpoints we need for the TFM PoC.
+    - This client intentionally implements only the endpoints we need for the Plataforma de Gobierno del Dato.
     """
 
     def __init__(

@@ -1,0 +1,135 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{\numberline {1}Introducción}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Contexto}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Problema abordado}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Solución propuesta}{2}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Aportación del trabajo}{3}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Estructura del documento}{4}{section.1.5}%
+\contentsline {chapter}{\numberline {2}Objetivos, alcance y trazabilidad}{5}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Objetivo general}{5}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Objetivos específicos}{5}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Alcance}{6}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Exclusiones}{6}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Cambio de alcance respecto a CKAN}{7}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Trazabilidad entre objetivos y evidencias}{7}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Metodología de trabajo}{8}{section.2.7}%
+\contentsline {subsection}{\numberline {2.7.1}Enfoque general}{8}{subsection.2.7.1}%
+\contentsline {subsection}{\numberline {2.7.2}Tablero y vistas en GitHub Project}{9}{subsection.2.7.2}%
+\contentsline {subsection}{\numberline {2.7.3}Fases del roadmap}{9}{subsection.2.7.3}%
+\contentsline {subsection}{\numberline {2.7.4}Vista temporal del trabajo}{9}{subsection.2.7.4}%
+\contentsline {chapter}{\numberline {3}Marco técnico y estado del arte}{13}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Gobierno del dato y gestión de metadatos}{13}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Catálogos de datos y metadatos técnicos}{14}{section.3.2}%
+\contentsline {section}{\numberline {3.3}RDF, JSON-LD y vocabularios semánticos}{15}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Qué es RDF y por qué se utiliza}{15}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}JSON-LD como serialización elegida}{16}{subsection.3.3.2}%
+\contentsline {section}{\numberline {3.4}DCAT, DCAT-AP y DCAT-AP-ES}{17}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Datos de alto valor y caso HVD}{18}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Validación SHACL}{18}{section.3.6}%
+\contentsline {section}{\numberline {3.7}OpenMetadata}{20}{section.3.7}%
+\contentsline {subsection}{\numberline {3.7.1}Gobierno centralizado frente a edición dataset por dataset}{20}{subsection.3.7.1}%
+\contentsline {section}{\numberline {3.8}Mercado de herramientas de gobierno alineadas con DCAT-AP-ES}{21}{section.3.8}%
+\contentsline {paragraph}{Plataformas comerciales de gobierno con módulo DCAT-AP-ES.}{21}{section.3.8}%
+\contentsline {paragraph}{Portales de datos abiertos.}{21}{section.3.8}%
+\contentsline {paragraph}{Plataformas open source de metadatos.}{22}{section.3.8}%
+\contentsline {subsection}{\numberline {3.8.1}Posicionamiento de la Plataforma de Gobierno del Dato del TFM}{22}{subsection.3.8.1}%
+\contentsline {section}{\numberline {3.9}PostgreSQL como fuente técnica reproducible}{22}{section.3.9}%
+\contentsline {section}{\numberline {3.10}Docker, Kind, Kubernetes y Helm}{23}{section.3.10}%
+\contentsline {section}{\numberline {3.11}Consolas web operativas y experiencia de usuario}{24}{section.3.11}%
+\contentsline {section}{\numberline {3.12}Reproducibilidad, idempotencia y \emph {Infrastructure as Code}}{25}{section.3.12}%
+\contentsline {section}{\numberline {3.13}Validación frente a verificación}{25}{section.3.13}%
+\contentsline {section}{\numberline {3.14}Síntesis del estado del arte}{26}{section.3.14}%
+\contentsline {chapter}{\numberline {4}Requisitos y arquitectura de la solución}{27}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Requisitos funcionales}{27}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Requisitos no funcionales}{28}{section.4.2}%
+\contentsline {section}{\numberline {4.3}No objetivos}{29}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Arquitectura lógica}{29}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Arquitectura física}{32}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Flujo extremo a extremo}{34}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Decisiones de diseño}{36}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}PostgreSQL como fuente canónica}{36}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}Gobierno restringido a la capa \texttt {gold}}{36}{subsection.4.7.2}%
+\contentsline {paragraph}{Conformidad semántica con el perfil DCAT-AP-ES.}{36}{subsection.4.7.2}%
+\contentsline {paragraph}{Coherencia con el marco DAMA-DMBOK.}{36}{subsection.4.7.2}%
+\contentsline {paragraph}{Separación entre catálogo técnico y catálogo de publicación.}{36}{subsection.4.7.2}%
+\contentsline {paragraph}{Foco en el valor evaluado por el tribunal.}{37}{subsection.4.7.2}%
+\contentsline {subsection}{\numberline {4.7.3}Doble ingesta como validación multi-fuente}{37}{subsection.4.7.3}%
+\contentsline {subsection}{\numberline {4.7.4}Hoja funcional para gobierno editorial}{37}{subsection.4.7.4}%
+\contentsline {subsection}{\numberline {4.7.5}Configuración global por YAML}{39}{subsection.4.7.5}%
+\contentsline {subsection}{\numberline {4.7.6}Núcleo único de lógica}{39}{subsection.4.7.6}%
+\contentsline {section}{\numberline {4.8}Modelo activo DCAT-AP-ES}{40}{section.4.8}%
+\contentsline {chapter}{\numberline {5}Implementación}{43}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Organización del repositorio}{43}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Fuente técnica reproducible: PostgreSQL en tres capas}{44}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Despliegue reproducible en Kubernetes}{45}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Doble ingesta técnica}{47}{section.5.4}%
+\contentsline {section}{\numberline {5.5}Núcleo Python: paquete \texttt {om\_dcat\_sync}}{47}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Configuración inmutable y entrypoint}{48}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Sincronización idempotente de gobierno}{49}{subsection.5.5.2}%
+\contentsline {subsection}{\numberline {5.5.3}Exportador \ac {DCATAPES}}{50}{subsection.5.5.3}%
+\contentsline {subsection}{\numberline {5.5.4}Validación SHACL del catálogo exportado}{51}{subsection.5.5.4}%
+\contentsline {section}{\numberline {5.6}Hoja funcional de gobierno y defaults globales}{51}{section.5.6}%
+\contentsline {section}{\numberline {5.7}Consola web operativa Next.js}{51}{section.5.7}%
+\contentsline {section}{\numberline {5.8}Resumen de implementación}{54}{section.5.8}%
+\contentsline {chapter}{\numberline {6}Validación y resultados}{55}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Estrategia de validación}{55}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Pruebas automatizadas}{55}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Validación estructural del estado vivo}{56}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Validación SHACL}{56}{section.6.4}%
+\contentsline {section}{\numberline {6.5}Resultados del caso de uso de validación}{57}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Artefactos generados}{58}{section.6.6}%
+\contentsline {chapter}{\numberline {7}Discusión}{59}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Cumplimiento del problema planteado}{59}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Beneficios obtenidos}{59}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Limitaciones}{60}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Amenazas a la validez}{61}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Posicionamiento frente a entornos Big Data}{61}{section.7.5}%
+\contentsline {section}{\numberline {7.6}Gobierno supervisado y responsabilidad del operador}{62}{section.7.6}%
+\contentsline {section}{\numberline {7.7}Trabajo futuro}{63}{section.7.7}%
+\contentsline {chapter}{\numberline {8}Conclusiones}{65}{chapter.8}%
+\contentsline {chapter}{\numberline {A}Reproducción del caso de uso de validación}{67}{appendix.Alph1}%
+\contentsline {section}{\numberline {A.1}Preparación del entorno}{67}{section.Alph1.1}%
+\contentsline {section}{\numberline {A.2}Despliegue de infraestructura}{67}{section.Alph1.2}%
+\contentsline {section}{\numberline {A.3}Ejecución del workflow canónico}{68}{section.Alph1.3}%
+\contentsline {section}{\numberline {A.4}Suite reproducible}{68}{section.Alph1.4}%
+\contentsline {chapter}{\numberline {B}Detalle de infraestructura}{69}{appendix.Alph2}%
+\contentsline {section}{\numberline {B.1}Versión de OpenMetadata}{69}{section.Alph2.1}%
+\contentsline {section}{\numberline {B.2}Matriz de versiones del sistema}{69}{section.Alph2.2}%
+\contentsline {section}{\numberline {B.3}Valores Helm de OpenMetadata}{70}{section.Alph2.3}%
+\contentsline {section}{\numberline {B.4}Manifiesto de PostgreSQL de referencia}{70}{section.Alph2.4}%
+\contentsline {section}{\numberline {B.5}Diagrama de despliegue}{71}{section.Alph2.5}%
+\contentsline {section}{\numberline {B.6}Notas operativas}{71}{section.Alph2.6}%
+\contentsline {section}{\numberline {B.7}Instalación portable y organismos con OpenMetadata propio}{71}{section.Alph2.7}%
+\contentsline {chapter}{\numberline {C}Esquema de gobierno funcional}{73}{appendix.Alph3}%
+\contentsline {section}{\numberline {C.1}Estructura de la hoja \texttt {gold\_governance.csv}}{73}{section.Alph3.1}%
+\contentsline {section}{\numberline {C.2}Defaults globales}{73}{section.Alph3.2}%
+\contentsline {chapter}{\numberline {D}Mapeo DCAT-AP-ES y entregables}{75}{appendix.Alph4}%
+\contentsline {section}{\numberline {D.1}Correspondencia OpenMetadata $\rightarrow $ DCAT-AP-ES}{75}{section.Alph4.1}%
+\contentsline {section}{\numberline {D.2}Qué gobierna OpenMetadata y qué deriva el sistema}{76}{section.Alph4.2}%
+\contentsline {section}{\numberline {D.3}Qué aporta activar el caso HVD}{76}{section.Alph4.3}%
+\contentsline {section}{\numberline {D.4}Entregables del caso de uso}{76}{section.Alph4.4}%
+\contentsline {chapter}{\numberline {E}Validación y consola web}{77}{appendix.Alph5}%
+\contentsline {section}{\numberline {E.1}Comandos de validación}{77}{section.Alph5.1}%
+\contentsline {section}{\numberline {E.2}Estructura de la consola web}{77}{section.Alph5.2}%
+\contentsline {section}{\numberline {E.3}Pruebas de la consola web}{77}{section.Alph5.3}%
+\contentsline {chapter}{\numberline {F}Demostración guiada de la plataforma}{79}{appendix.Alph6}%
+\contentsline {section}{\numberline {F.1}Propósito y supuestos iniciales}{79}{section.Alph6.1}%
+\contentsline {section}{\numberline {F.2}Apertura de la consola}{80}{section.Alph6.2}%
+\contentsline {section}{\numberline {F.3}Estado de la infraestructura}{80}{section.Alph6.3}%
+\contentsline {section}{\numberline {F.4}Servicios y datasets ingeridos}{81}{section.Alph6.4}%
+\contentsline {section}{\numberline {F.5}Curación funcional en la pantalla \emph {Gobierno}}{82}{section.Alph6.5}%
+\contentsline {paragraph}{1. Refrescar hoja desde OpenMetadata.}{82}{section.Alph6.5}%
+\contentsline {paragraph}{2. Editar metadatos DCAT-AP-ES.}{82}{section.Alph6.5}%
+\contentsline {paragraph}{3. Validar la hoja.}{82}{section.Alph6.5}%
+\contentsline {paragraph}{4. Guardar.}{82}{section.Alph6.5}%
+\contentsline {section}{\numberline {F.6}Aplicación del workflow}{83}{section.Alph6.6}%
+\contentsline {paragraph}{Dry-run.}{83}{section.Alph6.6}%
+\contentsline {paragraph}{Apply.}{83}{section.Alph6.6}%
+\contentsline {paragraph}{Idempotencia.}{83}{section.Alph6.6}%
+\contentsline {section}{\numberline {F.7}Exportación DCAT-AP-ES}{84}{section.Alph6.7}%
+\contentsline {section}{\numberline {F.8}Validación SHACL y suite reproducible}{84}{section.Alph6.8}%
+\contentsline {section}{\numberline {F.9}Artefactos y descarga del catálogo RDF}{85}{section.Alph6.9}%
+\contentsline {section}{\numberline {F.10}Federación del catálogo}{86}{section.Alph6.10}%
+\contentsline {section}{\numberline {F.11}Resumen del recorrido}{87}{section.Alph6.11}%
+\contentsline {chapter}{Referencia bibliográfica}{92}{appendix*.51}%
+\contentsfinish 

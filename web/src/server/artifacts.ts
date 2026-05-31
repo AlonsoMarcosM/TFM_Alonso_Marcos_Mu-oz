@@ -7,6 +7,8 @@ import { repoPath } from "./repoPaths";
 export const artifactFiles = [
   "tmp_pytest/prereqs_report.json",
   "tmp_pytest/validation_suite_summary.json",
+  "tmp_pytest/validation_report.html",
+  "tmp_pytest/validation_report.pdf",
   "tmp_pytest/runtime_validation_report.json",
   "tmp_pytest/validation_suite_catalog.jsonld",
   "tmp_pytest/validation_suite_shacl_report.ttl",
@@ -47,10 +49,20 @@ export async function readArtifact(relativePath: string) {
     throw new Error(`Artefacto no permitido: ${relativePath}`);
   }
   const absolutePath = repoPath(...normalized.split("/"));
+  const extension = path.extname(normalized).toLowerCase();
+  if (extension === ".pdf") {
+    // El PDF es binario: no se previsualiza como texto. Se ofrece como
+    // evidencia descargable; debe abrirse desde su ruta en disco.
+    return {
+      path: normalized,
+      extension,
+      content: `(Documento PDF binario. Ábrelo desde la ruta del repositorio: ${normalized})`,
+    };
+  }
   const content = await fsp.readFile(absolutePath, "utf8");
   return {
     path: normalized,
-    extension: path.extname(normalized).toLowerCase(),
+    extension,
     content,
   };
 }

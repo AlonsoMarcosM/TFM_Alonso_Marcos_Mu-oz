@@ -112,8 +112,8 @@ La misma ruta puede ejecutarse desde `web/`, usando botones sobre los scripts ve
 
 ```powershell
 cd .\web
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Abrir `http://localhost:3000` y seguir:

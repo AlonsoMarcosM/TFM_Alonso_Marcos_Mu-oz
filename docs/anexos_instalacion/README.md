@@ -1,6 +1,6 @@
 # Anexos de instalación replicables
 
-Estos anexos documentan el despliegue de la PoC para que pueda repetirse desde cero.
+Estos anexos documentan el despliegue de la plataforma para que pueda repetirse desde cero.
 
 Orden recomendado:
 
@@ -17,7 +17,7 @@ Objetivo de arquitectura:
 
 - Ejecutar todo desde la raíz del repo.
 - Mantener despliegue portable en local, VPS o cloud con Kubernetes.
-- Separar claramente aplicación, dependencias y base de datos demo.
+- Separar claramente aplicación, dependencias y base de datos de referencia.
 
 Atajo de ejecución total:
 
@@ -35,8 +35,8 @@ Consola web para ejecutar los mismos pasos con resultados visibles:
 
 ```powershell
 cd .\web
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 La app muestra por cada job el estado final, el resumen de ejecución, el log y los artefactos generados.

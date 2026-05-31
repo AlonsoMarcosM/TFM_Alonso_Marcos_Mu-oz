@@ -1,0 +1,37 @@
+\chapter{Reproducción del caso de uso de validación}\label{ap:reproduccion}
+
+Este anexo concentra los comandos exactos para reproducir el caso de uso de validación desde un repositorio limpio. Se asume Windows 10 u 11 con PowerShell, Docker Desktop, Node.js 20 o superior, Python 3.11 o superior y MiKTeX para compilar la memoria. Los comandos están extraídos de \texttt{scripts/infra/} y de la documentación canónica del repositorio.
+
+\section{Preparación del entorno}
+
+\begin{lstlisting}[language=PowerShell, caption={Instalación de dependencias Python del núcleo \texttt{om\_dcat\_sync}.}, label=code:ap-pip-install, captionpos=b]
+python -m pip install --upgrade pip
+python -m pip install -e .\tfm_ingestor
+\end{lstlisting}
+
+\begin{lstlisting}[language=PowerShell, caption={Instalación de dependencias de la consola web con pnpm.}, label=code:ap-pnpm-install, captionpos=b]
+cd .\web
+pnpm install
+\end{lstlisting}
+
+\section{Despliegue de infraestructura}
+
+\begin{lstlisting}[language=PowerShell, caption={Lanzamiento de Kind, Helm e ingesta doble.}, label=code:ap-launch-infra, captionpos=b]
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\launch_infra.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\ingest_postgres_double.ps1
+\end{lstlisting}
+
+\section{Ejecución del workflow canónico}
+
+\begin{lstlisting}[language=PowerShell, caption={Ejecución del workflow canónico end-to-end.}, label=code:ap-workflow, captionpos=b]
+python -m om_dcat_sync workflow run --dry-run
+python -m om_dcat_sync workflow run --allow-warnings
+\end{lstlisting}
+
+\section{Suite reproducible}
+
+\begin{lstlisting}[language=PowerShell, caption={Suite reproducible documentada.}, label=code:ap-suite, captionpos=b]
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_validation_suite.ps1
+\end{lstlisting}
+
+La salida de la suite incluye \texttt{runtime\_validation\_report.json}, \texttt{dcat\_catalog.jsonld} y \texttt{dcat\_validation\_report.ttl} en \texttt{tmp\_pytest/}.

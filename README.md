@@ -1,226 +1,398 @@
-# TFM - OpenMetadata + DCAT-AP-ES
+# Plataforma de Gobierno del Dato · OpenMetadata + DCAT-AP-ES (TFM UCLM 2026)
 
-Repositorio del Trabajo Fin de Máster:
+> Trabajo Fin de Máster del *Máster Universitario en Big Data y Computación en la Nube* (UCLM). Plataforma **end-to-end** que toma activos técnicos descubiertos en **OpenMetadata** sobre **Kubernetes**, los gobierna desde una hoja funcional versionable, exporta el catálogo en **DCAT-AP-ES (JSON-LD)** y lo **valida con SHACL** contra el perfil oficial **HVD** del Gobierno de España. La salida es un archivo RDF listo para federarse en `datos.gob.es`, `data.europa.eu` o cualquier portal CKAN compatible.
 
-- Título oficial (ES): `DISEÑO Y CONFIGURACIÓN DE UN MODELO DE METADATOS EN OPENMETADATA CONFORME AL ESTÁNDAR DCAT-AP PARA LA INTEROPERABILIDAD DE CATÁLOGOS DE DATOS`.
-- Título oficial (EN): `Design and Configuration of a Metadata Model in OpenMetadata According to the DCAT-AP Standard for Data Catalog Interoperability`.
-- Ficha oficial UCLM literal: `docs/tfe_ficha_oficial_uclm.txt`.
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
+![Kubernetes](https://img.shields.io/badge/Kubernetes-Kind%20%2B%20Helm-326CE5?logo=kubernetes&logoColor=white)
+![OpenMetadata](https://img.shields.io/badge/OpenMetadata-1.11-3361FF?logo=apache&logoColor=white)
+![DCAT-AP-ES](https://img.shields.io/badge/DCAT--AP--ES-1.0.0-005a9c)
+![SHACL](https://img.shields.io/badge/SHACL-HVD-660066)
+![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)
+![pnpm](https://img.shields.io/badge/pnpm-canonical-F69220?logo=pnpm&logoColor=white)
+![License](https://img.shields.io/badge/License-Academic-blue)
 
-## Qué valida este proyecto
+---
 
-- Despliegue reproducible de OpenMetadata en Kubernetes + Helm.
-- Flujo de metadatos gobernados sobre PostgreSQL de referencia y OpenMetadata.
-- Exportación DCAT-AP-ES en JSON-LD.
-- Validación SHACL reproducible incluida en el propio repositorio.
-- Shapes SHACL oficiales vendorizadas en `tfm_ingestor/src/tfm_ingestor/resources/shacl`, congeladas desde `datosgobes/DCAT-AP-ES/shacl/1.0.0` en el commit `f2c8a88868b89239c9f54bffdf621cded2401b9f`.
+## Tabla de contenidos
 
-## Alcance funcional
+1. [Contexto y objetivo](#1-contexto-y-objetivo)
+2. [Recorrido visual end-to-end](#2-recorrido-visual-end-to-end)
+3. [Arquitectura](#3-arquitectura)
+4. [Stack tecnológico](#4-stack-tecnológico)
+5. [Características clave](#5-características-clave)
+6. [Resultados medidos](#6-resultados-medidos)
+7. [Estructura del repositorio](#7-estructura-del-repositorio)
+8. [Puesta en marcha](#8-puesta-en-marcha)
+9. [Uso del sistema](#9-uso-del-sistema)
+10. [CLI canónico](#10-cli-canónico)
+11. [Modelo de datos DCAT-AP-ES activo](#11-modelo-de-datos-dcat-ap-es-activo)
+12. [Limitaciones y trabajo futuro](#12-limitaciones-y-trabajo-futuro)
+13. [Documentación técnica completa](#13-documentación-técnica-completa)
+14. [Autor](#14-autor)
 
-Este TFM trabaja sobre **metadatos**, no sobre datos de negocio.
+---
 
-- Los activos técnicos proceden del PostgreSQL de referencia `bronze/silver/gold`.
-- Solo la capa `gold` entra en el catálogo publicable de la plataforma.
-- El perfil activo del repositorio es `DCAT-AP-ES` con el caso `HVD` activado para los datasets `gold`.
+## 1. Contexto y objetivo
 
-Los servicios conectados a OpenMetadata forman el catálogo técnico gobernado de la plataforma. En el caso de uso de validación, ese catálogo se publica funcionalmente como catálogo UCLM: `gold_governance.csv` define la curación por dataset y `governance_defaults.yaml` completa publicador, URI de organismo, licencias, contacto, legislación HVD y URLs base. La salida es RDF serializado en JSON-LD, preparado para interoperar con `datos.gob.es` y catálogos europeos compatibles.
+Trabajo Fin de Máster (curso 2025-2026) del **Máster Universitario en Big Data y Computación en la Nube** de la **UCLM**, en la Escuela Superior de Ingeniería Informática de Albacete (ESII) y la Escuela Superior de Informática de Ciudad Real (ESI).
 
-Importante:
+- **Título oficial (ES):** *Diseño y configuración de un modelo de metadatos en OpenMetadata conforme al estándar DCAT-AP para la interoperabilidad de catálogos de datos*.
+- **Título oficial (EN):** *Design and Configuration of a Metadata Model in OpenMetadata According to the DCAT-AP Standard for Data Catalog Interoperability*.
+- **Concreción operativa:** `DCAT-AP-ES 1.0.0` (DCAT-AP 2.1.1 + DCAT-AP HVD 2.2.0).
 
-- En la memoria del TFM, `DCAT-AP` sigue siendo el marco oficial del enunciado.
-- En la implementación, la plataforma usa `DCAT-AP-ES = DCAT-AP 2.1.1 + DCAT-AP HVD 2.2.0 + especificaciones adicionales`.
-- La calificación HVD en la plataforma se usa como **hipótesis de diseño y validación** para ejercitar la extensión HVD dentro del caso de uso de validación. No debe interpretarse como una calificación jurídica automática de datasets reales fuera de la plataforma.
+**Problema abordado.** Las organizaciones suelen tener un catálogo técnico maduro (OpenMetadata, DataHub, Amundsen…) y, separado, un proceso editorial para publicar abierto en portales DCAT-AP. Ese hueco es manual, dataset por dataset, y se rompe en cuanto cambia el inventario técnico. Este TFM construye la capa que **cierra la grieta**: gobierno centralizado, idempotente y validado formalmente entre el catálogo técnico y el archivo RDF que aceptan los portales europeos.
 
-## Perfil activo del repositorio
+**Aportación demostrable.** Un flujo completo, reproducible desde un repositorio limpio, que descubre activos técnicos en OpenMetadata, los enriquece con metadatos editoriales desde una hoja CSV versionada, los sincroniza de forma idempotente, exporta JSON-LD conforme a DCAT-AP-ES HVD, y produce un informe SHACL Turtle con cero violaciones bloqueantes.
 
-Clases activas:
+---
 
-- `dcat:Catalog`
-- `dcat:Dataset`
-- `dcat:Distribution`
-- `dcat:DataService`
-- `foaf:Agent`
+## 2. Recorrido visual end-to-end
 
-Metadatos gobernados activos en OpenMetadata:
+La consola web (`web/`, Next.js + pnpm) materializa el flujo en nueve pantallas que un operario recorre sin tocar línea de comandos. El recorrido completo, paso a paso, con artefactos producidos en cada etapa, está documentado en el **Anexo E de la memoria** (`TFM/Memoria/appendices/apendice_demo_operativa.tex`).
 
-- `displayName`
-- `description`
-- custom property `dcat_publisher_name`
-- custom property `dcat_hvd_category`
-- custom property `dcat_access_url`
-- tags `dcat_theme.*`
+| Etapa | Pantalla web | Acción | Artefacto producido |
+|---:|---|---|---|
+| 1 | Infraestructura | Comprobar pods de Kubernetes y servicios | Estado del clúster |
+| 2 | Ingesta | Verificar los dos `DatabaseService` de OpenMetadata | Tablas `gold` descubiertas |
+| 3 | Gobierno | Refrescar hoja, editar metadatos DCAT-AP-ES, validar y guardar | `gold_governance.csv` |
+| 4 | Workflow → Dry-run | Previsualizar plan en JSON | Plan reproducible |
+| 5 | Workflow → Apply | Sincronizar OpenMetadata | Cambios aplicados (0 en la 2ª pasada → idempotencia) |
+| 6 | DCAT | Exportar catálogo | `dcat_catalog.jsonld` |
+| 7 | Validación | Lanzar suite reproducible | `validation_suite_summary.json` |
+| 8 | SHACL | Revisar violaciones por severidad | `dcat_validation_report.ttl` |
+| 9 | Artefactos | Descargar el RDF final para federar | Catálogo entregable |
 
-Metadatos derivados por configuración y exportador:
+---
 
-- `dcatap:applicableLegislation`
-- `dct:license` de `Distribution` y `DataService`
-- `dct:accessRights` de `DataService`
-- `dcat:endpointURL`
-- `dcat:endpointDescription`
-- `foaf:page`
-- `dcat:contactPoint`
-- `dcat:servesDataset`
+## 3. Arquitectura
 
-## Estructura del repositorio
+```mermaid
+flowchart LR
+    classDef src fill:#e8f3ff,stroke:#174a7c,stroke-width:2px,color:#162033
+    classDef k8s fill:#fff4df,stroke:#b87900,stroke-width:2px,color:#162033
+    classDef core fill:#edf7ed,stroke:#2f7d32,stroke-width:2px,color:#162033
+    classDef out fill:#f1ecff,stroke:#6f42c1,stroke-width:2px,color:#162033
+    classDef ops fill:#ffecec,stroke:#b42318,stroke-width:2px,color:#162033
 
-El mapa de carpetas, nombres canónicos y criterio de nomenclatura queda documentado en `docs/estructura_repositorio.md`.
+    subgraph SRC["Fuente técnica reproducible"]
+        PG[(PostgreSQL referencia<br/>bronze/silver/gold)]:::src
+    end
 
-Resumen:
+    subgraph META["Catálogo técnico (Kubernetes)"]
+        OM[OpenMetadata]:::k8s
+        MY[(MySQL)]:::k8s
+        OS[(OpenSearch)]:::k8s
+    end
 
-- `docs/`: documentación operativa, decisiones y anexos para memoria/defensa.
-- `tfm_ingestor/`: paquete Python y núcleo del workflow `om_dcat_sync`.
-- `web/`: consola web operativa en Next.js.
-- `scripts/`: scripts reproducibles de infraestructura, planificación y calidad.
-- `k8s/`: configuración declarativa Helm/Kubernetes.
-- `sql/`: PostgreSQL de referencia reproducible.
+    subgraph FUNC["Curación funcional"]
+        SHEET[(gold_governance.csv<br/>editorial)]:::core
+        CFG[(governance_defaults.yaml<br/>globales)]:::core
+    end
 
-Se mantienen nombres técnicos en inglés cuando forman parte de comandos, paquetes o convenciones del ecosistema. La documentación y los textos visibles de la app se redactan en español.
+    subgraph CORE["Núcleo Python om_dcat_sync"]
+        WF[workflow_service]:::core
+        GOV[governance_service]:::core
+        EXP[dcat_export]:::core
+        VAL[shacl_validation]:::core
+    end
 
-## Orden correcto del flujo
+    subgraph OUT["Catálogo gobernado"]
+        JSONLD[dcat_catalog.jsonld<br/>DCAT-AP-ES + HVD]:::out
+        TTL[dcat_validation_report.ttl<br/>informe SHACL]:::out
+    end
 
-1. Levantar infraestructura.
-2. Ingestar metadatos técnicos en OpenMetadata.
-3. Crear tags y custom properties mínimas.
-4. Ejecutar `om_dcat_sync workflow run --dry-run` para refrescar la hoja funcional y generar un plan reproducible.
-5. Curar funcionalmente `gold_governance.csv` cuando el workflow indique que faltan obligatorios editoriales; esa hoja es la fuente canónica de sincronización para los datasets `gold`.
-6. Volver a ejecutar `workflow run --dry-run` para revisar el plan.
-7. Ejecutar `workflow run --allow-warnings` para aplicar, exportar y validar.
+    subgraph OPS["Operación"]
+        WEB[Consola web Next.js]:::ops
+        CLI[CLI om_dcat_sync]:::ops
+        PS[Scripts PowerShell]:::ops
+    end
 
-## Ejecución rápida
+    PG -->|ingesta técnica| OM
+    OM --> MY
+    OM --> OS
+    OM -->|tablas descubiertas| WF
+    SHEET --> WF
+    CFG --> WF
+    WF --> GOV
+    GOV -->|cambios idempotentes| OM
+    WF --> EXP --> JSONLD
+    JSONLD --> VAL --> TTL
+    WEB --> CLI
+    PS --> CLI
+    CLI --> WF
+```
 
-Desde la raíz del repo:
+### Flujo de gobierno
+
+```mermaid
+flowchart TB
+    A[1. Descubrir activos técnicos<br/>en OpenMetadata] --> B[2. Refrescar hoja desde<br/>tablas descubiertas]
+    B --> C[3. Curación editorial<br/>título, descripción, tema, HVD]
+    C --> D[4. Dry-run<br/>plan reproducible JSON]
+    D --> E[5. Apply<br/>PATCH/POST idempotentes]
+    E --> F[6. Exportar DCAT-AP-ES<br/>JSON-LD con 5 clases activas]
+    F --> G[7. Validar SHACL HVD<br/>shapes oficiales vendorizadas]
+    G --> H[8. Catálogo RDF<br/>listo para harvester]
+```
+
+### Estado vs publicación
+
+```mermaid
+flowchart LR
+    OM[OpenMetadata<br/>catálogo técnico completo] -->|bronze/silver/gold visibles| INV[Inventario interno]
+    OM -->|solo gold curado| PUB[Catálogo de publicación<br/>DCAT-AP-ES HVD]
+    PUB --> CKAN[Harvester CKAN]
+    PUB --> EU[data.europa.eu]
+    PUB --> ES[datos.gob.es]
+```
+
+Decisión documentada: solo la capa `gold` entra en el catálogo de publicación. La justificación completa (conformidad semántica, alineación DAMA, separación catálogo técnico/publicación) está en la sección 4.5.2 de la memoria.
+
+---
+
+## 4. Stack tecnológico
+
+| Capa | Tecnología | Razón |
+|---|---|---|
+| Fuente técnica | **PostgreSQL 16** | Reproducible, expresivo, ampliamente extendido en organizaciones reales |
+| Catálogo de metadatos | **OpenMetadata 1.11** | API REST, modelo de entidades maduro, custom properties extensibles |
+| Orquestación contenedores | **Kubernetes + Helm + Kind** | Despliegue declarativo, idempotente, transferible |
+| Núcleo de gobierno | **Python 3.11 + rdflib + pySHACL** | Tipado moderno, dataclasses inmutables, validación SHACL nativa |
+| Consola operativa | **Next.js 16 + React 19 + TypeScript** | Server actions, UI sobre lógica cerrada del núcleo |
+| Gestor de paquetes Node | **pnpm** (canónico) | Velocidad, lockfile estricto, store global |
+| Perfil semántico | **DCAT-AP-ES 1.0.0 + HVD** | Estándar español oficial alineado con la práctica europea |
+| Validación | **SHACL** (W3C) con shapes oficiales vendorizadas | Garantía formal del cumplimiento del perfil |
+| Bibliografía y memoria | **LaTeX + XeLaTeX + BibTeX** | Calidad académica, control total tipográfico |
+| Pruebas backend | **pytest** | Fixtures reutilizables, cobertura del núcleo Python |
+| Pruebas frontend | **vitest** | Test runner moderno integrado con Vite/Next |
+
+---
+
+## 5. Características clave
+
+- **Idempotencia comprobable**: una segunda ejecución consecutiva del workflow aplica `0` cambios. Esta propiedad se demuestra empíricamente en la suite reproducible (`scripts/infra/run_validation_suite.ps1`).
+- **Validación formal contra perfil oficial**: el catálogo se valida con las shapes SHACL oficiales del Gobierno de España, vendorizadas en `tfm_ingestor/src/tfm_ingestor/resources/shacl/` desde el commit `f2c8a888` de `datosgobes/DCAT-AP-ES`. Sin dependencias de red en validación.
+- **Núcleo único, consumidores múltiples**: el CLI `om_dcat_sync`, los scripts PowerShell y la consola web Next.js invocan exactamente la misma lógica de negocio Python. La consola no reimplementa reglas — es un cliente cerrado.
+- **Gobierno declarativo**: una hoja `gold_governance.csv` versionable + un YAML de defaults globales sustituyen la edición dataset por dataset que ofrecen las alternativas comerciales.
+- **Reproducibilidad total**: el flujo completo (despliegue Kubernetes + ingesta doble + workflow + validación) corre desde repositorio limpio sin servicios externos cloud propietarios.
+- **Doble ingesta multi-fuente**: dos `DatabaseService` sobre el mismo PostgreSQL demuestran que el gobierno opera sobre `FQN`, no sobre nombres cortos.
+- **Artefactos versionables**: todo el resultado (JSON-LD, Turtle, JSON) se genera en `tmp_pytest/` y es regenerable bit a bit entre ejecuciones.
+- **Operador no técnico soportado**: la consola web ejecuta cada etapa con un botón, persiste jobs y artefactos, y muestra historial sin requerir conocimiento de PowerShell o Python.
+
+---
+
+## 6. Resultados medidos
+
+| Métrica | Valor | Verificación |
+|---|---|---|
+| Idempotencia del workflow | **0 cambios en 2ª pasada** | `validation_suite_summary.json` |
+| Datasets publicables generados | **4** (2 servicios × 2 tablas `gold`) | `dcat_catalog.jsonld` |
+| Violaciones SHACL bloqueantes | **0** (warnings permitidos) | `dcat_validation_report.ttl` |
+| Tiempo de despliegue completo (infra + ingesta + workflow) | **~5 min** desde repo limpio | `run_full_flow.ps1` |
+| Cobertura del perfil DCAT-AP-ES HVD | **5 clases activas** (`Catalog`, `Dataset`, `Distribution`, `DataService`, `Agent`) | `dcat_export.py` |
+| Conformidad runtime OpenMetadata ↔ SQL referencia | **conforme** | `runtime_validation_report.json` |
+| Tests Python | **pytest verde** | `python -m pytest` |
+| Tests web | **vitest verde** | `pnpm test` |
+
+---
+
+## 7. Estructura del repositorio
+
+```text
+TFM_Alonso_Marcos_Muñoz/
+├── README.md                            ← este documento
+├── docs/                                ← decisiones, mapeos y guías
+│   ├── tfm_oficial_objetivos_decisiones.md
+│   ├── dcat_mapping.md
+│   ├── guia_centralizada.md
+│   └── app_web.md
+├── tfm_ingestor/                        ← núcleo Python (om_dcat_sync)
+│   ├── src/tfm_ingestor/
+│   │   ├── workflow_service.py          ← orquestador canónico
+│   │   ├── governance_service.py        ← sincronización idempotente
+│   │   ├── dcat_export.py               ← exportador DCAT-AP-ES
+│   │   ├── shacl_validation.py          ← validador con pySHACL
+│   │   └── resources/shacl/             ← shapes oficiales vendorizadas
+│   ├── config/
+│   │   ├── gold_governance.csv          ← hoja editorial canónica
+│   │   ├── governance_defaults.yaml     ← defaults globales
+│   │   └── operational_profile.yaml     ← perfil de ejecución
+│   └── tests/                           ← suite pytest
+├── web/                                 ← consola operativa Next.js
+│   ├── src/app/                         ← pantallas por etapa
+│   └── package.json
+├── scripts/
+│   ├── infra/                           ← despliegue, ingesta, suite reproducible
+│   ├── quality/                         ← chequeos pre-push y render Mermaid
+│   └── planning/                        ← automatización del Project GitHub
+├── k8s/                                 ← valores Helm de OpenMetadata
+├── sql/                                 ← PostgreSQL de referencia
+├── TFM/Memoria/                         ← memoria LaTeX + figuras + bibliografía
+└── tmp_pytest/                          ← artefactos regenerables (no versionado)
+```
+
+---
+
+## 8. Puesta en marcha
+
+### 8.1 Requisitos
+
+- Windows 10/11 con PowerShell, Docker Desktop activo.
+- **Node.js 20+** con **pnpm** activado por corepack (gestor canónico — no usar npm en comandos nuevos).
+- **Python 3.11+**.
+- **MiKTeX** (solo si se quiere compilar la memoria localmente).
+- **kubectl**, **helm** y **kind** en `PATH`.
+
+### 8.2 Instalación
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\infra\check_prereqs.ps1 -Strict
 python -m pip install -r requirements-dev.txt
-powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_full_flow.ps1
+cd .\web; pnpm install; cd ..
 ```
 
-## App web operativa
+### 8.3 Despliegue (en orden)
 
-La plataforma incluye una consola web en `web/` para ejecutar el flujo sin memorizar comandos. La app no reimplementa el núcleo: lanza la lista cerrada de scripts y comandos versionados, edita `tfm_ingestor/config/gold_governance.csv` y muestra el resultado de cada ejecución.
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\launch_infra.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\infra\ingest_postgres_double.ps1
+python .\scripts\infra\bootstrap_governance.py
+```
 
-Para un operador de negocio, el recorrido es: comprobar infraestructura, ingestar activos técnicos, revisar la hoja de gobierno, ejecutar el workflow, exportar DCAT-AP-ES, validar SHACL y revisar evidencias. Cada botón corresponde a un script PowerShell o a `python -m om_dcat_sync`; no existen comandos arbitrarios ni conexión directa desde el frontend a OpenMetadata.
-
-Arranque local:
+### 8.4 Operación desde la consola web (recomendado)
 
 ```powershell
 cd .\web
-npm install
-npm run dev
+pnpm dev
 ```
 
-Abrir `http://localhost:3000`.
+Abrir `http://localhost:3000` y recorrer las pantallas en orden: *Infraestructura → Ingesta → Gobierno → Workflow → DCAT → Validación → SHACL → Artefactos*. El recorrido completo está descrito paso a paso en el Anexo E de la memoria.
 
-Cada botón de ejecución crea un job con:
-
-- estado visible (`pendiente`, `en ejecución`, `correcto` o `error`);
-- mensaje final de éxito o error;
-- resumen de lo ejecutado a partir de la salida JSON del comando;
-- duración y código de salida;
-- artefactos generados con resumen y vista previa cuando son JSON, JSON-LD, TTL, YAML o CSV;
-- historial consultable en la pantalla `Ejecuciones`.
-
-Documentación específica: `docs/app_web.md`.
-
-CLI principal canónico:
+### 8.5 Operación desde CLI (alternativa)
 
 ```powershell
-python -m om_dcat_sync workflow run --dry-run
-python -m om_dcat_sync workflow run --allow-warnings
+python -m om_dcat_sync workflow run --dry-run        # plan reproducible
+python -m om_dcat_sync workflow run --allow-warnings # apply + export + validate
 ```
 
-Comandos avanzados o de bajo nivel:
-
-```powershell
-python -m om_dcat_sync generate-governance-sheet
-python -m om_dcat_sync --sheet tfm_ingestor/config/gold_governance.csv --dry-run
-python -m om_dcat_sync --sheet tfm_ingestor/config/gold_governance.csv
-python -m om_dcat_sync export-dcat --output dcat_catalog.jsonld
-python -m om_dcat_sync validate-dcat --profile-case hvd --allow-warnings --report-output tmp_pytest/dcat_validation_report.ttl
-```
-
-Compatibilidad legacy:
-
-```powershell
-python -m tfm_ingestor --dry-run
-python -m tfm_ingestor
-```
-
-## Validación reproducible
-
-Tests:
-
-```powershell
-$env:PYTEST_DISABLE_PLUGIN_AUTOLOAD="1"; python -m pytest
-```
-
-Tests de la app web:
-
-```powershell
-cd .\web
-npm test
-```
-
-Validación SHACL del catálogo exportado:
-
-```powershell
-python -m om_dcat_sync workflow run --allow-warnings
-```
-
-Validación contra la infra real:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\infra\validate_live_dcat.ps1
-```
-
-Suite completa de validación hasta fase `05_Validacion`:
+### 8.6 Suite reproducible
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_validation_suite.ps1
 ```
 
-Esta suite deja artefactos reproducibles en `tmp_pytest/`:
+Deja artefactos en `tmp_pytest/`: `runtime_validation_report.json`, `validation_suite_summary.json`, `validation_suite_catalog.jsonld`, `validation_suite_shacl_report.ttl`, `pre_push_checks.json`.
 
-- `runtime_validation_report.json`
-- `validation_suite_summary.json`
-- `validation_suite_catalog.jsonld`
-- `validation_suite_shacl_report.ttl`
-- `pre_push_checks.json`
+---
 
-Comprobaciones cubiertas por la suite:
+## 9. Uso del sistema
 
-- inventario técnico ingerido (`service`, `database`, `schema`, `table`, `column`) frente a `sql/opendata_demo_init.sql`;
-- metadatos de gobierno aplicados frente a `tfm_ingestor/config/gold_governance.csv`;
-- exportación y validación SHACL HVD;
-- idempotencia del workflow canónico en segunda ejecución;
-- `pytest` y revisión de higiene Git.
+### Como operario de gobierno (consola web)
 
-## Entorno Python
+Refrescar la hoja desde OpenMetadata → editar campos editoriales (título, descripción, publicador, temática NTI-RISP, categoría HVD, URL de distribución) → validar → guardar → dry-run → apply → exportar → validar SHACL → descargar el JSON-LD final.
 
-Instalación recomendada:
+### Como integrador (federar el catálogo)
 
-```powershell
-python -m pip install -r requirements-dev.txt
-```
+El archivo `dcat_catalog.jsonld` es RDF válido DCAT-AP-ES 1.0.0 + HVD, comprobado por SHACL. Se entrega a:
 
-Solo ejecución:
+- Un harvester **CKAN** con extensión `ckanext-dcat` vía `/dataset/import`.
+- El equipo de federación de **datos.gob.es** como entrada del proceso editorial.
+- Un triplestore (**Apache Jena Fuseki**) para consultas SPARQL.
+- **rdflib** en Python para análisis programático.
+
+Ejemplo de entrega vía curl:
 
 ```powershell
-python -m pip install -r requirements.txt
+curl -X POST https://harvester.example.org/api/dataset/import `
+     -H "Authorization: Bearer $TOKEN" `
+     -H "Content-Type: application/ld+json" `
+     --data-binary "@tmp_pytest/dcat_catalog.jsonld"
 ```
 
-`tfm_ingestor/pyproject.toml` es la configuración canónica del paquete Python. No se añade `setup.py` porque el repo ya usa empaquetado moderno basado en `pyproject.toml`.
+---
 
-El perfil operativo principal del workflow queda concentrado en `tfm_ingestor/config/operational_profile.yaml`.
+## 10. CLI canónico
 
-## Documentación principal
+| Comando | Uso |
+|---|---|
+| `python -m om_dcat_sync workflow run --dry-run` | Plan reproducible sin aplicar cambios |
+| `python -m om_dcat_sync workflow run --allow-warnings` | Aplica gobierno + exporta + valida SHACL |
+| `python -m om_dcat_sync generate-governance-sheet` | Regenera la hoja desde OpenMetadata sin curar |
+| `python -m om_dcat_sync export-dcat --output dcat_catalog.jsonld` | Exporta el catálogo de forma aislada |
+| `python -m om_dcat_sync validate-dcat --profile-case hvd --allow-warnings` | Valida SHACL aislado contra el bundle HVD |
+| `python -m om_dcat_sync validate-runtime --strict` | Compara el estado vivo de OpenMetadata con el SQL fuente |
 
-- `docs/dcat_mapping.md`
-- `docs/tfe_ficha_oficial_uclm.txt`
-- `docs/tfm_oficial_objetivos_decisiones.md`
-- `docs/gobierno_funcional_gold.md`
-- `docs/custom_properties_openmetadata.md`
-- `docs/tfm_ingestor.md`
-- `docs/estructura_repositorio.md`
-- `docs/guia_centralizada.md`
-- `docs/app_web.md`
+---
+
+## 11. Modelo de datos DCAT-AP-ES activo
+
+**Clases**: `dcat:Catalog`, `dcat:Dataset`, `dcat:Distribution`, `dcat:DataService`, `foaf:Agent`.
+
+**Metadatos curados en OpenMetadata** (custom properties + tags):
+
+| Campo | Origen | Mapeo DCAT-AP-ES |
+|---|---|---|
+| `displayName` | OpenMetadata | `dct:title` |
+| `description` | OpenMetadata | `dct:description` |
+| `dcat_publisher_name` | custom property | `dct:publisher` → `foaf:Agent` |
+| `dcat_hvd_category` | custom property | `dcatap:hvdCategory` |
+| `dcat_access_url` | custom property | `dcat:accessURL` |
+| `dcat_theme.*` | tag | `dcat:theme` (NTI-RISP) |
+
+**Metadatos derivados por configuración** (`governance_defaults.yaml`):
+
+`dcatap:applicableLegislation` (Reglamento UE 2023/138 HVD), `dct:license`, `dct:accessRights`, `dcat:endpointURL`, `dcat:endpointDescription`, `foaf:page`, `dcat:contactPoint`, `dcat:servesDataset`.
+
+Esta separación es deliberada: lo que varía dataset por dataset se cura en la hoja; lo que aplica al catálogo entero vive en YAML para evitar duplicación y errores de consistencia.
+
+---
+
+## 12. Limitaciones y trabajo futuro
+
+- **Datos sintéticos**: el caso de uso valida la plataforma cloud, no la calidad del dato de negocio.
+- **Sin publicación automática**: la plataforma deja el JSON-LD listo para federar, pero la entrega a `datos.gob.es` o CKAN se documenta como paso siguiente (no hay credenciales reales contra esos portales en el alcance).
+- **HVD como hipótesis de diseño**: la calificación HVD se usa para ejercitar el perfil más exigente del estándar; no es una calificación jurídica automática para datasets reales.
+- **Sin RBAC/SSO/HA**: el alcance no incluye alta disponibilidad, hardening corporativo ni control de acceso granular; corresponden a programas de plataforma con presupuesto y ciclo de vida diferentes.
+- **CKAN como flujo operativo activo**: descartado en favor de PostgreSQL como fuente canónica, porque cosechar un catálogo externo replicaría metadatos ya publicados y no demostraría gobierno desde sistemas fuente. CKAN se mantiene como destino federable, no como origen.
+
+Detalle completo en el capítulo 7 (Discusión) de la memoria técnica.
+
+---
+
+## 13. Documentación técnica completa
+
+La memoria técnica (PDF compilado con XeLaTeX) cubre en detalle:
+
+| Capítulo | Contenido |
+|---|---|
+| 01 | Introducción: contexto DCAT-AP-ES, problema, aportación |
+| 02 | Objetivos, alcance y trazabilidad |
+| 03 | Marco técnico y estado del arte (RDF, JSON-LD, DCAT-AP-ES, SHACL, OpenMetadata, Kubernetes, mercado de herramientas) |
+| 04 | Requisitos funcionales y no funcionales con criterios de aceptación, arquitectura, decisiones de diseño (incluida la decisión gold-only) |
+| 05 | Implementación: PostgreSQL, Kubernetes, núcleo Python, exportador DCAT, validador SHACL, consola web |
+| 06 | Validación y resultados con métricas reproducibles |
+| 07 | Discusión, limitaciones y amenazas a la validez |
+| 08 | Conclusiones |
+| A | Anexo de reproducción del caso de uso |
+| B | Detalle de infraestructura |
+| C | Esquema completo de la hoja de gobierno |
+| D | Comandos de validación y estructura de la consola web |
+| E | **Demostración guiada end-to-end** (recorrido visual paso a paso) |
+
+> Archivo: [`TFM/Memoria/TFM.pdf`](TFM/Memoria/TFM.pdf) (compilable con `xelatex TFM.tex; bibtex TFM; xelatex TFM.tex; xelatex TFM.tex`).
+
+Documentación operativa complementaria en [`docs/`](docs/): mapeo DCAT-AP-ES, guía centralizada del flujo, estructura del repositorio, app web, diagramas Mermaid canónicos.
+
+---
+
+## 14. Autor
+
+**Alonso Marcos Muñoz** — alonso.marcos@alu.uclm.es
+*Máster Universitario en Big Data y Computación en la Nube* — Universidad de Castilla-La Mancha (UCLM).
+Trabajo Fin de Máster (TFM), curso 2025-2026. Defensa prevista: junio de 2026.
+
+- **Tutor:** Fernando Gualo Cejudo.
+- **Codirector:** Antonio Labian Moya.
+
+---
+
+> Proyecto académico. Toda la infraestructura corre localmente sobre Docker + Kind; el bundle SHACL está vendorizado para garantizar reproducibilidad determinista. Las shapes oficiales pertenecen al Gobierno de España (`datosgobes/DCAT-AP-ES`).

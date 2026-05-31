@@ -1,0 +1,151 @@
+% -------------------------------
+% Preámbulo de la memoria
+% Siguiendo el patrón del TFG previo del autor:
+%   1) Contraportada (logos + título + autor/tutor/codirector + fecha)
+%   2) Dedicatoria
+%   3) Declaración de autoría (incluye DNI)
+%   4) Resumen
+%   5) Abstract
+%   6) Agradecimientos
+% Cada bloque se cierra con \cleardoublepage para evitar solapamientos
+% entre textblock* absolutos y el contenido que les sigue.
+% -------------------------------
+
+% =====================================================================
+% 1) Contraportada
+% =====================================================================
+\cleardoublepage
+\setcounter{page}{1}
+\thispagestyle{empty}
+\null
+
+\begin{textblock*}{3cm}(9cm,25.5cm)
+\begin{center}
+\includegraphics[height=1.2cm]{figs/logouclm.jpg}
+\end{center}
+\end{textblock*}
+
+\begin{textblock*}{\textwidth}(2.8cm,2.6cm)
+\begin{flushleft}
+\includegraphics[height=0.8cm]{figs/logoesii.png}
+\end{flushleft}
+\end{textblock*}
+
+\begin{textblock*}{\textwidth}(3cm,2.37cm)
+\begin{flushright}
+\includegraphics[height=1cm]{figs/logoesi.png}
+\end{flushright}
+\end{textblock*}
+
+\begin{textblock*}{\textwidth}(3cm,6.5cm)
+\begin{center}\doublespacing
+{\fontsize{18pt}{4pt}\selectfont \bft{TRABAJO FIN DE MÁSTER}}
+
+\medskip
+{\fontsize{18pt}{4pt}\selectfont Máster Universitario en Big Data y Computación en la Nube}
+\end{center}
+\end{textblock*}
+
+\begin{textblock*}{\textwidth}(3cm,12.5cm)
+\begin{center}\doublespacing
+{\fontsize{22pt}{4pt}\selectfont \bft{\titulo}}
+\end{center}
+\end{textblock*}
+
+\begin{textblock*}{\textwidth}(3cm, 19.5cm)
+\begin{flushleft}\doublespacing
+{\fontsize{14pt}{4pt}\selectfont \bft{Autor:} \autor}
+
+{\fontsize{14pt}{4pt}\selectfont \bft{Tutor:} \director}
+
+{\fontsize{14pt}{4pt}\selectfont \bft{Codirector:} \codirector}
+\end{flushleft}
+\end{textblock*}
+
+\begin{textblock*}{\textwidth}(3cm,23.25cm)
+\begin{flushright}
+{\fontsize{14pt}{4pt}\selectfont \fecha}
+\end{flushright}
+\end{textblock*}
+
+% Cerrar explícitamente la página de la contraportada antes de
+% pasar al siguiente bloque (los textblock* son absolutos).
+\clearpage
+
+% =====================================================================
+% 2) Dedicatoria
+% =====================================================================
+\cleardoublepage
+\thispagestyle{empty}
+
+\vspace*{9cm}
+\begin{flushright}\em
+A mi familia y a quienes me han acompañado durante el máster, \\
+por la paciencia y el apoyo que han hecho posible \\
+llegar hasta este trabajo.
+\end{flushright}
+\clearpage
+
+% =====================================================================
+% 3) Declaración de autoría
+% Usa \chapter*{...}: el estilo de capítulo definido en configuracion.tex
+% renderiza el título alineado a la derecha y con la línea horizontal
+% decorativa (\rule{0.5\textwidth}{1pt}), igual que la plantilla UCLM.
+% =====================================================================
+\cleardoublepage
+\thispagestyle{plain}
+\chapter*{Declaración de autoría}
+
+Yo, \autor, con DNI \dni, declaro que soy el único autor del Trabajo Fin de Máster titulado ``\titulo''. El trabajo se ha realizado de forma individual y el material procedente de terceros se cita o atribuye de acuerdo con su naturaleza documental, técnica o bibliográfica. Asimismo, declaro que el contenido aquí presentado no infringe las leyes vigentes en materia de propiedad intelectual.
+
+\vspace*{2cm}
+\begin{center}
+Albacete, a \quad \ldots \quad de \quad \ldots \quad de 2026
+
+\vskip3cm
+
+Fdo.: \autor
+\end{center}
+\clearpage
+
+% =====================================================================
+% 4) Resumen
+% =====================================================================
+\cleardoublepage
+\thispagestyle{plain}
+\chapter*{Resumen}
+
+Este Trabajo Fin de Máster diseña, implementa y valida una Plataforma de Gobierno del Dato centrada en la gestión de metadatos técnicos y funcionales sobre OpenMetadata y en su exportación interoperable conforme al perfil DCAT-AP-ES. Partiendo del enunciado oficial, orientado a alinear OpenMetadata con DCAT-AP, el trabajo concreta el problema en un caso de uso de validación reproducible que recorre el ciclo completo de gobierno de metadatos: desde la conexión de un sistema fuente real hasta la obtención de un catálogo interoperable validado de forma automatizada.
+
+La plataforma se construye como un flujo extremo a extremo y reproducible. Sobre Kubernetes se despliegan OpenMetadata y un PostgreSQL de referencia con esquemas \texttt{bronze}, \texttt{silver} y \texttt{gold} que actúa como fuente técnica canónica. Sus activos se ingieren en OpenMetadata, donde se enriquecen con metadatos de gobierno, y la capa \texttt{gold} se somete a curación funcional mediante una hoja CSV versionada. Un paquete Python propio, \texttt{om\_dcat\_sync}, concentra toda la lógica de negocio (descubrimiento de activos, sincronización idempotente del gobierno, exportación del catálogo a JSON-LD y validación), de modo que tanto una interfaz de línea de comandos como una consola web operativa reutilizan el mismo núcleo sin duplicar reglas. La consola web permite ejecutar el flujo, editar la hoja funcional y consultar logs y artefactos sin memorizar comandos.
+
+La validación combina pruebas automatizadas, comprobación estructural del estado vivo de OpenMetadata frente al contrato esperado y validación semántica SHACL del perfil DCAT-AP-ES para el caso de datos de alto valor (HVD), empleando shapes oficiales congeladas en el repositorio. El resultado es una plataforma simple, idempotente y reproducible que transforma activos técnicos gobernados en un catálogo RDF serializado en JSON-LD, interoperable y preparado para su federación con ecosistemas compatibles como datos.gob.es o data.europa.eu, y defendible a partir de evidencias trazables.
+\clearpage
+
+% =====================================================================
+% 5) Abstract
+% =====================================================================
+\cleardoublepage
+\thispagestyle{plain}
+\chapter*{Abstract}
+
+This Master's Thesis designs, implements and validates a Data Governance Platform focused on managing technical and functional metadata in OpenMetadata and on its interoperable export according to the DCAT-AP-ES profile. Starting from the official topic, aimed at aligning OpenMetadata with DCAT-AP, the work frames the problem as a reproducible validation use case that spans the full metadata-governance cycle: from connecting a real source system to obtaining an interoperable catalogue validated in an automated way.
+
+The platform is built as a reproducible end-to-end flow. OpenMetadata and a reference PostgreSQL database with \texttt{bronze}, \texttt{silver} and \texttt{gold} schemas, acting as the canonical technical source, are deployed on Kubernetes. Its assets are ingested into OpenMetadata and enriched with governance metadata, and the \texttt{gold} layer undergoes functional curation through a versioned CSV sheet. A custom Python package, \texttt{om\_dcat\_sync}, centralises all business logic (asset discovery, idempotent governance synchronization, JSON-LD catalogue export and validation), so that both a command-line interface and an operational web console reuse the same core without duplicating rules. The web console makes it possible to run the flow, edit the functional sheet and inspect logs and artefacts without memorising commands.
+
+Validation combines automated tests, structural checking of OpenMetadata's live state against the expected contract, and SHACL semantic validation of the DCAT-AP-ES profile for the High-Value Datasets (HVD) case, using official shapes frozen in the repository. The result is a simple, idempotent and reproducible platform that turns governed technical assets into an interoperable RDF catalogue serialized in JSON-LD, ready for federation with compatible ecosystems such as datos.gob.es or data.europa.eu, and defensible through traceable evidence.
+\clearpage
+
+% =====================================================================
+% 6) Agradecimientos
+% =====================================================================
+\cleardoublepage
+\thispagestyle{plain}
+\chapter*{Agradecimientos}
+
+Quiero expresar mi agradecimiento a las personas e instituciones que han hecho posible este trabajo.
+
+A mi tutor, Fernando Gualo Cejudo, y a mi codirector, Antonio Labian Moya, por el acompañamiento técnico y académico a lo largo de todo el desarrollo. Su orientación constante, su criterio exigente sobre el alcance, la evidencia y la trazabilidad, y su disponibilidad para revisar y discutir cada decisión han sido determinantes para dar forma y rigor a esta memoria. Les agradezco también el marco académico proporcionado por la Universidad de Castilla-La Mancha y por el Máster Universitario en Big Data y Computación en la Nube, en el que se enmarca este Trabajo Fin de Máster.
+
+A mi familia y a las personas cercanas, por su paciencia, comprensión y apoyo incondicional durante los meses dedicados al máster y, de manera especial, a la preparación de este trabajo. Su ánimo en los momentos de mayor carga y su confianza constante han sido un sostén imprescindible para llegar hasta aquí.
+\clearpage

@@ -19,7 +19,7 @@ export default function ValidacionPage() {
           sirven para justificar que el catálogo gobernado es reproducible y validable.
         </p>
       </section>
-      <OperationGrid operations={operations.filter((operation) => ["run-validation-suite", "validate-live-dcat"].includes(operation.id))} />
+      <OperationGrid operations={operations.filter((operation) => ["run-validation-suite", "render-validation-report", "validate-live-dcat"].includes(operation.id))} />
       <ArtifactViewer initialPath="tmp_pytest/validation_suite_summary.json" />
     </div>
   );

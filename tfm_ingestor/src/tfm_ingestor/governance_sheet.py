@@ -298,7 +298,11 @@ def match_sheet_row(
     for row in rows:
         if row.table_fqn and row.table_fqn == table_fqn:
             return row
-    for row in rows:
+    if table_fqn:
+        rows_without_fqn = [row for row in rows if not row.table_fqn]
+    else:
+        rows_without_fqn = rows
+    for row in rows_without_fqn:
         if row.schema_name == schema_name and row.table_name == table_name:
             return row
     return None

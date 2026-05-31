@@ -7,7 +7,6 @@ from typing import Any
 from tfm_ingestor.config import DefaultsConfig, RulesConfig
 from tfm_ingestor.governance_model import GovernanceIntent, PlannedTableChange
 from tfm_ingestor.governance_sheet import GovernanceSheetRow, match_sheet_row
-from tfm_ingestor.mapping import build_governance_spec
 from tfm_ingestor.om_api import OpenMetadataApi, OpenMetadataApiError, OmRef
 from tfm_ingestor.patch_ops import build_table_patch_ops
 
@@ -94,7 +93,6 @@ def build_governance_intents(
 ) -> list[GovernanceIntent]:
     intents: list[GovernanceIntent] = []
     rows = sheet_rows or []
-    use_sheet = bool(rows)
 
     for table in tables:
         schema_name = schema_name_for_table(table)
@@ -105,51 +103,24 @@ def build_governance_intents(
         if schema_name not in rules.schema_to_layer:
             continue
 
-        row = match_sheet_row(rows=rows, table=table) if use_sheet else None
-        if use_sheet and row is None:
+        row = match_sheet_row(rows=rows, table=table)
+        if row is None:
             continue
 
-        if row is not None:
-            intents.append(
-                GovernanceIntent(
-                    table_fqn=table_fqn,
-                    schema_name=schema_name,
-                    table_name=table_name,
-                    publish=row.publish,
-                    title=row.title if row.publish else None,
-                    description=row.description if row.publish else None,
-                    publisher_name=(row.publisher_name or defaults.catalog.publisher_name) if row.publish else None,
-                    theme_tag_fqns=row.theme_tag_fqns if row.publish else [],
-                    hvd_category_uri=row.hvd_category_uri if row.publish else None,
-                    distribution_access_url=row.distribution_access_url if row.publish else None,
-                    source="sheet",
-                )
-            )
-            continue
-
-        spec = build_governance_spec(
-            schema_name=schema_name,
-            table_name=table_name,
-            schema_to_layer=rules.schema_to_layer,
-            schema_to_domain=rules.schema_to_domain,
-            tags_by_prefix=rules.table_tags_by_prefix,
-            catalog_defaults={"publisher_name": defaults.catalog.publisher_name},
-            dataset_defaults=defaults.dataset_defaults,
-        )
         intents.append(
             GovernanceIntent(
                 table_fqn=table_fqn,
                 schema_name=schema_name,
                 table_name=table_name,
-                publish=True,
-                title=None,
-                description=None,
-                publisher_name=str(spec.custom_properties.get("dcat_publisher_name") or defaults.catalog.publisher_name),
-                theme_tag_fqns=spec.tag_fqns,
-                hvd_category_uri=str(spec.custom_properties.get("dcat_hvd_category") or "") or None,
-                distribution_access_url=str(spec.custom_properties.get("dcat_access_url") or "") or None,
-                source="rules",
-                domain_name=spec.domain_name,
+                publish=row.publish,
+                title=row.title if row.publish else None,
+                description=row.description if row.publish else None,
+                publisher_name=(row.publisher_name or defaults.catalog.publisher_name) if row.publish else None,
+                theme_tag_fqns=row.theme_tag_fqns if row.publish else [],
+                hvd_category_uri=row.hvd_category_uri if row.publish else None,
+                distribution_access_url=row.distribution_access_url if row.publish else None,
+                source="sheet",
+                domain_name=rules.schema_to_domain.get(schema_name),
             )
         )
 
@@ -176,7 +147,7 @@ def _resolve_domain_ref(
     if domain is None and not dry_run:
         domain = api.create_domain(
             name=domain_name,
-            description="TFM demo domain",
+            description="TFM governance domain",
             domain_type="Source-aligned",
         )
     if domain is None:
