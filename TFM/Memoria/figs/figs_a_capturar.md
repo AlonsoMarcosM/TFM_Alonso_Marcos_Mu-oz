@@ -92,24 +92,21 @@ la memoria referencia:
 
 ---
 
-## Checklist rápido de archivos pendientes en `TFM/Memoria/figs/`
+## Estado de capturas (actualizado)
 
-Capturas manuales (A–D):
+**Solo faltan 2 figuras** por capturar; el resto ya está en `TFM/Memoria/figs/`.
 
-- [ ] `fig_web_home.png`
-- [ ] `fig_web_pantalla_infraestructura.png`
-- [ ] `fig_web_pantalla_ingesta.png`
-- [ ] `fig_web_pantalla_gobierno.png`
-- [ ] `fig_web_pantalla_workflow.png`
-- [ ] `fig_web_pantalla_dcat.png`
-- [ ] `fig_web_pantalla_validacion.png`
-- [ ] `fig_web_pantalla_shacl.png`
-- [ ] `fig_web_pantalla_artefactos.png`
-- [ ] `fig_postgres_schemas.png`
-- [ ] `fig_om_services.png`
-- [ ] `fig_om_tabla_propiedades.png`
-- [ ] `fig_docker_containers.png`
-- [ ] `fig_pods_kubernetes.png`
-- [ ] `fig_modulos_python.png`
+### Pendientes (lo que falta)
 
-Generadas por script Mermaid (E) y por el autor (F): ver secciones anteriores.
+- [ ] `fig_modulos_python.png` — explorador de VS Code en `tfm_ingestor/src/tfm_ingestor/` (sección D).
+- [ ] `fig_om_tabla_propiedades.png` — pestaña **Custom Properties** + **Tags** de una tabla `gold` en OpenMetadata tras el flujo (sección B).
+
+### Ya disponibles en `figs/`
+
+- [x] Consola web: `fig_web_home.png`, `fig_web_pantalla_infraestructura.png`, `fig_web_pantalla_ingesta.png`, `fig_web_pantalla_gobierno.png`, `fig_web_pantalla_workflow.png`, `fig_web_pantalla_dcat.png`, `fig_web_pantalla_validacion.png`, `fig_web_pantalla_shacl.png`, `fig_web_pantalla_artefactos.png`
+- [x] OpenMetadata / infra: `fig_postgres_schemas.png`, `fig_om_services.png`, `fig_docker_containers.png`, `fig_pods_kubernetes.png`
+- [x] Validación europea: `fig_validation_shacl_europe.png` (SEMIC/ITB, DCAT-AP HVD 3.0.0, SUCCESS)
+- [x] Planificación (autor): `fig_gantt_planificacion.png`, `fig_kanban_board.png`
+- [x] Diagramas Mermaid (sección E, regenerables con el script): `fig_arquitectura_logica_capas.png`, `fig_arquitectura_logica_detalle.png`, `fig_arquitectura_fisica.png`, `fig_flujo_operativo_validacion.png`, `fig_pipeline_metadatos.png`, `fig_mapeo_activo_dcat_openmetadata.png`, `fig_kubernetes_reproducible.png`
+
+> Consejo: el HTML y el PDF de validación se pueden abrir renderizados desde la consola web (botón **Abrir** en la tabla de **Artefactos**), útil para preparar capturas o evidencias.

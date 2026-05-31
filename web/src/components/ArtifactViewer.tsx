@@ -66,9 +66,21 @@ export function ArtifactViewer({ initialPath }: { initialPath?: string }) {
                   <td>{artifact.size}</td>
                   <td>{artifact.updatedAt ?? "-"}</td>
                   <td>
-                    <button disabled={!artifact.exists} onClick={() => loadContent(artifact.path)}>
-                      Ver
-                    </button>
+                    <div className="actions">
+                      <button disabled={!artifact.exists} onClick={() => loadContent(artifact.path)}>
+                        Ver
+                      </button>
+                      {artifact.exists ? (
+                        <a
+                          className="text-link"
+                          href={`/api/artifacts/raw?path=${encodeURIComponent(artifact.path)}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Abrir
+                        </a>
+                      ) : null}
+                    </div>
                   </td>
                 </tr>
               ))}

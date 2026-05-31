@@ -43,6 +43,38 @@ export async function listArtifacts() {
   );
 }
 
+const CONTENT_TYPES: Record<string, string> = {
+  ".html": "text/html; charset=utf-8",
+  ".pdf": "application/pdf",
+  ".json": "application/json; charset=utf-8",
+  ".jsonld": "application/ld+json; charset=utf-8",
+  ".ttl": "text/turtle; charset=utf-8",
+  ".csv": "text/csv; charset=utf-8",
+  ".yaml": "text/yaml; charset=utf-8",
+  ".yml": "text/yaml; charset=utf-8",
+};
+
+export function artifactContentType(relativePath: string): string {
+  const extension = path.extname(relativePath).toLowerCase();
+  return CONTENT_TYPES[extension] ?? "text/plain; charset=utf-8";
+}
+
+export async function readArtifactRaw(
+  relativePath: string,
+): Promise<{ buffer: Buffer; contentType: string; filename: string }> {
+  const normalized = relativePath.replaceAll("\\", "/");
+  if (!artifactFiles.includes(normalized)) {
+    throw new Error(`Artefacto no permitido: ${relativePath}`);
+  }
+  const absolutePath = repoPath(...normalized.split("/"));
+  const buffer = await fsp.readFile(absolutePath);
+  return {
+    buffer,
+    contentType: artifactContentType(normalized),
+    filename: normalized.split("/").pop() ?? "artefacto",
+  };
+}
+
 export async function readArtifact(relativePath: string) {
   const normalized = relativePath.replaceAll("\\", "/");
   if (!artifactFiles.includes(normalized)) {
