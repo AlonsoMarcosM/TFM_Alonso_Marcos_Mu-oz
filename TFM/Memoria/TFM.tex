@@ -11,7 +11,11 @@
 
 \input{elements/portada}
 
-\setmainfont[Ligatures={NoRequired,NoCommon,NoContextual}]{Calibri}
+\IfFontExistsTF{Calibri}{
+  \setmainfont[Ligatures={NoRequired,NoCommon,NoContextual}]{Calibri}
+}{
+  \setmainfont{Carlito}
+}
 
 \frontmatter
 \input{elements/preambulo}
