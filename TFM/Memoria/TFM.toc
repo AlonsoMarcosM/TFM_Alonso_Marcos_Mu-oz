@@ -76,60 +76,61 @@
 \contentsline {section}{\numberline {6.2}Pruebas automatizadas}{55}{section.6.2}%
 \contentsline {section}{\numberline {6.3}Validación estructural del estado vivo}{56}{section.6.3}%
 \contentsline {section}{\numberline {6.4}Validación SHACL}{56}{section.6.4}%
-\contentsline {section}{\numberline {6.5}Resultados del caso de uso de validación}{57}{section.6.5}%
-\contentsline {section}{\numberline {6.6}Artefactos generados}{58}{section.6.6}%
-\contentsline {chapter}{\numberline {7}Discusión}{59}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Cumplimiento del problema planteado}{59}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Beneficios obtenidos}{59}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Limitaciones}{60}{section.7.3}%
-\contentsline {section}{\numberline {7.4}Amenazas a la validez}{61}{section.7.4}%
-\contentsline {section}{\numberline {7.5}Posicionamiento frente a entornos Big Data}{61}{section.7.5}%
-\contentsline {section}{\numberline {7.6}Gobierno supervisado y responsabilidad del operador}{62}{section.7.6}%
-\contentsline {section}{\numberline {7.7}Trabajo futuro}{63}{section.7.7}%
-\contentsline {chapter}{\numberline {8}Conclusiones}{65}{chapter.8}%
-\contentsline {chapter}{\numberline {A}Reproducción del caso de uso de validación}{67}{appendix.Alph1}%
-\contentsline {section}{\numberline {A.1}Preparación del entorno}{67}{section.Alph1.1}%
-\contentsline {section}{\numberline {A.2}Despliegue de infraestructura}{67}{section.Alph1.2}%
-\contentsline {section}{\numberline {A.3}Ejecución del workflow canónico}{68}{section.Alph1.3}%
-\contentsline {section}{\numberline {A.4}Suite reproducible}{68}{section.Alph1.4}%
-\contentsline {chapter}{\numberline {B}Detalle de infraestructura}{69}{appendix.Alph2}%
-\contentsline {section}{\numberline {B.1}Versión de OpenMetadata}{69}{section.Alph2.1}%
-\contentsline {section}{\numberline {B.2}Matriz de versiones del sistema}{69}{section.Alph2.2}%
-\contentsline {section}{\numberline {B.3}Valores Helm de OpenMetadata}{70}{section.Alph2.3}%
-\contentsline {section}{\numberline {B.4}Manifiesto de PostgreSQL de referencia}{70}{section.Alph2.4}%
-\contentsline {section}{\numberline {B.5}Diagrama de despliegue}{71}{section.Alph2.5}%
-\contentsline {section}{\numberline {B.6}Notas operativas}{71}{section.Alph2.6}%
-\contentsline {section}{\numberline {B.7}Instalación portable y organismos con OpenMetadata propio}{71}{section.Alph2.7}%
-\contentsline {chapter}{\numberline {C}Esquema de gobierno funcional}{73}{appendix.Alph3}%
-\contentsline {section}{\numberline {C.1}Estructura de la hoja \texttt {gold\_governance.csv}}{73}{section.Alph3.1}%
-\contentsline {section}{\numberline {C.2}Defaults globales}{73}{section.Alph3.2}%
-\contentsline {chapter}{\numberline {D}Mapeo DCAT-AP-ES y entregables}{75}{appendix.Alph4}%
-\contentsline {section}{\numberline {D.1}Correspondencia OpenMetadata $\rightarrow $ DCAT-AP-ES}{75}{section.Alph4.1}%
-\contentsline {section}{\numberline {D.2}Qué gobierna OpenMetadata y qué deriva el sistema}{76}{section.Alph4.2}%
-\contentsline {section}{\numberline {D.3}Qué aporta activar el caso HVD}{76}{section.Alph4.3}%
-\contentsline {section}{\numberline {D.4}Entregables del caso de uso}{76}{section.Alph4.4}%
-\contentsline {chapter}{\numberline {E}Validación y consola web}{77}{appendix.Alph5}%
-\contentsline {section}{\numberline {E.1}Comandos de validación}{77}{section.Alph5.1}%
-\contentsline {section}{\numberline {E.2}Estructura de la consola web}{77}{section.Alph5.2}%
-\contentsline {section}{\numberline {E.3}Pruebas de la consola web}{77}{section.Alph5.3}%
-\contentsline {chapter}{\numberline {F}Demostración guiada de la plataforma}{79}{appendix.Alph6}%
-\contentsline {section}{\numberline {F.1}Propósito y supuestos iniciales}{79}{section.Alph6.1}%
-\contentsline {section}{\numberline {F.2}Apertura de la consola}{80}{section.Alph6.2}%
-\contentsline {section}{\numberline {F.3}Estado de la infraestructura}{80}{section.Alph6.3}%
-\contentsline {section}{\numberline {F.4}Servicios y datasets ingeridos}{81}{section.Alph6.4}%
-\contentsline {section}{\numberline {F.5}Curación funcional en la pantalla \emph {Gobierno}}{82}{section.Alph6.5}%
-\contentsline {paragraph}{1. Refrescar hoja desde OpenMetadata.}{82}{section.Alph6.5}%
-\contentsline {paragraph}{2. Editar metadatos DCAT-AP-ES.}{82}{section.Alph6.5}%
-\contentsline {paragraph}{3. Validar la hoja.}{82}{section.Alph6.5}%
-\contentsline {paragraph}{4. Guardar.}{82}{section.Alph6.5}%
-\contentsline {section}{\numberline {F.6}Aplicación del workflow}{83}{section.Alph6.6}%
-\contentsline {paragraph}{Dry-run.}{83}{section.Alph6.6}%
-\contentsline {paragraph}{Apply.}{83}{section.Alph6.6}%
-\contentsline {paragraph}{Idempotencia.}{83}{section.Alph6.6}%
-\contentsline {section}{\numberline {F.7}Exportación DCAT-AP-ES}{84}{section.Alph6.7}%
-\contentsline {section}{\numberline {F.8}Validación SHACL y suite reproducible}{84}{section.Alph6.8}%
-\contentsline {section}{\numberline {F.9}Artefactos y descarga del catálogo RDF}{85}{section.Alph6.9}%
-\contentsline {section}{\numberline {F.10}Federación del catálogo}{86}{section.Alph6.10}%
-\contentsline {section}{\numberline {F.11}Resumen del recorrido}{87}{section.Alph6.11}%
-\contentsline {chapter}{Referencia bibliográfica}{92}{appendix*.51}%
+\contentsline {section}{\numberline {6.5}Validación externa con el validador europeo (SEMIC/ITB)}{57}{section.6.5}%
+\contentsline {section}{\numberline {6.6}Resultados del caso de uso de validación}{59}{section.6.6}%
+\contentsline {section}{\numberline {6.7}Artefactos generados}{59}{section.6.7}%
+\contentsline {chapter}{\numberline {7}Discusión}{61}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Cumplimiento del problema planteado}{61}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Beneficios obtenidos}{61}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Limitaciones}{62}{section.7.3}%
+\contentsline {section}{\numberline {7.4}Amenazas a la validez}{63}{section.7.4}%
+\contentsline {section}{\numberline {7.5}Posicionamiento frente a entornos Big Data}{63}{section.7.5}%
+\contentsline {section}{\numberline {7.6}Gobierno supervisado y responsabilidad del operador}{64}{section.7.6}%
+\contentsline {section}{\numberline {7.7}Trabajo futuro}{65}{section.7.7}%
+\contentsline {chapter}{\numberline {8}Conclusiones}{67}{chapter.8}%
+\contentsline {chapter}{\numberline {A}Reproducción del caso de uso de validación}{69}{appendix.Alph1}%
+\contentsline {section}{\numberline {A.1}Preparación del entorno}{69}{section.Alph1.1}%
+\contentsline {section}{\numberline {A.2}Despliegue de infraestructura}{69}{section.Alph1.2}%
+\contentsline {section}{\numberline {A.3}Ejecución del workflow canónico}{70}{section.Alph1.3}%
+\contentsline {section}{\numberline {A.4}Suite reproducible}{70}{section.Alph1.4}%
+\contentsline {chapter}{\numberline {B}Detalle de infraestructura}{71}{appendix.Alph2}%
+\contentsline {section}{\numberline {B.1}Versión de OpenMetadata}{71}{section.Alph2.1}%
+\contentsline {section}{\numberline {B.2}Matriz de versiones del sistema}{71}{section.Alph2.2}%
+\contentsline {section}{\numberline {B.3}Valores Helm de OpenMetadata}{72}{section.Alph2.3}%
+\contentsline {section}{\numberline {B.4}Manifiesto de PostgreSQL de referencia}{72}{section.Alph2.4}%
+\contentsline {section}{\numberline {B.5}Diagrama de despliegue}{73}{section.Alph2.5}%
+\contentsline {section}{\numberline {B.6}Notas operativas}{73}{section.Alph2.6}%
+\contentsline {section}{\numberline {B.7}Instalación portable y organismos con OpenMetadata propio}{73}{section.Alph2.7}%
+\contentsline {chapter}{\numberline {C}Esquema de gobierno funcional}{75}{appendix.Alph3}%
+\contentsline {section}{\numberline {C.1}Estructura de la hoja \texttt {gold\_governance.csv}}{75}{section.Alph3.1}%
+\contentsline {section}{\numberline {C.2}Defaults globales}{75}{section.Alph3.2}%
+\contentsline {chapter}{\numberline {D}Mapeo DCAT-AP-ES y entregables}{77}{appendix.Alph4}%
+\contentsline {section}{\numberline {D.1}Correspondencia OpenMetadata $\rightarrow $ DCAT-AP-ES}{77}{section.Alph4.1}%
+\contentsline {section}{\numberline {D.2}Qué gobierna OpenMetadata y qué deriva el sistema}{78}{section.Alph4.2}%
+\contentsline {section}{\numberline {D.3}Qué aporta activar el caso HVD}{78}{section.Alph4.3}%
+\contentsline {section}{\numberline {D.4}Entregables del caso de uso}{78}{section.Alph4.4}%
+\contentsline {chapter}{\numberline {E}Validación y consola web}{79}{appendix.Alph5}%
+\contentsline {section}{\numberline {E.1}Comandos de validación}{79}{section.Alph5.1}%
+\contentsline {section}{\numberline {E.2}Estructura de la consola web}{79}{section.Alph5.2}%
+\contentsline {section}{\numberline {E.3}Pruebas de la consola web}{79}{section.Alph5.3}%
+\contentsline {chapter}{\numberline {F}Demostración guiada de la plataforma}{81}{appendix.Alph6}%
+\contentsline {section}{\numberline {F.1}Propósito y supuestos iniciales}{81}{section.Alph6.1}%
+\contentsline {section}{\numberline {F.2}Apertura de la consola}{82}{section.Alph6.2}%
+\contentsline {section}{\numberline {F.3}Estado de la infraestructura}{82}{section.Alph6.3}%
+\contentsline {section}{\numberline {F.4}Servicios y datasets ingeridos}{83}{section.Alph6.4}%
+\contentsline {section}{\numberline {F.5}Curación funcional en la pantalla \emph {Gobierno}}{84}{section.Alph6.5}%
+\contentsline {paragraph}{1. Refrescar hoja desde OpenMetadata.}{84}{section.Alph6.5}%
+\contentsline {paragraph}{2. Editar metadatos DCAT-AP-ES.}{84}{section.Alph6.5}%
+\contentsline {paragraph}{3. Validar la hoja.}{84}{section.Alph6.5}%
+\contentsline {paragraph}{4. Guardar.}{84}{section.Alph6.5}%
+\contentsline {section}{\numberline {F.6}Aplicación del workflow}{85}{section.Alph6.6}%
+\contentsline {paragraph}{Dry-run.}{85}{section.Alph6.6}%
+\contentsline {paragraph}{Apply.}{85}{section.Alph6.6}%
+\contentsline {paragraph}{Idempotencia.}{85}{section.Alph6.6}%
+\contentsline {section}{\numberline {F.7}Exportación DCAT-AP-ES}{86}{section.Alph6.7}%
+\contentsline {section}{\numberline {F.8}Validación SHACL y suite reproducible}{86}{section.Alph6.8}%
+\contentsline {section}{\numberline {F.9}Artefactos y descarga del catálogo RDF}{87}{section.Alph6.9}%
+\contentsline {section}{\numberline {F.10}Federación del catálogo}{88}{section.Alph6.10}%
+\contentsline {section}{\numberline {F.11}Resumen del recorrido}{89}{section.Alph6.11}%
+\contentsline {chapter}{Referencia bibliográfica}{94}{appendix*.52}%
 \contentsfinish 

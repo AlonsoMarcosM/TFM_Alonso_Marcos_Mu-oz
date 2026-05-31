@@ -228,6 +228,13 @@ David~J. Anderson.
   2023.
 \newblock Diario Oficial de la Unión Europea; última consulta: mayo de 2026.
 
+\bibitem{itbSemicShacl}
+{Comisión Europea -- DG DIGIT, Interoperability Test Bed}.
+\newblock {SEMIC SHACL Validator}.
+\newblock \url{https://www.itb.ec.europa.eu/shacl/semic-shacl/upload}, 2026.
+\newblock Servicio oficial de validación SHACL del Interoperability Test Bed
+  (ITB); última consulta: mayo de 2026.
+
 \bibitem{openmetadataKubernetes}
 {OpenMetadata}.
 \newblock {Kubernetes Deployment}.

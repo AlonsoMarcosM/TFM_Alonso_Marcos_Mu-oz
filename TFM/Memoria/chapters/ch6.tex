@@ -57,6 +57,14 @@ La ruta recomendada, sin embargo, es integrarla dentro del workflow completo (li
 python -m om_dcat_sync workflow run --allow-warnings
 \end{lstlisting}
 
+\section{Validación externa con el validador europeo (SEMIC/ITB)}\label{sec:validacion-europea}
+
+Además de la validación \ac{SHACL} local con las \emph{shapes} \ac{DCATAPES} congeladas, el catálogo exportado se ha sometido a una validación externa e independiente con el \emph{SEMIC SHACL Validator} del \emph{Interoperability Test Bed} (ITB) de la Comisión Europea~\cite{itbSemicShacl}. Este servicio comprueba la conformidad de un grafo \ac{RDF} frente a las especificaciones SEMIC oficiales. Se cargó el catálogo \fqn{validation_suite_catalog.jsonld} y se validó contra el grupo DCAT-AP, perfil \textbf{DCAT-AP HVD}, versión \textbf{3.0.0 Base Zero} (sin conocimiento de fondo), con sintaxis de entrada \ac{JSONLD}.
+
+El resultado, recogido en la figura~\ref{fig:validacion-europea}, fue \textbf{SUCCESS} con \textbf{0 errores, 0 advertencias y 0 mensajes}. Este hallazgo es relevante por dos motivos. Primero, confirma que la salida no solo cumple el perfil nacional \ac{DCATAPES} validado localmente, sino también el perfil europeo \emph{DCAT-AP HVD} verificado por una herramienta oficial ajena a la plataforma. Segundo, la modalidad \emph{Base Zero} aplica las restricciones sin resolver vocabularios externos, de modo que una conformidad sin hallazgos evidencia que la estructura, las relaciones y las propiedades del grafo son correctas por sí mismas y no por inferencias del validador.
+
+\figuraMemoria{fig_validation_shacl_europe.png}{Validación externa del catálogo en el \emph{SEMIC SHACL Validator} (ITB, Comisión Europea): perfil DCAT-AP HVD 3.0.0 Base Zero, resultado SUCCESS sin errores ni advertencias. Elaboración propia.}{fig:validacion-europea}
+
 \section{Resultados del caso de uso de validación}
 
 El caso de uso de validación produce dos datasets publicables y sus recursos asociados:
@@ -77,7 +85,8 @@ La documentación del repositorio registra una ejecución completa de la suite c
 \bft{Comprobación} & \bft{Resultado documentado} & \bft{Interpretación} \\ \hline
 Estado runtime & Conforme & OpenMetadata contiene los activos esperados. \\ \hline
 Gobierno aplicado & Conforme & La hoja funcional coincide con metadatos vivos. \\ \hline
-SHACL HVD & Conforme con warnings permitidos & No hay violaciones bloqueantes. \\ \hline
+SHACL HVD (local) & Conforme con warnings permitidos & No hay violaciones bloqueantes. \\ \hline
+Validación europea (ITB) & SUCCESS (0/0/0) & Conforme con DCAT-AP HVD 3.0.0 en el validador oficial europeo. \\ \hline
 Tablas exportadas & 2 & Se exportan los dos datasets \texttt{gold}. \\ \hline
 Segunda ejecución & 0 cambios aplicados & El workflow es idempotente. \\ \hline
 \end{tabular}

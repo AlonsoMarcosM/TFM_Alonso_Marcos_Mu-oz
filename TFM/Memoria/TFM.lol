@@ -12,12 +12,12 @@
 \contentsline {lstlisting}{\numberline {6.2}{\ignorespaces Validación estructural del estado vivo de OpenMetadata desde el CLI \texttt {om\_dcat\_sync}.}}{56}{lstlisting.6.2}%
 \contentsline {lstlisting}{\numberline {6.3}{\ignorespaces Validación SHACL aislada del catálogo JSON-LD ya exportado, caso HVD.}}{56}{lstlisting.6.3}%
 \contentsline {lstlisting}{\numberline {6.4}{\ignorespaces Workflow canónico end-to-end: sincroniza gobierno, exporta DCAT-AP-ES y valida SHACL HVD.}}{57}{lstlisting.6.4}%
-\contentsline {lstlisting}{\numberline {A.1}{\ignorespaces Instalación de dependencias Python del núcleo \texttt {om\_dcat\_sync}.}}{67}{lstlisting.Alph1.1}%
-\contentsline {lstlisting}{\numberline {A.2}{\ignorespaces Instalación de dependencias de la consola web con pnpm.}}{67}{lstlisting.Alph1.2}%
-\contentsline {lstlisting}{\numberline {A.3}{\ignorespaces Lanzamiento de Kind, Helm e ingesta doble.}}{67}{lstlisting.Alph1.3}%
-\contentsline {lstlisting}{\numberline {A.4}{\ignorespaces Ejecución del workflow canónico end-to-end.}}{68}{lstlisting.Alph1.4}%
-\contentsline {lstlisting}{\numberline {A.5}{\ignorespaces Suite reproducible documentada.}}{68}{lstlisting.Alph1.5}%
-\contentsline {lstlisting}{\numberline {E.1}{\ignorespaces Validación independiente y por suite.}}{77}{lstlisting.Alph5.1}%
-\contentsline {lstlisting}{\numberline {E.2}{\ignorespaces Pruebas Vitest de la consola web.}}{77}{lstlisting.Alph5.2}%
-\contentsline {lstlisting}{\numberline {F.1}{\ignorespaces Comprobación rápida del entorno antes de iniciar la demostración.}}{79}{lstlisting.Alph6.1}%
-\contentsline {lstlisting}{\numberline {F.2}{\ignorespaces Envío del catálogo a un harvester CKAN con extensión DCAT.}}{86}{lstlisting.Alph6.2}%
+\contentsline {lstlisting}{\numberline {A.1}{\ignorespaces Instalación de dependencias Python del núcleo \texttt {om\_dcat\_sync}.}}{69}{lstlisting.Alph1.1}%
+\contentsline {lstlisting}{\numberline {A.2}{\ignorespaces Instalación de dependencias de la consola web con pnpm.}}{69}{lstlisting.Alph1.2}%
+\contentsline {lstlisting}{\numberline {A.3}{\ignorespaces Lanzamiento de Kind, Helm e ingesta doble.}}{69}{lstlisting.Alph1.3}%
+\contentsline {lstlisting}{\numberline {A.4}{\ignorespaces Ejecución del workflow canónico end-to-end.}}{70}{lstlisting.Alph1.4}%
+\contentsline {lstlisting}{\numberline {A.5}{\ignorespaces Suite reproducible documentada.}}{70}{lstlisting.Alph1.5}%
+\contentsline {lstlisting}{\numberline {E.1}{\ignorespaces Validación independiente y por suite.}}{79}{lstlisting.Alph5.1}%
+\contentsline {lstlisting}{\numberline {E.2}{\ignorespaces Pruebas Vitest de la consola web.}}{79}{lstlisting.Alph5.2}%
+\contentsline {lstlisting}{\numberline {F.1}{\ignorespaces Comprobación rápida del entorno antes de iniciar la demostración.}}{81}{lstlisting.Alph6.1}%
+\contentsline {lstlisting}{\numberline {F.2}{\ignorespaces Envío del catálogo a un harvester CKAN con extensión DCAT.}}{88}{lstlisting.Alph6.2}%
