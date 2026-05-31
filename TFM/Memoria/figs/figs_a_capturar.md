@@ -37,6 +37,8 @@ recuadro «Captura pendiente» con el nombre del archivo esperado.
 | `fig_web_pantalla_validacion.png` | Sección **Validación** | Pulsa **Suite completa → Ejecutar** y espera al estado `correcto`. Captura el bloque **Resultado** (muestra conformidad de estado vivo, idempotencia y SHACL, duración y código de salida) junto con la lista de artefactos generados, incluidos `validation_report.html` y `validation_report.pdf`. |
 | `fig_web_pantalla_shacl.png` | Sección **SHACL** | Esta pantalla muestra el **manifiesto de las shapes DCAT-AP-ES congeladas** (`manifest.json`): evidencia de que la validación no descarga shapes en tiempo de ejecución. Captura la previsualización del manifiesto. *(El informe SHACL con severidades es el artefacto `*_shacl_report.ttl`; se ve en **Artefactos**, no aquí.)* |
 | `fig_web_pantalla_artefactos.png` | Sección **Artefactos** | Tabla de evidencias (ruta, estado, tamaño, fecha). Pulsa **Ver** sobre `web_catalog.jsonld` (o `validation_suite_catalog.jsonld`) y captura con la **previsualización del JSON-LD** abierta debajo de la tabla. |
+| `fig_web_pantalla_ejecuciones.png` | Sección **Ejecuciones** (`/jobs`) | Lista de jobs con identificador, operación, estado `correcto`/`error`, duración y código de salida. Pulsa sobre uno de los jobs (preferiblemente la «Suite completa» correctamente completada) para ver también el resumen y el log. |
+| `fig_validation_report_html.png` | Sección **Artefactos → Abrir** sobre `tmp_pytest/validation_report.html` | Informe HTML de validación renderizado en el navegador: cabecera con título y fecha, badges de conformidad en verde/rojo, tabla de detalle con los resultados. Abre el artefacto con el botón **Abrir** y captura la pestaña. |
 
 > Sugerencia: tras pulsar `Generar informe HTML/PDF` en **Validación**, los
 > artefactos `validation_report.html` y `validation_report.pdf` aparecen en
@@ -96,11 +98,14 @@ la memoria referencia:
 
 **Solo faltan 2 figuras** por capturar; el resto ya está en `TFM/Memoria/figs/`.
 
-### Pendientes (lo que falta)
+### Pendientes (lo que falta — 5 figuras)
 
-- [ ] `fig_validation_report_html.png` — Informe HTML renderizado en el navegador. Pasos: (1) ejecuta **Suite completa** en Validación, (2) ve a **Artefactos**, (3) busca `tmp_pytest/validation_report.html` y pulsa **Abrir** → se abre el HTML en una pestaña. Captura la página completa mostrando el resumen de conformidad con los badges de color (verde/rojo) y el listado de resultados. Esta figura va en el capítulo de Validación de la memoria.
-- [ ] `fig_modulos_python.png` — explorador de VS Code en `tfm_ingestor/src/tfm_ingestor/` (sección D).
-- [ ] `fig_om_tabla_propiedades.png` — pestaña **Custom Properties** + **Tags** de una tabla `gold` en OpenMetadata tras el flujo (sección B).
+- [ ] `fig_validation_report_html.png` — Artefactos → **Abrir** sobre `tmp_pytest/validation_report.html`. Captura el HTML renderizado con badges de conformidad (verde/rojo) y la tabla de resultados. Referenciada en el capítulo de Validación.
+- [ ] `fig_web_pantalla_ejecuciones.png` — Sección **Ejecuciones** (`/jobs`). Lista de jobs completados con duración y estado; pulsa uno para ver el resumen completo.
+- [ ] `fig_modulos_python.png` — Explorador de VS Code en `tfm_ingestor/src/tfm_ingestor/` (sección D).
+- [ ] `fig_om_tabla_propiedades.png` — Pestaña **Custom Properties** + **Tags** de una tabla `gold` en OpenMetadata tras el flujo (sección B).
+
+> Las instrucciones detalladas de cada captura están en la tabla de la sección A del mismo archivo.
 
 ### Ya disponibles en `figs/`
 

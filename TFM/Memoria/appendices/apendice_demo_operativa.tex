@@ -76,9 +76,15 @@ La pantalla \emph{SHACL}, complementaria, muestra el \emph{manifiesto de las sha
 
 \section{Artefactos y descarga del catálogo RDF}\label{sec:demo-artefactos}
 
-La pantalla \emph{Artefactos} expone todos los ficheros generados en \texttt{tmp\_pytest/} con vista previa estructurada para \ac{JSONLD}, Turtle, \ac{YAML}, \ac{CSV} y \ac{JSON}. El operario descarga directamente \texttt{dcat\_catalog.jsonld}, que es el artefacto final del recorrido. La pantalla \emph{Ejecuciones} (complementaria) lista cada \emph{job} con estado, duración, código de salida y enlace a sus artefactos asociados.
+La pantalla \emph{Artefactos} expone todos los ficheros generados en \texttt{tmp\_pytest/} con dos acciones por fila: \emph{Ver} (previsualización de texto en la misma página) y \emph{Abrir} (sirve el fichero con su tipo \ac{MIME} real en una pestaña nueva, de modo que el HTML se renderiza como página y el PDF se abre en el visor del navegador). El operario puede abrir o descargar directamente \texttt{dcat\_catalog.jsonld} —el artefacto final del recorrido—, el informe \ac{SHACL} en Turtle o el informe HTML/PDF de validación.
 
-\figuraMemoria{fig_web_pantalla_artefactos.png}{Pantalla \emph{Artefactos}: previsualización y descarga del catálogo \ac{JSONLD} final. Elaboración propia.}{fig:demo-artefactos}
+\figuraMemoria{fig_web_pantalla_artefactos.png}{Pantalla \emph{Artefactos}: listado de evidencias con vista previa (\emph{Ver}) y apertura nativa (\emph{Abrir}) para HTML renderizado y PDF en el visor del navegador. Elaboración propia.}{fig:demo-artefactos}
+
+\section{Historial de ejecuciones}\label{sec:demo-ejecuciones}
+
+La pantalla \emph{Ejecuciones} lista todos los \emph{jobs} generados por la consola en orden cronológico inverso. Cada entrada muestra el identificador único del \emph{job}, la operación ejecutada, el estado (\texttt{ok} o \texttt{error}), la duración en segundos y el código de salida. El operario puede abrir cualquier \emph{job} para ver el log completo, el resumen del resultado y los artefactos que produjo, lo que permite reconstruir la trazabilidad de cualquier ejecución pasada sin necesidad de volver a ejecutarla.
+
+\figuraMemoria{fig_web_pantalla_ejecuciones.png}{Pantalla \emph{Ejecuciones}: historial de \emph{jobs} con estado, duración, código de salida y acceso al log y artefactos. Elaboración propia.}{fig:demo-ejecuciones}
 
 \section{Federación del catálogo}\label{sec:demo-federacion}
 
@@ -120,7 +126,8 @@ La plataforma, por tanto, no se limita a producir un \ac{JSONLD} formalmente vá
 6 & DCAT — exportar             & \texttt{dcat\_catalog.jsonld}         & §~\ref{sec:rdf-semantica} \\ \hline
 7 & Validación — suite          & Informe consolidado \ac{JSON}         & cap.~\ref{cap:validacion} \\ \hline
 8 & SHACL — manifiesto congelado & \texttt{manifest.json} (informe \texttt{.ttl} en Artefactos) & §~\ref{sec:shacl} \\ \hline
-9 & Artefactos — descargar      & Catálogo \ac{RDF} entregable          & §~\ref{sec:demo-federacion} \\ \hline
+9 & Artefactos — descargar / Abrir & Catálogo \ac{RDF}, informe HTML/PDF & §~\ref{sec:demo-artefactos} \\ \hline
+10 & Ejecuciones — revisar log    & Historial de \emph{jobs} trazables    & §~\ref{sec:demo-ejecuciones} \\ \hline
 \end{tabular}
 \caption{Mapa del recorrido demo: acción del operario, artefacto producido y sección de la memoria donde se justifica formalmente. Elaboración propia.}
 \label{tab:demo-resumen}
