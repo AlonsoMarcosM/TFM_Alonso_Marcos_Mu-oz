@@ -98,6 +98,7 @@ la memoria referencia:
 
 ### Pendientes (lo que falta)
 
+- [ ] `fig_validation_report_html.png` — Informe HTML renderizado en el navegador. Pasos: (1) ejecuta **Suite completa** en Validación, (2) ve a **Artefactos**, (3) busca `tmp_pytest/validation_report.html` y pulsa **Abrir** → se abre el HTML en una pestaña. Captura la página completa mostrando el resumen de conformidad con los badges de color (verde/rojo) y el listado de resultados. Esta figura va en el capítulo de Validación de la memoria.
 - [ ] `fig_modulos_python.png` — explorador de VS Code en `tfm_ingestor/src/tfm_ingestor/` (sección D).
 - [ ] `fig_om_tabla_propiedades.png` — pestaña **Custom Properties** + **Tags** de una tabla `gold` en OpenMetadata tras el flujo (sección B).
 
