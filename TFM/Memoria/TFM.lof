@@ -21,26 +21,28 @@
 \contentsline {figure}{\numberline {5.6}{\ignorespaces Estructura interna del paquete \texttt {om\_dcat\_sync}. Elaboración propia.}}{48}{figure.caption.31}%
 \contentsline {figure}{\numberline {5.7}{\ignorespaces Propiedades personalizadas DCAT y etiquetas \texttt {dcat\_theme.*} aplicadas a una tabla \texttt {gold} en OpenMetadata tras ejecutar el workflow. Elaboración propia.}}{50}{figure.caption.32}%
 \contentsline {figure}{\numberline {5.8}{\ignorespaces Pantalla \emph {Gobierno} de la consola web: edición de la hoja \texttt {gold\_governance.csv}. Elaboración propia.}}{52}{figure.caption.33}%
-\contentsline {figure}{\numberline {5.9}{\ignorespaces Pantalla \emph {Workflow}: lanzamiento de \texttt {dry-run} y \texttt {apply} con resumen de cambios. Elaboración propia.}}{52}{figure.caption.34}%
+\contentsline {figure}{\numberline {5.9}{\ignorespaces Pantalla \emph {Workflow}: lanzamiento de \texttt {dry-run} y \texttt {apply} con resumen de cambios. Elaboración propia.}}{53}{figure.caption.34}%
 \contentsline {figure}{\numberline {5.10}{\ignorespaces Pantalla \emph {DCAT}: exportación y previsualización del catálogo \ac {JSONLD}. Elaboración propia.}}{53}{figure.caption.35}%
-\contentsline {figure}{\numberline {5.11}{\ignorespaces Pantalla \emph {Validación}: ejecución de la suite reproducible y resumen de resultados. Elaboración propia.}}{53}{figure.caption.36}%
+\contentsline {figure}{\numberline {5.11}{\ignorespaces Pantalla \emph {Validación}: ejecución de la suite reproducible y resumen de resultados. Elaboración propia.}}{54}{figure.caption.36}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {6.1}{\ignorespaces Validación externa del catálogo en el \emph {SEMIC SHACL Validator} (ITB, Comisión Europea): perfil DCAT-AP HVD 3.0.0 Base Zero, resultado SUCCESS sin errores ni advertencias. Elaboración propia.}}{58}{figure.caption.37}%
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Validación externa del catálogo en el \emph {SEMIC SHACL Validator} (ITB, Comisión Europea): perfil DCAT-AP HVD 3.0.0 Base Zero, resultado SUCCESS sin errores ni advertencias. Elaboración propia.}}{60}{figure.caption.37}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Informe de validación HTML renderizado en el navegador desde la consola web (botón \emph {Abrir} en la pantalla \emph {Artefactos}): resumen de conformidad por indicador y detalle del resultado. Elaboración propia.}}{62}{figure.caption.39}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {F.1}{\ignorespaces Pantalla inicial de la consola web y \emph {sidebar} con las secciones operativas. Elaboración propia.}}{82}{figure.caption.42}%
-\contentsline {figure}{\numberline {F.2}{\ignorespaces Pantalla \emph {Infraestructura}: comprobación de prerrequisitos y opciones de reset limpio. Elaboración propia.}}{83}{figure.caption.43}%
-\contentsline {figure}{\numberline {F.3}{\ignorespaces Pantalla \emph {Ingesta}: servicios PostgreSQL y datasets \texttt {gold} descubiertos por OpenMetadata. Elaboración propia.}}{83}{figure.caption.44}%
-\contentsline {figure}{\numberline {F.4}{\ignorespaces Pantalla \emph {Gobierno}: edición de la hoja {\small \nolinkurl {gold_governance.csv}} con listas controladas para temática y categoría \ac {HVD}. Elaboración propia.}}{84}{figure.caption.45}%
-\contentsline {figure}{\numberline {F.5}{\ignorespaces Pantalla \emph {Workflow}: dry-run y aplicación con resumen de cambios. Elaboración propia.}}{85}{figure.caption.46}%
-\contentsline {figure}{\numberline {F.6}{\ignorespaces Pantalla \emph {DCAT}: exportación del catálogo \ac {JSONLD} y previsualización. Elaboración propia.}}{86}{figure.caption.47}%
-\contentsline {figure}{\numberline {F.7}{\ignorespaces Pantalla \emph {Validación}: ejecución de la suite reproducible y resumen consolidado. Elaboración propia.}}{87}{figure.caption.48}%
-\contentsline {figure}{\numberline {F.8}{\ignorespaces Pantalla \emph {SHACL}: manifiesto de las \emph {shapes} DCAT-AP-ES congeladas (sin descarga en tiempo de ejecución). Elaboración propia.}}{87}{figure.caption.49}%
-\contentsline {figure}{\numberline {F.9}{\ignorespaces Pantalla \emph {Artefactos}: previsualización y descarga del catálogo \ac {JSONLD} final. Elaboración propia.}}{88}{figure.caption.50}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {F.1}{\ignorespaces Pantalla inicial de la consola web y \emph {sidebar} con las secciones operativas. Elaboración propia.}}{84}{figure.caption.43}%
+\contentsline {figure}{\numberline {F.2}{\ignorespaces Pantalla \emph {Infraestructura}: comprobación de prerrequisitos y opciones de reset limpio. Elaboración propia.}}{85}{figure.caption.44}%
+\contentsline {figure}{\numberline {F.3}{\ignorespaces Pantalla \emph {Ingesta}: servicios PostgreSQL y datasets \texttt {gold} descubiertos por OpenMetadata. Elaboración propia.}}{85}{figure.caption.45}%
+\contentsline {figure}{\numberline {F.4}{\ignorespaces Pantalla \emph {Gobierno}: edición de la hoja {\small \nolinkurl {gold_governance.csv}} con listas controladas para temática y categoría \ac {HVD}. Elaboración propia.}}{86}{figure.caption.46}%
+\contentsline {figure}{\numberline {F.5}{\ignorespaces Pantalla \emph {Workflow}: dry-run y aplicación con resumen de cambios. Elaboración propia.}}{87}{figure.caption.47}%
+\contentsline {figure}{\numberline {F.6}{\ignorespaces Pantalla \emph {DCAT}: exportación del catálogo \ac {JSONLD} y previsualización. Elaboración propia.}}{88}{figure.caption.48}%
+\contentsline {figure}{\numberline {F.7}{\ignorespaces Pantalla \emph {Validación}: ejecución de la suite reproducible y resumen consolidado. Elaboración propia.}}{89}{figure.caption.49}%
+\contentsline {figure}{\numberline {F.8}{\ignorespaces Pantalla \emph {SHACL}: manifiesto de las \emph {shapes} DCAT-AP-ES congeladas (sin descarga en tiempo de ejecución). Elaboración propia.}}{89}{figure.caption.50}%
+\contentsline {figure}{\numberline {F.9}{\ignorespaces Pantalla \emph {Artefactos}: listado de evidencias con vista previa (\emph {Ver}) y apertura nativa (\emph {Abrir}) para HTML renderizado y PDF en el visor del navegador. Elaboración propia.}}{90}{figure.caption.51}%
+\contentsline {figure}{\numberline {F.10}{\ignorespaces Pantalla \emph {Ejecuciones}: historial de \emph {jobs} con estado, duración, código de salida y acceso al log y artefactos. Elaboración propia.}}{91}{figure.caption.52}%
 \contentsfinish 

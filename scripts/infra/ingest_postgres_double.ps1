@@ -22,12 +22,22 @@ foreach ($serviceName in $ServiceNames) {
   }
   $resolvedServiceName = $serviceName.Trim()
   Write-Host "Ingesta tecnica PostgreSQL para servicio '$resolvedServiceName'..."
-  powershell -ExecutionPolicy Bypass -File ".\scripts\infra\ingest_postgres.ps1" `
-    -ServiceName $resolvedServiceName `
-    -DbUser $DbUser `
-    -DbPassword $DbPassword `
-    -DbHostPort $DbHostPort `
-    -DbName $DbName
+  $args = @(
+    "-ExecutionPolicy", "Bypass",
+    "-File", ".\scripts\infra\ingest_postgres.ps1",
+    "-ServiceName", $resolvedServiceName,
+    "-DbUser", $DbUser,
+    "-DbPassword", $DbPassword,
+    "-DbName", $DbName
+  )
+  if ($DbHostPort -and $DbHostPort.Trim().Length -gt 0) {
+    $args += @("-DbHostPort", $DbHostPort.Trim())
+  }
+
+  powershell @args
+  if ($LASTEXITCODE -ne 0) {
+    throw "La ingesta tecnica fallo para el servicio '$resolvedServiceName'."
+  }
 
   $summaries += @{
     service_name = $resolvedServiceName
