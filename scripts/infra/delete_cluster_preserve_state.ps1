@@ -14,7 +14,21 @@ function Resolve-Kind {
   if ($kindCmd) {
     return $kindCmd.Source
   }
-  throw "kind no encontrado en PATH."
+
+  # Copia portable provisionada por launch_infra.ps1 / check_prereqs.ps1.
+  $localKind = Join-Path (Resolve-RepoRoot) ".tools\kind\kind.exe"
+  if (Test-Path $localKind) {
+    return $localKind
+  }
+
+  $fromWinget = Get-ChildItem `
+    "$env:LOCALAPPDATA\Microsoft\WinGet\Packages" `
+    -Recurse -Filter kind.exe -ErrorAction SilentlyContinue | Select-Object -First 1
+  if ($fromWinget) {
+    return $fromWinget.FullName
+  }
+
+  throw "kind no encontrado en PATH ni en .tools/."
 }
 
 $repoRoot = Resolve-RepoRoot
