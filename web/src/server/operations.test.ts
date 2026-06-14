@@ -26,6 +26,7 @@ describe("operations catalog", () => {
       "validate-dcat",
       "validate-runtime",
       "run-validation-suite",
+      "render-validation-report",
       "validate-live-dcat",
     ]);
   });
