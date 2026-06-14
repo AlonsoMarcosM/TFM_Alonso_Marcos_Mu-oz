@@ -41,6 +41,10 @@ function Require-Command([string]$name) {
 }
 
 function Resolve-Kind {
+  # Version local fijada para reproducibilidad. Compatible con kubectl/k8s 1.31.x.
+  $kindVersion = "v0.24.0"
+  $localKind = Join-Path (Resolve-RepoRoot) ".tools\kind\kind.exe"
+
   $kindCmd = Get-Command kind -ErrorAction SilentlyContinue
   if ($kindCmd) {
     return $kindCmd.Source
@@ -54,7 +58,18 @@ function Resolve-Kind {
     return $fromWinget.FullName
   }
 
-  throw "kind no encontrado. Instalar con: winget install --id Kubernetes.kind -e"
+  if (Test-Path $localKind) {
+    return $localKind
+  }
+
+  # Auto-descarga portable a .tools/ (mismo patron que Resolve-Helm3). Hace el
+  # despliegue reproducible en cualquier equipo con solo Docker Desktop + Python.
+  Write-Host "kind no encontrado en PATH ni winget. Descargando version local $kindVersion..."
+  $kindDir = Join-Path (Resolve-RepoRoot) ".tools\kind"
+  New-Item -ItemType Directory -Path $kindDir -Force | Out-Null
+  $kindUrl = "https://kind.sigs.k8s.io/dl/$kindVersion/kind-windows-amd64"
+  Invoke-WebRequest -Uri $kindUrl -OutFile $localKind
+  return $localKind
 }
 
 function Get-ReleaseStatus([string]$helmPath, [string]$releaseName) {

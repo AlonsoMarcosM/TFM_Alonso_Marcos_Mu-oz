@@ -19,7 +19,20 @@ F:\DISCO DURO PORTABLE\INGENIERIA\MASTER\TFM\TFM_Alonso_Marcos_Mu-oz
 - Helm 3
 - Python 3.10+
 
-Kind es la opción recomendada para el clúster local reproducible. Helm 3 puede estar instalado en `PATH` o ser descargado automáticamente por los scripts del repo en `.tools/`.
+Kind es la opción recomendada para el clúster local reproducible. Tanto **Helm 3** como **kind** pueden estar instalados en `PATH` o ser **descargados automáticamente** por los scripts del repo en `.tools/` (`launch_infra.ps1` resuelve y, si faltan, descarga `helm.exe` y `kind.exe`). Por eso, en un equipo con solo Docker Desktop + Python, basta con tener `kubectl`: el resto se autoprovisiona. `check_prereqs.ps1` reconoce las copias locales en `.tools/`, por lo que la comprobación `-Strict` pasa aunque Helm/kind no estén en el `PATH` del sistema.
+
+### Consola web (opcional)
+
+La consola web (`web/`) es la ruta equivalente al CLI y no es necesaria para la suite de validación del núcleo. Si se quiere levantar o validar:
+
+- **Node.js ≥ 20.19** (recomendado **22 LTS**). Versiones anteriores (p. ej. 20.18) no cumplen los `engines` de las herramientas web actuales (Next.js 16 y `vitest` 4 / `rolldown`), que exigen `^20.19.0 || >=22.12.0`. Igual que Helm/kind, puede usarse una copia portable en `.tools/node/` sin tocar el Node del sistema.
+- **pnpm** (gestor Node canónico) provisionado con **corepack** (incluido en Node): `corepack prepare pnpm@10 --activate`.
+
+Notas de entorno reproducible para `web/`:
+
+- Si corepack falla al verificar firmas (`Cannot find matching keyid`, bug de claves caducadas en el corepack que acompaña a Node 20.18), exportar `COREPACK_INTEGRITY_KEYS=0`.
+- En instalaciones no interactivas (sin TTY), `pnpm install` puede pedir confirmación para purgar `node_modules`; exportar `CI=true` para que continúe.
+- Comandos: `pnpm install`, `pnpm test` (vitest), `pnpm build` (Next.js), `pnpm dev` (puerto 3000).
 
 ## Versión de OpenMetadata
 
