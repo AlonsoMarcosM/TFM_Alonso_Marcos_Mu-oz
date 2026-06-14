@@ -162,9 +162,9 @@ Resumen esperado de la suite viva en el entorno actual:
 - `governance_conforms: true`
 - `shacl_conforms: true`
 - `idempotence_conforms: true`
-- `first_applied: 2`
+- `first_applied: 4`
 - `second_applied: 0`
-- `tables_exported: 2`
+- `tables_exported: 4`
 
 ## Documentos clave
 
