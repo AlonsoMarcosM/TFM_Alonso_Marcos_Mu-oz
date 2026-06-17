@@ -1,0 +1,23 @@
+\section{Trazabilidad entre objetivos y evidencias}\label{sec:trazabilidad}
+
+La tabla~\ref{tab:trazabilidad} relaciona cada objetivo con el bloque donde se aborda y con la evidencia versionada que lo respalda.\ct{Hecho: la trazabilidad objetivos-evidencias se ha movido a Resultados (antes estaba en Objetivos), como pedía el tutor.}
+
+\begin{table}[h]
+\footnotesize
+\centering
+\begin{tabular}{|L{3.6cm}|L{4.6cm}|L{5.2cm}|}
+\hline
+\rowcolor{tema!10}
+\bft{Objetivo} & \bft{Bloque} & \bft{Evidencia del repositorio} \\ \hline
+Análisis DCAT-AP-ES & Estado del arte & \texttt{docs/dcat\_mapping.md}, bibliografía oficial \\ \hline
+Mapeo OpenMetadata & Arquitectura e implementación & \texttt{dcat\_export.py}, \texttt{governance\_service.py} \\ \hline
+Configuración de gobierno & Implementación & \texttt{gold\_governance.csv}, \texttt{governance\_defaults.yaml} \\ \hline
+Doble ingesta PostgreSQL & Implementación y validación & \texttt{ingest\_postgres\_double.ps1}, \texttt{gold\_governance.csv} \\ \hline
+Workflow reproducible & Implementación y validación & \texttt{workflow\_service.py}, \texttt{run\_validation\_suite.ps1} \\ \hline
+Exportación JSON-LD & Validación & \texttt{dcat\_export.py}, artefactos \texttt{*.jsonld} \\ \hline
+Validación SHACL & Validación & \texttt{shacl\_validation.py}, shapes vendorizadas \\ \hline
+Consola operativa & Implementación & \texttt{web/}, \texttt{operations.ts}, \texttt{jobRunner.ts} \\ \hline
+\end{tabular}
+\caption{Trazabilidad entre objetivos, bloques de la memoria y evidencias. Elaboración propia.}
+\label{tab:trazabilidad}
+\end{table}

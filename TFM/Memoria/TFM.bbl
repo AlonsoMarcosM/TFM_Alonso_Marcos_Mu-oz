@@ -1,64 +1,10 @@
 \begin{thebibliography}{10}
 
-\bibitem{uclmFichaTfe2026}
-{Universidad de Castilla-La Mancha}.
-\newblock {Ficha oficial del Trabajo Fin de Estudios: Diseño y configuración
-  de un modelo de metadatos en OpenMetadata conforme al estándar DCAT-AP para
-  la interoperabilidad de catálogos de datos}.
-\newblock \url{https://tfe.apps.uclm.es/ges_mi_tfe.aspx}, 2026.
-\newblock Portal institucional de gestión del Trabajo Fin de Estudios de la
-  UCLM (acceso autenticado). Copia literal conservada localmente en
-  \texttt{docs/tfe\_ficha\_oficial\_uclm.txt}.
-
-\bibitem{w3cDcat3}
-{W3C}.
-\newblock {Data Catalog Vocabulary (DCAT) - Version 3}.
-\newblock \url{https://www.w3.org/TR/vocab-dcat-3/}, 2024.
-\newblock W3C Recommendation; última consulta: mayo de 2026.
-
-\bibitem{datosGobDcatApEs2025}
-{Iniciativa Aporta}.
-\newblock {Guía técnica y modelo DCAT-AP-ES 1.0.0}.
-\newblock \url{https://datosgobes.github.io/DCAT-AP-ES/}, 2025.
-\newblock Última consulta: mayo de 2026.
-
-\bibitem{datosGobDama2021}
-David Puig and Juan Mañes.
-\newblock {El potencial uso de la metodología de DAMA en la gestión de los
-  datos abiertos}.
-\newblock
-  \url{https://datos.gob.es/es/blog/el-potencial-uso-de-la-metodologia-de-dama-en-la-gestion-de-los-datos-abiertos},
-  2021.
-\newblock Publicado en datos.gob.es; última consulta: mayo de 2026.
-
-\bibitem{damaDmbok}
-{DAMA International}.
-\newblock {DAMA-DMBOK: Data Management Body of Knowledge}.
-\newblock
-  \url{https://dama.org/learning-resources/dama-data-management-body-of-knowledge-dmbok/},
-  2026.
-\newblock Última consulta: mayo de 2026.
-
-\bibitem{andersonKanban}
-David~J. Anderson.
-\newblock {\em {Kanban: Successful Evolutionary Change for Your Technology
-  Business}}.
-\newblock Blue Hole Press, 2010.
-\newblock ISBN 978-0984521401.
-
-\bibitem{pmiPmbok7}
-{Project Management Institute}.
-\newblock {A Guide to the Project Management Body of Knowledge (PMBOK Guide),
-  7th Edition}, 2021.
-\newblock ISBN 978-1628256642.
-
-\bibitem{githubProjects}
-{GitHub, Inc.}
-\newblock {About Projects (GitHub Projects)}.
-\newblock
-  \url{https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects},
-  2026.
-\newblock Documentación oficial; última consulta: mayo de 2026.
+\bibitem{europeDcatAp}
+{SEMIC -- European Commission}.
+\newblock {DCAT Application Profile for Data Portals in Europe (DCAT-AP)}.
+\newblock \url{https://semiceu.github.io/DCAT-AP/releases/2.1.1/}, 2023.
+\newblock Versión 2.1.1; última consulta: mayo de 2026.
 
 \bibitem{w3cRdf11}
 {W3C}.
@@ -72,11 +18,43 @@ David~J. Anderson.
 \newblock \url{https://www.w3.org/TR/json-ld11/}, 2020.
 \newblock W3C Recommendation.
 
-\bibitem{europeDcatAp}
-{SEMIC -- European Commission}.
-\newblock {DCAT Application Profile for Data Portals in Europe (DCAT-AP)}.
-\newblock \url{https://semiceu.github.io/DCAT-AP/releases/2.1.1/}, 2023.
-\newblock Versión 2.1.1; última consulta: mayo de 2026.
+\bibitem{w3cDcat3}
+{W3C}.
+\newblock {Data Catalog Vocabulary (DCAT) - Version 3}.
+\newblock \url{https://www.w3.org/TR/vocab-dcat-3/}, 2024.
+\newblock W3C Recommendation; última consulta: mayo de 2026.
+
+\bibitem{datosGobDcatApEs2025}
+{Iniciativa Aporta}.
+\newblock {Guía técnica y modelo DCAT-AP-ES 1.0.0}.
+\newblock \url{https://datosgobes.github.io/DCAT-AP-ES/}, 2025.
+\newblock Última consulta: mayo de 2026.
+
+\bibitem{euHvdRegulation}
+{Comisión Europea}.
+\newblock {Reglamento de Ejecución (UE) 2023/138 relativo a conjuntos de datos
+  de alto valor (HVD)}.
+\newblock
+  \url{https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32023R0138},
+  2023.
+\newblock Diario Oficial de la Unión Europea; última consulta: mayo de 2026.
+
+\bibitem{damaDmbok}
+{DAMA International}.
+\newblock {DAMA-DMBOK: Data Management Body of Knowledge}.
+\newblock
+  \url{https://dama.org/learning-resources/dama-data-management-body-of-knowledge-dmbok/},
+  2026.
+\newblock Última consulta: mayo de 2026.
+
+\bibitem{datosGobDama2021}
+David Puig and Juan Mañes.
+\newblock {El potencial uso de la metodología de DAMA en la gestión de los
+  datos abiertos}.
+\newblock
+  \url{https://datos.gob.es/es/blog/el-potencial-uso-de-la-metodologia-de-dama-en-la-gestion-de-los-datos-abiertos},
+  2021.
+\newblock Publicado en datos.gob.es; última consulta: mayo de 2026.
 
 \bibitem{datosGobValidacionDcatApEs2025}
 {Iniciativa Aporta}.
@@ -118,6 +96,55 @@ David~J. Anderson.
 \newblock \url{https://www.amundsen.io/amundsen/}, 2026.
 \newblock Documentación oficial; última consulta: mayo de 2026.
 
+\bibitem{kubernetesConcepts}
+{The Kubernetes Authors}.
+\newblock {Kubernetes Concepts}.
+\newblock \url{https://kubernetes.io/docs/concepts/}, 2026.
+\newblock Documentación oficial; última consulta: mayo de 2026.
+
+\bibitem{pytestDocs}
+{pytest team}.
+\newblock {pytest -- helps you write better programs}.
+\newblock \url{https://docs.pytest.org/}, 2026.
+\newblock Documentación oficial; última consulta: mayo de 2026.
+
+\bibitem{vitestDocs}
+{Vitest team}.
+\newblock {Vitest -- Next Generation Testing Framework}.
+\newblock \url{https://vitest.dev/}, 2026.
+\newblock Documentación oficial; última consulta: mayo de 2026.
+
+\bibitem{datosGobNtiRisp}
+{Gobierno de España}.
+\newblock {Norma Técnica de Interoperabilidad de Reutilización de Recursos de
+  Información del Sector Público (NTI-RISP)}.
+\newblock
+  \url{https://datos.gob.es/es/doc-tags/norma-tecnica-de-interoperabilidad-nti-risp},
+  2013.
+\newblock Resolución de 19 de febrero de 2013, BOE 4 de marzo de 2013; última
+  consulta: mayo de 2026.
+
+\bibitem{andersonKanban}
+David~J. Anderson.
+\newblock {\em {Kanban: Successful Evolutionary Change for Your Technology
+  Business}}.
+\newblock Blue Hole Press, 2010.
+\newblock ISBN 978-0984521401.
+
+\bibitem{pmiPmbok7}
+{Project Management Institute}.
+\newblock {A Guide to the Project Management Body of Knowledge (PMBOK Guide),
+  7th Edition}, 2021.
+\newblock ISBN 978-1628256642.
+
+\bibitem{githubProjects}
+{GitHub, Inc.}
+\newblock {About Projects (GitHub Projects)}.
+\newblock
+  \url{https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects},
+  2026.
+\newblock Documentación oficial; última consulta: mayo de 2026.
+
 \bibitem{dockerOverview}
 {Docker, Inc.}
 \newblock {Docker overview}.
@@ -128,12 +155,6 @@ David~J. Anderson.
 {Kubernetes SIGs}.
 \newblock {kind -- Kubernetes IN Docker}.
 \newblock \url{https://kind.sigs.k8s.io/docs/}, 2026.
-\newblock Documentación oficial; última consulta: mayo de 2026.
-
-\bibitem{kubernetesConcepts}
-{The Kubernetes Authors}.
-\newblock {Kubernetes Concepts}.
-\newblock \url{https://kubernetes.io/docs/concepts/}, 2026.
 \newblock Documentación oficial; última consulta: mayo de 2026.
 
 \bibitem{helmDocs}
@@ -159,28 +180,6 @@ David~J. Anderson.
 \newblock {TypeScript Handbook}.
 \newblock \url{https://www.typescriptlang.org/docs/handbook/intro.html}, 2026.
 \newblock Documentación oficial; última consulta: mayo de 2026.
-
-\bibitem{pytestDocs}
-{pytest team}.
-\newblock {pytest -- helps you write better programs}.
-\newblock \url{https://docs.pytest.org/}, 2026.
-\newblock Documentación oficial; última consulta: mayo de 2026.
-
-\bibitem{vitestDocs}
-{Vitest team}.
-\newblock {Vitest -- Next Generation Testing Framework}.
-\newblock \url{https://vitest.dev/}, 2026.
-\newblock Documentación oficial; última consulta: mayo de 2026.
-
-\bibitem{datosGobNtiRisp}
-{Gobierno de España}.
-\newblock {Norma Técnica de Interoperabilidad de Reutilización de Recursos de
-  Información del Sector Público (NTI-RISP)}.
-\newblock
-  \url{https://datos.gob.es/es/doc-tags/norma-tecnica-de-interoperabilidad-nti-risp},
-  2013.
-\newblock Resolución de 19 de febrero de 2013, BOE 4 de marzo de 2013; última
-  consulta: mayo de 2026.
 
 \bibitem{mermaidDocs}
 {Mermaid Contributors}.
@@ -218,15 +217,6 @@ David~J. Anderson.
 \newblock {pySHACL -- Python validator for SHACL}.
 \newblock \url{https://github.com/RDFLib/pySHACL}, 2026.
 \newblock Repositorio oficial; última consulta: mayo de 2026.
-
-\bibitem{euHvdRegulation}
-{Comisión Europea}.
-\newblock {Reglamento de Ejecución (UE) 2023/138 relativo a conjuntos de datos
-  de alto valor (HVD)}.
-\newblock
-  \url{https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32023R0138},
-  2023.
-\newblock Diario Oficial de la Unión Europea; última consulta: mayo de 2026.
 
 \bibitem{itbSemicShacl}
 {Comisión Europea -- DG DIGIT, Interoperability Test Bed}.

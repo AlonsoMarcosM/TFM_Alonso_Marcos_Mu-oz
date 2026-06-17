@@ -1,114 +1,55 @@
-\chapter{Validación y resultados}\label{cap:validacion}
+\chapter{Conclusiones y trabajos futuros}\label{cap:conclusiones}
 
-Este capítulo evalúa la corrección de la salida producida por la plataforma. Complementa el recorrido operativo \emph{end-to-end} documentado en el Anexo~\ref{ap:demo-operativa}, donde se narran las pantallas de la consola web y los artefactos producidos en cada paso. Aquí se mide qué garantiza esa salida; allí se muestra cómo se obtiene paso a paso.
+Este capítulo cierra la memoria revisando el objetivo principal, comprobando el cumplimiento de los objetivos parciales y dónde se cubren, justificando las competencias asociadas y planteando las líneas de evolución.\ct{El tutor reestructura las conclusiones: revisión del objetivo principal, recordatorio de los objetivos y dónde se cubren, justificación de competencias y trabajo futuro. Las secciones 7.1-7.4 de ``Discusión'' van a Resultados, y 7.5-7.6 a anexos.}
 
-\section{Estrategia de validación}
+\section{Revisión del objetivo principal}
 
-La validación combina tres niveles:
+El objetivo general, diseñar y desplegar una configuración de metadatos en OpenMetadata alineada con DCAT-AP que mejore la interoperabilidad y la gestión semántica de catálogos de datos, se ha cumplido. El trabajo no se queda en una configuración conceptual: entrega una Plataforma de Gobierno del Dato reproducible que descubre activos técnicos en OpenMetadata, los enriquece con metadatos funcionales mediante una hoja de gobierno versionada, sincroniza ese gobierno de forma repetible, exporta un catálogo DCAT-AP-ES en JSON-LD y valida su conformidad con SHACL para el caso HVD, contrastada además con el validador europeo oficial.
 
-\begin{enumerate}
-  \item pruebas automatizadas de módulos Python y servidor web;
-  \item validación estructural del estado vivo de OpenMetadata;
-  \item validación semántica del catálogo JSON-LD mediante SHACL.
-\end{enumerate}
+La aportación central es la separación de tres responsabilidades: OpenMetadata como catálogo técnico, la hoja funcional como punto de curación editorial y un núcleo Python único como mecanismo de sincronización, exportación y validación, reutilizado por la CLI y la consola web sin duplicar reglas de negocio. Esa separación es la que hace el resultado reproducible, trazable y operable también por perfiles no desarrolladores.
 
-Esta estrategia evita depender de una comprobación visual de la interfaz. Cada resultado debe poder reproducirse mediante comandos versionados y artefactos generados.
+\section{Cumplimiento de los objetivos}
 
-\section{Pruebas automatizadas}
-
-El repositorio contiene pruebas \texttt{pytest} para configuración, reglas de mapeo, hoja funcional, exportación DCAT, validación SHACL, validación runtime y workflow. La app web incluye tests para operaciones, lectura y escritura de CSV, resumen de jobs, artefactos y redacción de secretos. Los comandos exactos de ejecución para reproducir esta capa de pruebas figuran en el Anexo~\ref{ap:validacion-web}.
-
-Los comandos principales se muestran en el listado~\ref{code:pytest-pnpm}.
-
-\begin{lstlisting}[language=PowerShell, caption={Ejecución de la suite \texttt{pytest} del núcleo Python y de los tests \texttt{vitest} de la consola web.}, label=code:pytest-pnpm, captionpos=b]
-$env:PYTEST_DISABLE_PLUGIN_AUTOLOAD="1"; python -m pytest
-cd .\web
-pnpm test
-\end{lstlisting}
-
-Estas pruebas cubren la lógica interna sin exigir que el tribunal inspeccione manualmente cada módulo.
-
-\section{Validación estructural del estado vivo}
-
-La validación runtime compara la instancia de OpenMetadata con el contrato esperado. Comprueba que existan servicio, base de datos, esquemas, tablas y columnas definidos por \texttt{sql/opendata\_demo\_init.sql}; también comprueba que los datasets \texttt{gold} publicados tengan los metadatos de gobierno esperados según la hoja funcional.
-
-El comando canónico se muestra en el listado~\ref{code:validate-runtime}.
-
-\begin{lstlisting}[language=PowerShell, caption={Validación estructural del estado vivo de OpenMetadata desde el CLI \texttt{om\_dcat\_sync}.}, label=code:validate-runtime, captionpos=b]
-python -m om_dcat_sync validate-runtime --strict `
-    --output tmp_pytest/runtime_validation_report.json
-\end{lstlisting}
-
-Este nivel valida trazabilidad entre la fuente técnica, OpenMetadata y la configuración funcional.
-
-\section{Validación SHACL}
-
-La validación SHACL usa el caso \texttt{hvd} de DCAT-AP-ES. Según la documentación oficial, este caso incluye las restricciones generales y las formas específicas para conjuntos de datos de alto valor \cite{datosGobValidacionDcatApEs2025}. En el repositorio, esas shapes están vendorizadas en \texttt{tfm\_ingestor/src/tfm\_ingestor/resources/shacl/}, junto con un manifiesto que fija el origen.
-
-La validación puede ejecutarse de forma aislada (listado~\ref{code:validate-dcat}).
-
-\begin{lstlisting}[language=PowerShell, caption={Validación SHACL aislada del catálogo JSON-LD ya exportado, caso HVD.}, label=code:validate-dcat, captionpos=b]
-python -m om_dcat_sync validate-dcat --profile-case hvd --allow-warnings
-\end{lstlisting}
-
-La ruta recomendada, sin embargo, es integrarla dentro del workflow completo (listado~\ref{code:workflow-run}), que ejecuta sincronización, exportación y validación en un único paso idempotente.
-
-\begin{lstlisting}[language=PowerShell, caption={Workflow canónico end-to-end: sincroniza gobierno, exporta DCAT-AP-ES y valida SHACL HVD.}, label=code:workflow-run, captionpos=b]
-python -m om_dcat_sync workflow run --allow-warnings
-\end{lstlisting}
-
-\section{Validación externa con el validador europeo (SEMIC/ITB)}\label{sec:validacion-europea}
-
-Además de la validación \ac{SHACL} local con las \emph{shapes} \ac{DCATAPES} congeladas, el catálogo exportado se ha sometido a una validación externa e independiente con el \emph{SEMIC SHACL Validator} del \emph{Interoperability Test Bed} (ITB) de la Comisión Europea~\cite{itbSemicShacl}. Este servicio comprueba la conformidad de un grafo \ac{RDF} frente a las especificaciones SEMIC oficiales. Se cargó el catálogo \fqn{validation_suite_catalog.jsonld} y se validó contra el grupo DCAT-AP, perfil \textbf{DCAT-AP HVD}, versión \textbf{3.0.0 Base Zero} (sin conocimiento de fondo), con sintaxis de entrada \ac{JSONLD}.
-
-El resultado, recogido en la figura~\ref{fig:validacion-europea}, fue \textbf{SUCCESS} con \textbf{0 errores, 0 advertencias y 0 mensajes}. Este hallazgo es relevante por dos motivos. Primero, confirma que la salida no solo cumple el perfil nacional \ac{DCATAPES} validado localmente, sino también el perfil europeo \emph{DCAT-AP HVD} verificado por una herramienta oficial ajena a la plataforma. Segundo, la modalidad \emph{Base Zero} aplica las restricciones sin resolver vocabularios externos, de modo que una conformidad sin hallazgos evidencia que la estructura, las relaciones y las propiedades del grafo son correctas por sí mismas y no por inferencias del validador.
-
-\figuraMemoria{fig_validation_shacl_europe.png}{Validación externa del catálogo en el \emph{SEMIC SHACL Validator} (ITB, Comisión Europea): perfil DCAT-AP HVD 3.0.0 Base Zero, resultado SUCCESS sin errores ni advertencias. Elaboración propia.}{fig:validacion-europea}
-
-\section{Resultados del caso de uso de validación}
-
-El caso de uso de validación produce dos datasets publicables y sus recursos asociados:
-
-\begin{itemize}
-  \item \emph{Agenda cultural pública}, a partir de \fqn{gold.agenda_cultural_publica};
-  \item \emph{Resumen de movilidad por municipio}, a partir de \fqn{gold.movilidad_resumen_municipio}.
-\end{itemize}
-
-La documentación del repositorio registra una ejecución completa de la suite con los siguientes resultados: conformidad runtime, conformidad técnica, conformidad de gobierno, conformidad SHACL, idempotencia positiva, dos tablas exportadas, dos cambios aplicados en la primera ejecución y cero cambios aplicados en la segunda. Esta última cifra es relevante porque evidencia idempotencia: una vez sincronizado el estado, repetir el workflow no vuelve a aplicar operaciones innecesarias.
+Los objetivos específicos propuestos para el TFE se han cubierto en su totalidad, en los bloques que recoge la tabla~\ref{tab:cumplimiento-objetivos}.
 
 \begin{table}[h]
 \footnotesize
 \centering
-\begin{tabular}{|L{5.5cm}|L{4cm}|L{4cm}|}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{|L{5.4cm}|L{4.0cm}|L{3.0cm}|}
 \hline
 \rowcolor{tema!10}
-\bft{Comprobación} & \bft{Resultado documentado} & \bft{Interpretación} \\ \hline
-Estado runtime & Conforme & OpenMetadata contiene los activos esperados. \\ \hline
-Gobierno aplicado & Conforme & La hoja funcional coincide con metadatos vivos. \\ \hline
-SHACL HVD (local) & Conforme con warnings permitidos & No hay violaciones bloqueantes. \\ \hline
-Validación europea (ITB) & SUCCESS (0/0/0) & Conforme con DCAT-AP HVD 3.0.0 en el validador oficial europeo. \\ \hline
-Tablas exportadas & 2 & Se exportan los dos datasets \texttt{gold}. \\ \hline
-Segunda ejecución & 0 cambios aplicados & El workflow es idempotente. \\ \hline
+\bft{Objetivo} & \bft{Cómo se ha cubierto} & \bft{Dónde} \\ \hline
+Analizar DCAT-AP y sus extensiones & Análisis de DCAT, DCAT-AP, DCAT-AP-ES y HVD, RDF/JSON-LD y SHACL & Estado del arte \\ \hline
+Mapear clases y propiedades de DCAT-AP con OpenMetadata & Mapeo activo de \ident{dcat:Catalog}, \ident{dcat:Dataset}, \ident{dcat:Distribution}, \ident{dcat:DataService} y \ident{foaf:Agent} & Resultados (arquitectura) y Anexo de mapeo \\ \hline
+Configurar taxonomías y \emph{custom metadata} en OpenMetadata & Custom properties DCAT y etiquetas \texttt{dcat\_theme.*} gobernadas de forma repetible & Resultados (implementación) \\ \hline
+Implementar un pipeline de ingestión/sincronización & Doble ingesta PostgreSQL y workflow \texttt{om\_dcat\_sync} de sincronización & Resultados (implementación) \\ \hline
+Validar mediante exportación/federación del catálogo & Exportación JSON-LD y validación SHACL HVD (local y validador europeo) & Resultados (validación) \\ \hline
+Evaluar beneficios y limitaciones & Discusión de beneficios, limitaciones y amenazas a la validez & Resultados (discusión) \\ \hline
 \end{tabular}
-\caption{Resumen de resultados del caso de uso de validación. Elaboración propia a partir de la documentación del repositorio.}
-\label{tab:resultados}
+\caption{Cumplimiento de los objetivos del TFE y bloque donde se evidencian. Elaboración propia.}
+\label{tab:cumplimiento-objetivos}
 \end{table}
 
-\section{Artefactos generados}
+\section{Justificación de competencias}
 
-Los artefactos esperados son:
+El trabajo desarrolla las dos competencias oficialmente asociadas al TFE:
 
 \begin{itemize}
-  \item catálogo JSON-LD exportado;
-  \item informe SHACL en Turtle;
-  \item informe runtime en JSON;
-  \item plan de workflow en JSON;
-  \item resumen de suite de validación;
-  \item informe de validación legible en HTML y PDF.
+  \item \textbf{CN02} (conocer las arquitecturas para el tratamiento masivo de datos y las técnicas de almacenamiento, orquestación y gestión de pipelines): se evidencia en el despliegue reproducible sobre Kubernetes y Helm, en la fuente PostgreSQL organizada en capas \emph{medallion}, en la doble ingesta y en el workflow orquestado de extremo a extremo.
+  \item \textbf{CP03} (implementar marcos de trabajo de gobierno de datos y estrategias de aseguramiento de la calidad para gestionar la integridad, la seguridad y la accesibilidad de los datos masivos): se evidencia en el gobierno centralizado y declarativo de metadatos, la curación funcional bajo responsabilidad humana, la conformidad verificable con DCAT-AP-ES y el perfil HVD mediante SHACL, y la trazabilidad entre la fuente técnica, el catálogo técnico, la hoja funcional, el JSON-LD y el informe de validación.
 \end{itemize}
 
-A partir del resumen JSON de la validación, la plataforma genera un \emph{informe legible} en HTML y PDF mediante el comando \texttt{om\_dcat\_sync render-report}, que se apoya en la biblioteca \texttt{fpdf2} para el PDF. El informe resalta los indicadores de conformidad (estado runtime, gobierno, idempotencia y \ac{SHACL}) y aplana el resto de resultados en un listado consultable. Puede generarse desde la consola web —pantalla \emph{Validación}— o desde el \ac{CLI}, y queda disponible como evidencia autocontenida para revisión, defensa o entrega a terceros sin necesidad de inspeccionar el \ac{JSON} en bruto. La consola web sirve el informe HTML con su tipo \ac{MIME} real mediante el botón \emph{Abrir}, de modo que se renderiza directamente en el navegador (figura~\ref{fig:informe-html-renderizado}).
+El trabajo asume además limitaciones explícitas (datos sintéticos, un subconjunto controlado de DCAT-AP-ES y ausencia de publicación automática hacia portales externos), diseñadas como frontera de alcance y no como déficit técnico, que no afectan al resultado principal: una solución reproducible, trazable y defendible que transforma activos técnicos gobernados en un catálogo interoperable validado formalmente.
 
-\figuraMemoria{fig_validation_report_html.png}{Informe de validación HTML renderizado en el navegador desde la consola web: resumen de conformidad por indicador y detalle del resultado. Elaboración propia.}{fig:informe-html-renderizado}
+\section{Trabajo futuro}
 
-Estos ficheros se generan en \texttt{tmp\_pytest/}. No se versionan porque son reproducibles y dependen de la ejecución local, pero sí se referencian como evidencia regenerable. La cadena de pasos para regenerarlos desde un repositorio limpio se describe en el Anexo~\ref{ap:reproduccion}, y el recorrido visual que conduce a cada artefacto en el Anexo~\ref{ap:demo-operativa}.
+Las líneas de evolución más razonables son:
+
+\begin{itemize}
+  \item publicar automáticamente el JSON-LD en un CKAN o portal compatible cuando exista un destino real;
+  \item ampliar la cobertura de metadatos recomendados y opcionales de DCAT-AP-ES;
+  \item incorporar aprobaciones editoriales y roles si la web pasa a uso multiusuario;
+  \item automatizar ejecuciones periódicas mediante Airflow, CI/CD o un scheduler, entendidas como automatización de la reproducibilidad y no como delegación de la decisión de publicar;
+  \item validar el comportamiento con más fuentes técnicas y más datasets \texttt{gold}, por ejemplo mediante ingesta desde APIs o bases de datos públicas.
+\end{itemize}

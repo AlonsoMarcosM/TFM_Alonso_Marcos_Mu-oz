@@ -1,6 +1,6 @@
 \chapter{Reproducción del caso de uso de validación}\label{ap:reproduccion}
 
-Este anexo concentra los comandos exactos para reproducir el caso de uso de validación desde un repositorio limpio. Se asume Windows 10 u 11 con PowerShell, Docker Desktop, Node.js 20 o superior, Python 3.11 o superior y MiKTeX para compilar la memoria. Los comandos están extraídos de \texttt{scripts/infra/} y de la documentación canónica del repositorio.
+Este anexo concentra los comandos exactos para reproducir el caso de uso de validación desde un repositorio limpio, clonado del repositorio público del TFM en GitHub.\footnote{\url{https://github.com/AlonsoMarcosM/TFM_Alonso_Marcos_Mu-oz}} Se asume Windows 10 u 11 con PowerShell, Docker Desktop, Node.js 20 o superior, Python 3.11 o superior y MiKTeX para compilar la memoria. Los comandos están extraídos de \texttt{scripts/infra/} y de la documentación canónica del repositorio.
 
 \section{Preparación del entorno}
 
@@ -34,4 +34,4 @@ python -m om_dcat_sync workflow run --allow-warnings
 powershell -ExecutionPolicy Bypass -File .\scripts\infra\run_validation_suite.ps1
 \end{lstlisting}
 
-La salida de la suite incluye \texttt{runtime\_validation\_report.json}, \texttt{dcat\_catalog.jsonld} y \texttt{dcat\_validation\_report.ttl} en \texttt{tmp\_pytest/}.
+La salida de la suite incluye \fqn{runtime_validation_report.json}, \fqn{dcat_catalog.jsonld} y \fqn{dcat_validation_report.ttl} en \fqn{tmp_pytest/}.

@@ -112,6 +112,7 @@
 \setlength{\headheight}{15pt}
 \emergencystretch=3em
 \Urlmuskip=0mu plus 2mu\relax
+\emergencystretch=3.5em
 
 % -------------------------------
 % Ajuste tipográfico fino y ruptura de identificadores largos
@@ -128,6 +129,11 @@
 % _, ., /, - como puntos de ruptura naturales y no crea hipervínculo.
 \urlstyle{tt}
 \newcommand{\fqn}[1]{{\small\nolinkurl{#1}}}
+% \ident: identificador monoespaciado a tamaño normal que SÍ puede cortarse en
+% puntos naturales (_ . : - /), para que clases e identificadores largos no
+% invadan el margen. Alternativa partible a \texttt para código en línea.
+% (\code ya está tomado por el entorno flotante de listados.)
+\newcommand{\ident}[1]{{\nolinkurl{#1}}}
 %\hypersetup{
 %    colorlinks,
 %    citecolor=black,
@@ -156,9 +162,9 @@
 \captionsetup{labelfont={tema, bf}}     % Estilo
 \captionsetup{font=normalsize}          % Tamaño
 \captionsetup{width=.9\linewidth}       % Anchura del título
- % Distancia de la figura al texto.
-\setlength{\intextsep}{1cm} 
-\setlength{\textfloatsep}{1cm}         
+ % Distancia de la figura al texto (ajustada para control de extensión).
+\setlength{\intextsep}{0.45cm}
+\setlength{\textfloatsep}{0.45cm}
        
 
 % -------------------------------
@@ -214,9 +220,12 @@
 	{}
  
 % Subsubsección
+% Numerada (secnumdepth=3) para que las subsecciones degradadas al fusionar
+% capítulos en "Resultados" conserven número y sean referenciables con \ref.
+\setcounter{secnumdepth}{3}
 \titleformat{\subsubsection}
 	{\bf\color{tema}}
-	{}
+	{\thesubsubsection.}
 	{0.75ex}
 	{}
 	 
@@ -288,6 +297,33 @@
 
 % Notas
 \usepackage[textsize=tiny,spanish,shadow,textwidth=2cm]{todonotes}
+
+% =====================================================================
+% PROVISIONAL  --  Comentarios de revisión del tutor.
+% Genera una marca pequeña al margen en el cuerpo (C1, C2, ...) y un
+% "Índice de comentarios del tutor" mediante \listoftodos en el frontmatter.
+% Cada \ct{...} registra el comentario / el cambio realizado.
+%
+% BORRAR ANTES DE LA ENTREGA FINAL:
+%   1) eliminar la línea \listoftodos[\ctlistname] de TFM.tex (frontmatter),
+%   2) cambiar el \usepackage de todonotes a la opción [disable]
+%      (o retirar las llamadas \ct{...} del cuerpo).
+% Con la opción [disable] todas las marcas \ct y el índice desaparecen
+% sin tocar el cuerpo de la memoria.
+% =====================================================================
+\newcounter{ctcount}
+\newcommand{\ctlistname}{Índice de comentarios del tutor (provisional)}
+% \ct{texto del comentario del tutor o del cambio realizado}
+% Marca al margen "Cn" + entrada "[Cn] texto" en el índice de comentarios.
+% La marca al margen "Cn" es un hiperenlace al destino \hypertarget{idx:ct}
+% situado en el "Índice de comentarios del tutor" (frontmatter), para poder
+% saltar del texto al índice con un clic. El índice (\listoftodos) ya enlaza
+% de vuelta a cada marca (todonotes + hyperref).
+\newcommand{\ct}[1]{%
+  \refstepcounter{ctcount}%
+  \todo[color=orange!25, bordercolor=orange!80, linecolor=orange!80,
+        size=\tiny, caption={[C\thectcount]~#1}]{\hyperlink{idx:ct}{\textbf{C\thectcount}}}%
+}
 
 % Para generar textos "random"
  
@@ -437,8 +473,8 @@
     framesep=6pt,
     xleftmargin=12pt,
     xrightmargin=4pt,
-    aboveskip=1em,
-    belowskip=1em,
+    aboveskip=0.5em,
+    belowskip=0.5em,
     frame=single,
     columns=fullflexible,
     keepspaces=true,
@@ -479,11 +515,11 @@
 % Figuras de la memoria: ancho por defecto 0.9\linewidth, altura limitada a
 % 0.7\textheight para evitar floats demasiado grandes; conserva relación de
 % aspecto. Si la figura no existe, muestra una caja "Captura pendiente".
-\newcommand{\figuraMemoria}[4][0.9\linewidth]{%
+\newcommand{\figuraMemoria}[4][\linewidth]{%
 \begin{figure}[htbp]
 \centering
 \IfFileExists{figs/#2}{%
-  \includegraphics[width=#1,height=0.7\textheight,keepaspectratio]{figs/#2}%
+  \includegraphics[width=#1,height=0.62\textheight,keepaspectratio]{figs/#2}%
 }{%
   \fbox{%
     \begin{minipage}[c][5cm][c]{0.85\linewidth}

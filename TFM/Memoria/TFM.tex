@@ -2,7 +2,10 @@
 % Memoria del TFM en la ESIIAB/ESICR de la UCLM
 % Compilar con XeLaTeX
 % -------------------------------
-\documentclass[12pt, a4paper]{book}
+% openany: los capítulos pueden empezar en página par o impar, evitando
+% las páginas en blanco que openright (por defecto) inserta antes de cada
+% capítulo. Necesario para ajustar el cuerpo al límite de 50 páginas.
+\documentclass[12pt, a4paper, openany]{book}
 
 \input{include/opciones}
 \input{include/configuracion}
@@ -25,30 +28,26 @@
 \listoffigures
 \listoftables
 \lstlistoflistings
+\hypertarget{idx:ct}{}\listoftodos[\ctlistname] % PROVISIONAL: índice de comentarios del tutor. BORRAR antes de la entrega.
 \input{elements/acronimos}
 \cleardoublepage
-\onehalfspacing
+% Interlineado del cuerpo en torno a 1.4 (antes 1.5 con \onehalfspacing) para
+% ajustar el cuerpo principal (Introducción a Conclusiones) al límite de 50
+% páginas; la bibliografía y los anexos no cuentan. \setstretch{1.15} a 12pt
+% deja el cuerpo en 49 páginas (\onehalfspacing equivale a 1.5).
+\setstretch{1.15}
 
 \mainmatter
 \pagestyle{fancy}
 
-\input{chapters/ch1}
-\input{chapters/ch2}
-\input{chapters/ch3}
-\input{chapters/ch4}
-\input{chapters/ch5}
-\input{chapters/ch6}
-\input{chapters/ch7}
-\input{chapters/ch8}
+\input{chapters/ch1} % Introducción
+\input{chapters/ch2} % Objetivos
+\input{chapters/ch3} % Estado del arte
+\input{chapters/ch4} % Metodología de trabajo
+\input{chapters/ch5} % Resultados (arquitectura + implementación + validación + discusión + trazabilidad)
+\input{chapters/ch6} % Conclusiones y trabajos futuros
 
-\appendix
-\input{appendices/apendice_reproduccion}
-\input{appendices/apendice_infraestructura}
-\input{appendices/apendice_ingesta_gobierno}
-\input{appendices/apendice_mapeo_dcat}
-\input{appendices/apendice_validacion_web}
-\input{appendices/apendice_demo_operativa}
-
+% El tutor pide que la bibliografía vaya ANTES de los anexos (no después).
 \cleardoublepage
 \thispagestyle{empty}
 
@@ -57,5 +56,15 @@
 \bibliography{bib/ref}
 \addcontentsline{toc}{chapter}{Referencia bibliográfica}
 \end{sloppypar}
+
+\appendix
+\input{appendices/apendice_reproduccion}
+\input{appendices/apendice_infraestructura}
+\input{appendices/apendice_ingesta_gobierno}
+\input{appendices/apendice_mapeo_dcat}
+\input{appendices/apendice_validacion_web}
+\input{appendices/apendice_demo_operativa}
+\input{appendices/apendice_capturas}
+\input{appendices/apendice_posicionamiento}
 
 \end{document}

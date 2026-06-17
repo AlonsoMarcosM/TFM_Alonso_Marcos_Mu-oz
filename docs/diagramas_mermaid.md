@@ -6,46 +6,26 @@ Este documento centraliza diagramas reutilizables para memoria, defensa y portfo
 
 ```mermaid
 flowchart LR
-  subgraph SRC["Fuente técnica reproducible"]
-    PG[(PostgreSQL de referencia)]
+  subgraph FUENTE["Fuente técnica"]
+    PG[(PostgreSQL<br/>bronze · silver · gold)]
   end
-
-  subgraph META["Catálogo técnico en Kubernetes"]
+  subgraph TEC["Catálogo técnico"]
     OM[OpenMetadata]
-    MY[(MySQL)]
-    OS[(OpenSearch)]
   end
-
-  subgraph INPUT["Entrada funcional y configuración"]
-    DISC[Tablas gold descubiertas]
-    SHEET[(gold_governance.csv)]
-    CFG[(governance_defaults.yaml)]
-    OP[Operario de negocio]
-    STATE[Estado vivo consultado]
+  subgraph GOB["Gobierno funcional"]
+    SHEET[(Hoja CSV<br/>+ defaults YAML)]
   end
-
-  subgraph CORE["Núcleo Python canónico"]
-    SYNC[om_dcat_sync workflow]
-    APPLY[Plan y aplicación de gobierno]
+  subgraph NUCLEO["Núcleo Python"]
+    CORE[om_dcat_sync]
   end
-
-  subgraph OUT["Catálogo UCLM gobernado"]
-    CAT[DCAT-AP-ES/HVD<br/>JSON-LD/RDF validable]
+  subgraph OPER["Operación"]
+    UI[CLI y consola web]
   end
+  OUT[Catálogo DCAT-AP-ES<br/>validado con SHACL]
 
-  PG -->|ingesta técnica| OM
-  OM --> MY
-  OM --> OS
-  OM -->|activos técnicos| DISC
-  DISC -->|refresco controlado| SHEET
-  OP -->|curación funcional| SHEET
-  OM -->|estado vivo| STATE
-  STATE -->|lectura API| SYNC
-  CFG -->|defaults globales DCAT/HVD| SYNC
-  SHEET -->|metadatos por dataset| SYNC
-  SYNC --> APPLY
-  APPLY -->|cambios idempotentes| OM
-  SYNC -->|exporta y valida| CAT
+  PG --> OM --> SHEET --> CORE --> OUT
+  CORE -->|gobierno repetible| OM
+  UI --> CORE
 ```
 
 ## 2) Flujo operativo real
@@ -243,3 +223,40 @@ flowchart TB
 ```
 
 Los diagramas 10 y 11 se reutilizan en el capítulo de arquitectura de la memoria como vista lógica por capas y vista física de despliegue, respectivamente.
+
+## 12) Visión funcional de la solución
+
+```mermaid
+flowchart LR
+  PG[(PostgreSQL<br/>bronze/silver/gold)] -->|ingesta| OM[OpenMetadata<br/>catálogo técnico]
+  OM -->|activos gold| SHEET[(Hoja de gobierno<br/>curación funcional)]
+  SHEET --> CORE[Núcleo<br/>om_dcat_sync]
+  CORE -->|exporta| CAT[Catálogo<br/>DCAT-AP-ES JSON-LD]
+  CAT -->|valida| SHACL{SHACL<br/>caso HVD}
+  SHACL -->|conforme| OK([Catálogo validado])
+```
+
+El diagrama 12 ofrece la visión funcional de conjunto que precede a la vista lógica por capas en la introducción de la memoria (figura `fig_vision_funcional_solucion.png`).
+
+## 13) Diagrama de secuencia: operación del responsable del catálogo
+
+```mermaid
+sequenceDiagram
+    actor R as Responsable del catálogo
+    participant W as Consola web / CLI
+    participant N as Núcleo om_dcat_sync
+    participant OM as OpenMetadata
+    participant SH as Validador SHACL
+    R->>W: Edita la hoja de gobierno (CSV)
+    R->>W: Ejecuta el workflow
+    W->>N: run_workflow
+    N->>OM: Descubre activos técnicos
+    N->>OM: Aplica gobierno (repetible)
+    N->>N: Exporta catálogo JSON-LD
+    N->>SH: Valida (shapes DCAT-AP-ES, HVD)
+    SH-->>N: Conforme / violaciones
+    N-->>W: Catálogo validado e informe
+    W-->>R: Resultado y artefactos
+```
+
+El diagrama 13 (figura `fig_secuencia_operacion.png`) muestra la interacción del actor principal con la plataforma de extremo a extremo, para la sección de actores del sistema.

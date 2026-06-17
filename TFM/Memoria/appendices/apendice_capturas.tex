@@ -1,0 +1,255 @@
+\chapter{Capturas y listados complementarios}\label{ap:capturas}
+
+Este anexo reúne las capturas de pantalla, los listados de código y configuración y la tabla extensa que evidencian la implementación descrita en los capítulos de metodología y de resultados. Se han trasladado aquí, fuera del cuerpo principal, para respetar el límite de extensión, pero cada elemento se referencia desde la sección que lo discute. El material se organiza siguiendo el mismo orden que la memoria: primero la organización del trabajo, después la infraestructura, la ingesta y el gobierno en OpenMetadata, el núcleo Python, la consola web, y por último los listados y la tabla de gobierno.
+
+\section{Organización del repositorio y planificación}
+
+El árbol de la figura~\ref{code:arbol-repositorio} detalla la estructura canónica del repositorio descrita en la sección~\ref{sec:metodologia-repo}, y el diagrama de Gantt de la figura~\ref{fig:gantt-metodologia} corresponde a la vista temporal del roadmap del capítulo de metodología.
+
+\begin{figure}[ht]
+\centering
+\footnotesize
+\fbox{\begin{minipage}{0.88\linewidth}
+\setlength{\DTbaselineskip}{12pt}
+\renewcommand*\DTstyle{\ttfamily\footnotesize}
+\renewcommand*\DTstylecomment{\rmfamily\footnotesize\itshape\color{gris50}}
+\dirtree{%
+.1 TFM\_Alonso\_Marcos\_Munoz/.
+.2 sql/ \DTcomment{PostgreSQL referencia (bronze/silver/gold)}.
+.2 k8s/ \DTcomment{Valores Helm OM y dependencias}.
+.2 scripts/.
+.3 infra/ \DTcomment{Despliegue, ingesta, suite}.
+.3 quality/ \DTcomment{Pre-push y render Mermaid}.
+.3 planning/ \DTcomment{Automatización GitHub Project}.
+.2 tfm\_ingestor/ \DTcomment{Núcleo Python canónico}.
+.3 src/tfm\_ingestor/ \DTcomment{workflow, dcat, shacl, om\_api}.
+.3 config/ \DTcomment{YAML defaults + hoja CSV}.
+.3 resources/shacl/ \DTcomment{SHACL DCAT-AP-ES vendorizado}.
+.3 tests/ \DTcomment{Suite pytest}.
+.2 web/ \DTcomment{Consola Next.js}.
+.2 docs/ \DTcomment{Decisiones y guías}.
+.2 TFM/Memoria/ \DTcomment{Memoria LaTeX}.
+.2 tmp\_pytest/ \DTcomment{Artefactos regenerables}.
+}
+\end{minipage}}
+\caption{Árbol canónico del repositorio del TFM. Elaboración propia.}
+\label{code:arbol-repositorio}
+\end{figure}
+
+\figuraMemoria{fig_gantt_planificacion.png}{Diagrama de Gantt del roadmap del TFM, derivado del archivo declarativo \fqn{scripts/planning/github_project_planificacion.json}. Elaboración propia.}{fig:gantt-metodologia}
+
+\section{Infraestructura y despliegue}
+
+Las tres figuras siguientes evidencian el despliegue reproducible de la sección~\ref{sec:implementacion-k8s}: el esquema lógico del clúster, los contenedores Docker que lo materializan y los \emph{pods} resultantes en Kubernetes.
+
+\figuraMemoria{fig_kubernetes_reproducible.png}{Despliegue Kubernetes reproducible usado como base del caso de uso de validación. Elaboración propia.}{fig:kubernetes-reproducible}
+
+\figuraMemoria{fig_docker_containers.png}{Contenedores Docker que materializan el clúster Kind y los nodos auxiliares. Elaboración propia.}{fig:docker-containers}
+
+\figuraMemoria{fig_pods_kubernetes.png}{Pods desplegados en el clúster Kind: OpenMetadata, MySQL, OpenSearch y PostgreSQL de referencia. Elaboración propia.}{fig:pods-kubernetes}
+
+\section{Ingesta y gobierno en OpenMetadata}
+
+Estas capturas evidencian la fuente técnica y el gobierno aplicado. La figura~\ref{fig:postgres-schemas} muestra las capas del PostgreSQL de referencia (sección~\ref{sec:implementacion-postgres}); la figura~\ref{fig:om-services}, los dos servicios registrados tras la doble ingesta (sección~\ref{sec:implementacion-ingesta}); y la figura~\ref{fig:om-tabla-propiedades}, las propiedades DCAT y las etiquetas aplicadas a una tabla \texttt{gold} tras ejecutar el workflow.
+
+\figuraMemoria{fig_postgres_schemas.png}{Esquemas \texttt{bronze}, \texttt{silver} y \texttt{gold} del PostgreSQL de referencia, vistos desde la \ac{UI} de \ac{OM}. Elaboración propia.}{fig:postgres-schemas}
+
+\figuraMemoria{fig_om_services.png}{Servicios de base de datos ingeridos en OpenMetadata tras la doble ingesta. Elaboración propia.}{fig:om-services}
+
+\figuraMemoria{fig_om_tabla_propiedades.png}{Propiedades personalizadas DCAT y etiquetas \fqn{dcat_theme.*} aplicadas a una tabla \texttt{gold} en OpenMetadata tras ejecutar el workflow. Elaboración propia.}{fig:om-tabla-propiedades}
+
+\section{Núcleo Python y pipeline de metadatos}
+
+La figura~\ref{fig:modulos-python} resume la estructura interna del paquete \fqn{om_dcat_sync} (sección~\ref{sec:implementacion-nucleo}), y la figura~\ref{fig:pipeline-metadatos} representa la transformación conceptual desde los activos técnicos hasta la salida validada.
+
+\figuraMemoria{fig_modulos_python.png}{Estructura interna del paquete \fqn{om_dcat_sync}. Elaboración propia.}{fig:modulos-python}
+
+\figuraMemoria{fig_flujo_operativo_validacion.png}{Flujo operativo del caso de uso de validación, paso a paso. Elaboración propia.}{fig:flujo-operativo}
+
+\figuraMemoria{fig_pipeline_metadatos.png}{Pipeline de metadatos desde OpenMetadata hasta la validación SHACL. Elaboración propia.}{fig:pipeline-metadatos}
+
+\section{Consola web operativa}
+
+Las pantallas de la consola web (sección~\ref{sec:implementacion-web}) documentan la operación guiada del flujo: la edición de la hoja de gobierno, el lanzamiento del workflow, la exportación DCAT y la validación, además del informe de validación renderizado en el navegador.
+
+\figuraMemoria{fig_web_pantalla_gobierno.png}{Pantalla \emph{Gobierno} de la consola web: edición de la hoja \fqn{gold_governance.csv}. Elaboración propia.}{fig:web-pantalla-gobierno}
+
+\figuraMemoria{fig_web_pantalla_workflow.png}{Pantalla \emph{Workflow}: lanzamiento de \texttt{dry-run} y \texttt{apply} con resumen de cambios. Elaboración propia.}{fig:web-pantalla-workflow}
+
+\figuraMemoria{fig_web_pantalla_dcat.png}{Pantalla \emph{DCAT}: exportación y previsualización del catálogo \ac{JSONLD}. Elaboración propia.}{fig:web-pantalla-dcat}
+
+\figuraMemoria{fig_web_pantalla_validacion.png}{Pantalla \emph{Validación}: ejecución de la suite reproducible y resumen de resultados. Elaboración propia.}{fig:web-pantalla-validacion}
+
+\figuraMemoria{fig_validation_report_html.png}{Informe de validación HTML renderizado en el navegador desde la consola web. Elaboración propia.}{fig:informe-html-renderizado}
+
+\section{Listados de código y configuración}
+
+\subsection{Núcleo Python}
+
+El entrypoint del workflow (sección~\ref{sec:implementacion-nucleo}) se configura con una \texttt{dataclass} inmutable (listado~\ref{code:workflow-service}) y se orquesta en \texttt{run\_workflow}, cuya secuencia operativa real se recoge en el listado~\ref{code:workflow-service-impl}.
+
+\begin{lstlisting}[language=Python, caption={Configuración inmutable del workflow canónico en \texttt{workflow\_service.py}.}, label=code:workflow-service, captionpos=b]
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class WorkflowRunConfig:
+    defaults_path: str
+    rules_path:    str
+    sheet_path:    str
+    base_url:      str
+    token:         str | None
+    limit:         int  = 1000
+    dry_run:       bool = False
+    refresh_sheet: bool = True
+    export_output: str  = "dcat_catalog.jsonld"
+    report_output: str | None = None
+    allow_warnings: bool = False
+    profile_case:  str  = "hvd"
+    plan_output:   str | None = None
+    tables_input_path: str | None = None
+    skip_export:   bool = False
+    skip_validate: bool = False
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption={Esqueleto de \texttt{run\_workflow} en \texttt{workflow\_service.py}.}, label=code:workflow-service-impl, captionpos=b]
+def run_workflow(config: WorkflowRunConfig) -> dict[str, Any]:
+    defaults = load_defaults(config.defaults_path)
+    rules    = load_rules(config.rules_path)
+    api      = OpenMetadataApi(base_url=config.base_url, jwt_token=config.token)
+    tables   = discover_tables(api=api, limit=config.limit)
+
+    # 1) Refrescar la hoja desde activos descubiertos sin perder curación previa
+    if config.refresh_sheet:
+        existing = load_governance_sheet(config.sheet_path) if Path(config.sheet_path).exists() else []
+        generate_governance_sheet(tables, defaults, config.sheet_path, existing_rows=existing,
+                                  tags_by_prefix=rules.table_tags_by_prefix)
+
+    # 2) Sincronizar gobierno hacia OpenMetadata (idempotente)
+    plan = run_governance_sync(api=api, sheet_path=config.sheet_path,
+                               defaults=defaults, rules=rules, dry_run=config.dry_run)
+
+    # 3) Exportar el catálogo DCAT-AP-ES y 4) validar con SHACL
+    if not config.skip_export:
+        export_catalog(api=api, defaults=defaults, output=config.export_output)
+    if not config.skip_validate:
+        export_and_validate_catalog(profile_case=config.profile_case,
+                                    report_output=config.report_output,
+                                    allow_warnings=config.allow_warnings)
+    return {"plan": plan, "sheet_refreshed": config.refresh_sheet}
+\end{lstlisting}
+
+\subsection{Exportación, configuración e infraestructura}
+
+El contexto \ac{JSONLD} canónico del exportador (listado~\ref{code:dcat-export-context}), el fragmento de \emph{values} Helm del despliegue (listado~\ref{code:k8s-values}), el perfil operativo que enlaza defaults, reglas y caso de validación (listado~\ref{code:operational-profile-yaml}) y la estructura de un \emph{job} persistido por la consola web (listado~\ref{code:web-job-state}) completan la configuración descrita en los resultados.
+
+\begin{lstlisting}[language=jsonld, caption={Contexto JSON-LD canónico generado por \texttt{dcat\_export.py}.}, label=code:dcat-export-context, captionpos=b]
+"@context": {
+  "@language": "es",
+  "dcat":  "http://www.w3.org/ns/dcat#",
+  "dct":   "http://purl.org/dc/terms/",
+  "foaf":  "http://xmlns.com/foaf/0.1/",
+  "skos":  "http://www.w3.org/2004/02/skos/core#",
+  "vcard": "http://www.w3.org/2006/vcard/ns#",
+  "hvd":   "http://data.europa.eu/r5r/applicableLegislation/",
+  "tema":  "http://datos.gob.es/kos/sector-publico/sector/"
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=yaml, caption={Fragmento de \texttt{k8s/openmetadata.values.yaml}: configuración mínima del release Helm.}, label=code:k8s-values, captionpos=b]
+openmetadata:
+  config:
+    elasticsearch:
+      host: opensearch
+      port: 9200
+    database:
+      host: mysql
+      port: 3306
+      driverClass: com.mysql.cj.jdbc.Driver
+\end{lstlisting}
+
+\begin{lstlisting}[language=yaml, caption={Perfil operativo \texttt{operational\_profile.yaml} que enlaza defaults, reglas, hoja y caso de validación.}, label=code:operational-profile-yaml, captionpos=b]
+defaults_path: "tfm_ingestor/config/governance_defaults.yaml"
+rules_path:    "tfm_ingestor/config/mapping_rules.yaml"
+sheet_path:    "tfm_ingestor/config/gold_governance.csv"
+
+workflow:
+  profile_case:   "hvd"
+  allow_warnings: false
+  refresh_sheet:  true
+  export_output:  "dcat_catalog.jsonld"
+  report_output:  "tmp_pytest/dcat_validation_report.ttl"
+\end{lstlisting}
+
+\begin{lstlisting}[language=jsonld, caption={Estructura de un \emph{job} persistido en \texttt{state/web\_jobs/}.}, label=code:web-job-state, captionpos=b]
+{
+  "id":          "job-2026-05-18T10-43-12-workflow-run",
+  "operation":   "workflow.run",
+  "status":      "ok",
+  "started_at":  "2026-05-18T10:43:12Z",
+  "duration_s":  47.8,
+  "exit_code":   0,
+  "summary":     { "tables": 4, "changes_applied": 0, "shacl_conformant": true },
+  "artifacts":   ["tmp_pytest/dcat_catalog.jsonld",
+                  "tmp_pytest/dcat_validation_report.ttl"]
+}
+\end{lstlisting}
+
+\subsection{Ejemplos de RDF y SHACL}
+
+Como apoyo al estado del arte (sección~\ref{sec:rdf-semantica}), el listado~\ref{code:turtle-dataset} muestra en Turtle el mismo grafo que el ejemplo JSON-LD del cuerpo, y el listado~\ref{code:shacl-dataset} ilustra una restricción SHACL mínima.
+
+\begin{lstlisting}[language=Turtle, caption={Tripletas RDF que describen un dataset DCAT en sintaxis Turtle (mismo grafo que el listado~\ref{code:jsonld-dataset}).}, label=code:turtle-dataset, captionpos=b]
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix ex:   <https://www.uclm.es/datos/plataforma-gobierno-dato/> .
+
+ex:agenda-cultural-publica a dcat:Dataset ;
+    dct:title       "Agenda cultural pública - servicio operativo"@es ;
+    dct:description "Relación de eventos culturales públicos."@es ;
+    dct:publisher   ex:UCLM ;
+    dcat:theme      <http://datos.gob.es/kos/sector-publico/sector/cultura-ocio> .
+\end{lstlisting}
+
+\begin{lstlisting}[language=Turtle, caption={Fragmento ilustrativo de SHACL que exige título y descripción a cada Dataset DCAT.}, label=code:shacl-dataset, captionpos=b]
+[] a sh:NodeShape ;
+   sh:targetClass dcat:Dataset ;
+   sh:property [
+       sh:path     dct:title ;
+       sh:minCount 1 ;
+       sh:severity sh:Violation ;
+       sh:message  "Todo dcat:Dataset debe declarar al menos un dct:title."@es ;
+   ] ;
+   sh:property [
+       sh:path     dct:description ;
+       sh:minCount 1 ;
+       sh:severity sh:Violation ;
+       sh:message  "Todo dcat:Dataset debe declarar al menos una dct:description."@es ;
+   ] .
+\end{lstlisting}
+
+\section{Columnas de la hoja de gobierno}
+
+La tabla~\ref{tab:hoja-gobierno-columnas} detalla las columnas de la hoja funcional \fqn{gold_governance.csv} (sección~\ref{sec:implementacion-hoja}); los criterios de validación completos se recogen en el Anexo~\ref{ap:ingesta-gobierno}.
+
+\begin{table}[h]
+\footnotesize
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{|L{4.4cm}|L{1.9cm}|L{5.6cm}|}
+\hline
+\rowcolor{tema!10}
+\bft{Columna} & \bft{Tipo} & \bft{Propósito} \\ \hline
+\fqn{publicar}                  & \texttt{si}/\texttt{no} & Inclusión del dataset en el catálogo exportado. \\ \hline
+\fqn{schema_name}               & texto       & Esquema PostgreSQL (\texttt{gold} en el caso de uso). \\ \hline
+\fqn{table_name}                & texto       & Nombre técnico de la tabla. \\ \hline
+\fqn{table_fqn}                 & texto       & Identificador completo en \ac{OM}, clave única. \\ \hline
+\fqn{titulo_dataset}            & texto       & Título funcional editorial. \\ \hline
+\fqn{descripcion_dataset}       & texto       & Descripción editorial del dataset. \\ \hline
+\fqn{publicador}                & texto       & Nombre del organismo publicador. \\ \hline
+\fqn{tematica_dcat}             & enum NTI-RISP & Temática \ac{NTIRISP} del dataset. \\ \hline
+\fqn{categoria_hvd}             & enum HVD    & Categoría del Reglamento (UE) 2023/138. \\ \hline
+\fqn{access_url_distribucion}   & URL         & URL pública de la distribución. \\ \hline
+\end{tabular}
+\caption{Columnas de la hoja funcional \texttt{gold\_governance.csv}. Elaboración propia.}
+\label{tab:hoja-gobierno-columnas}
+\end{table}

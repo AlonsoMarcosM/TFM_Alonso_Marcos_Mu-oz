@@ -47,7 +47,7 @@ El manifiesto \fqn{k8s/postgres-demo.yaml} crea un \texttt{Deployment}, un \text
 
 \section{Diagrama de despliegue}
 
-El diagrama de la figura~\ref{fig:kubernetes-reproducible} resume el despliegue. En operación real, el \texttt{kubectl port-forward} expone OpenMetadata en \texttt{localhost:8585} y PostgreSQL en \texttt{localhost:5432}.
+El diagrama de la figura~\ref{fig:kubernetes-reproducible} resume el despliegue. En operación real, el \texttt{kubectl port-forward} expone OpenMetadata en \fqn{localhost:8585} y PostgreSQL en \fqn{localhost:5432}.
 
 \section{Notas operativas}
 
@@ -69,4 +69,4 @@ En un organismo o empresa que ya disponga de OpenMetadata, la integración no re
     \item Omitir los pasos de creación de clúster (\fqn{launch_infra.ps1}) y ejecutar directamente el workflow de gobierno, exportación y validación, ya sea desde el \ac{CLI} o desde la consola web.
 \end{itemize}
 
-De este modo, el mismo flujo —descubrimiento, curación funcional, sincronización idempotente, exportación \ac{DCATAPES} y validación \ac{SHACL}— opera sobre el catálogo técnico que el cliente ya mantiene, sin imponer su motor de despliegue ni duplicar su gobierno. La compatibilidad se ha verificado contra OpenMetadata 1.12.x (sección~\ref{sec:version-openmetadata}); versiones próximas que conserven las mismas entidades de la \ac{API} \ac{REST} son igualmente compatibles. Esta separación entre lógica portable y despliegue de referencia es la que permite ofrecer la plataforma como capa de conformidad \ac{DCATAPES} sobre un OpenMetadata preexistente.
+De este modo, el mismo flujo (descubrimiento, curación funcional, sincronización repetible, exportación \ac{DCATAPES} y validación \ac{SHACL}) opera sobre el catálogo técnico que el cliente ya mantiene, sin imponer su motor de despliegue ni duplicar su gobierno. La compatibilidad se ha verificado contra OpenMetadata 1.12.x (sección~\ref{sec:version-openmetadata}). Las versiones próximas que conserven las mismas entidades de la \ac{API} \ac{REST} son igualmente compatibles. Esta separación entre lógica portable y despliegue de referencia es la que permite ofrecer la plataforma como capa de conformidad \ac{DCATAPES} sobre un OpenMetadata preexistente.

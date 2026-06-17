@@ -1,26 +1,24 @@
-\chapter{Marco técnico y estado del arte}
+\chapter{Estado del arte}
 
-Este capítulo explica primero los conceptos y tecnologías que forman el estado del arte utilizado por el TFM. La implementación propia se reserva para capítulos posteriores. La separación es deliberada: antes de justificar cómo se ha construido la plataforma conviene entender qué problema resuelven el gobierno del dato, los catálogos de metadatos, DCAT-AP-ES, SHACL, OpenMetadata, Kubernetes y la interfaz web en el contexto actual.
+Este capítulo explica primero los conceptos y tecnologías que forman el estado del arte utilizado por el TFM. La implementación propia se reserva para capítulos posteriores. La separación es deliberada: antes de justificar cómo se ha construido la plataforma conviene entender qué problema resuelven el gobierno del dato, los catálogos de metadatos, DCAT-AP-ES, SHACL y OpenMetadata en el contexto actual. El stack tecnológico concreto (PostgreSQL, Docker, Kubernetes, Helm y la consola web) se justifica en el capítulo de metodología.
 
 \section{Gobierno del dato y gestión de metadatos}\label{sec:gobierno-dato}
 
-El gobierno del dato es el conjunto de responsabilidades, políticas, procesos, roles y controles que permite gestionar los datos como activos de una organización. En la práctica actual no se limita a almacenar información: define quién es responsable de cada activo, qué significado tiene, bajo qué reglas se publica, qué calidad mínima debe tener, cómo se traza su origen y cómo se comparte con terceros. \ac{DAMA}-\ac{DMBOK} se utiliza habitualmente como marco de referencia para ordenar estas funciones de gestión de datos~\cite{damaDmbok}. En el ámbito español de datos abiertos, datos.gob.es relaciona estas prácticas con principios como accesibilidad, consistencia, auditabilidad, exactitud y seguridad~\cite{datosGobDama2021}.
+El gobierno del dato es el conjunto de responsabilidades, políticas, procesos, roles y controles que permite gestionar los datos como activos de una organización. En la práctica actual no se limita a almacenar información: define quién es responsable de cada activo, qué significado tiene, bajo qué reglas se publica, qué calidad mínima debe tener, cómo se traza su origen y cómo se comparte con terceros. \ac{DAMA}-\ac{DMBOK} se utiliza habitualmente como marco de referencia para ordenar estas funciones de gestión de datos~\cite{damaDmbok}. Ese marco distingue roles con responsabilidades distintas: el \emph{propietario} (\emph{owner}) del dato, que responde de él; el \emph{steward} o custodio, que lo describe, lo cura y vela por su calidad; los perfiles técnicos de sistemas e ingeniería de datos, que operan la infraestructura y los pipelines; y los consumidores, que reutilizan el catálogo publicado. La Plataforma del TFM se dirige sobre todo al rol de \emph{steward}, al que ofrece un punto único de gobierno. En el ámbito español de datos abiertos, datos.gob.es relaciona estas prácticas con principios como accesibilidad, consistencia, auditabilidad, exactitud y seguridad~\cite{datosGobDama2021}.
 
 \ac{DMBOK} agrupa once áreas funcionales: arquitectura de datos, modelado y diseño, almacenamiento y operaciones, seguridad, integración e interoperabilidad, documentación y contenido, datos maestros y de referencia, almacenamiento analítico y \emph{business intelligence}, metadatos, calidad y gobierno~\cite{damaDmbok}. La Plataforma del TFM se sitúa de forma intencionada en la intersección de tres áreas: \textbf{metadatos} (descripción semántica de activos), \textbf{integración e interoperabilidad} (exportación a un perfil externo) y \textbf{gobierno} (políticas sobre qué se publica y cómo). El resto de áreas no se aborda porque corresponden a programas de gestión de datos de mayor envergadura, con equipos dedicados y objetivos transversales.
 
-La gestión de metadatos es una pieza central de ese gobierno. Los metadatos describen los datos y permiten que una persona o un sistema entiendan qué existe, dónde se encuentra, quién lo mantiene, qué reglas le aplican y cómo puede reutilizarse. En entornos modernos, los metadatos ya no se mantienen solo en documentos estáticos: se capturan desde bases de datos, almacenes analíticos, herramientas de integración, sistemas de calidad, catálogos y plataformas de linaje. El objetivo es reducir la distancia entre el sistema técnico que contiene el activo y la descripción funcional que se publica o consulta.
+La gestión de metadatos es una pieza central de ese gobierno: los metadatos describen los datos y permiten entender qué existe, dónde se encuentra, quién lo mantiene y cómo puede reutilizarse. \ac{DMBOK} distingue cuatro tipos: \emph{de negocio} (significado, glosario, responsable), \emph{técnicos} (esquema, tipo, claves), \emph{operacionales} (frecuencia, latencia) y \emph{de gobierno} (clasificación, sensibilidad, calidad)~\cite{damaDmbok}. La Plataforma del TFM gobierna principalmente metadatos técnicos descubiertos por \ac{OM} y metadatos de negocio aportados por la hoja funcional, y deja el resto fuera del alcance por no ser esenciales para demostrar conformidad \ac{DCATAPES}.
 
-\ac{DMBOK} distingue cuatro tipos de metadatos: \emph{de negocio} (significado funcional, glosario, responsable), \emph{técnicos} (esquema, tipo, longitud, claves), \emph{operacionales} (frecuencia de actualización, latencia, propietario de la ejecución) y \emph{de gobierno} (clasificación, sensibilidad, calidad esperada)~\cite{damaDmbok}. La Plataforma del TFM gobierna principalmente metadatos técnicos descubiertos por \ac{OM} y metadatos de negocio aportados por la hoja funcional, dejando el resto fuera del alcance porque no son esenciales para demostrar conformidad \ac{DCATAPES}.
-
-La Plataforma de Gobierno del Dato del TFM adopta esa visión y la acota deliberadamente a un perímetro reproducible. No persigue medir la calidad de cada valor almacenado en tablas ni sustituir una suite corporativa completa, decisiones que pertenecen a iniciativas con alcance, presupuesto y ciclo de vida distintos. Su objetivo es entregar un ciclo defendible y verificable: descubrir activos técnicos, enriquecerlos con metadatos funcionales, publicar una representación interoperable y validar formalmente que esa representación cumple un perfil externo.
+La Plataforma de Gobierno del Dato del TFM adopta esa visión y la acota deliberadamente a un perímetro reproducible. No persigue medir la calidad de cada valor almacenado en tablas ni sustituir una suite corporativa completa, decisiones que pertenecen a iniciativas con alcance, presupuesto y ciclo de vida distintos. Su objetivo es entregar un \emph{ciclo de gobierno de metadatos} defendible y verificable: descubrir activos técnicos, enriquecerlos con metadatos funcionales, publicar una representación interoperable y validar formalmente que esa representación cumple un perfil externo, por ejemplo DCAT-AP-ES o, en su variante más exigente, DCAT-AP HVD.\ct{El tutor pregunta ``¿un ciclo de qué?'' y pide un ejemplo de perfil. Se precisa que es un ciclo de gobierno de metadatos y se ejemplifica el perfil con DCAT-AP-ES / DCAT-AP HVD.}
 
 \section{Catálogos de datos y metadatos técnicos}
 
-Un catálogo de datos organiza descripciones de activos para que puedan encontrarse, entenderse y gobernarse. En el estado actual de la ingeniería de datos, los catálogos suelen integrar conectores de ingesta, modelos de entidades, búsqueda, etiquetas, glosarios, owners, descripciones, linaje y APIs. La utilidad principal es que los equipos de datos dejen de depender de conocimiento informal y puedan consultar un inventario vivo.
+Un catálogo de datos organiza descripciones de activos para que puedan encontrarse, entenderse y reutilizarse. Conviene matizar un punto importante: cuando un activo llega a un catálogo, y muy especialmente a un catálogo de publicación, se asume que ya ha sido gobernado. El catálogo no es el lugar donde empieza el gobierno, sino donde se hace visible y consultable su resultado. El gobierno (responsable, significado, reglas de publicación y calidad mínima) es condición previa, y el catálogo lo materializa y lo expone.\ct{El tutor subraya que, sobre el papel, si un activo llega a un catálogo ya debe estar gobernado, y que esto es importante. Se aclara que el gobierno es condición previa y que el catálogo expone su resultado, no lo origina.} En el estado actual de la ingeniería de datos, los catálogos suelen integrar conectores de ingesta, modelos de entidades, búsqueda, etiquetas, glosarios, owners, descripciones, linaje y APIs. La utilidad principal es que los equipos de datos dejen de depender de conocimiento informal y puedan consultar un inventario vivo.
 
 La diferencia entre datos y metadatos es clave. Una tabla PostgreSQL contiene filas y columnas con datos. OpenMetadata registra que existe esa tabla, su nombre, esquema, columnas, descripción, etiquetas y propiedades adicionales. DCAT-AP-ES, por su parte, no espera la tabla como tal, sino una descripción semántica del dataset publicable. Por eso el problema de este TFM no es mover datos de negocio, sino transformar metadatos técnicos y funcionales en un grafo de catálogo.
 
-También es importante distinguir catálogo técnico de catálogo de publicación. Un catálogo técnico ayuda a operar internamente los activos. Un catálogo de publicación, como los usados para datos abiertos, exige metadatos comprensibles, vocabularios controlados y formatos interoperables. La Plataforma de Gobierno del Dato une ambos niveles: parte de activos técnicos en OpenMetadata y produce una salida DCAT-AP-ES validable.
+También es importante distinguir, como ya se anticipó en la introducción, el catálogo técnico del catálogo de publicación. Un catálogo técnico ayuda a operar internamente los activos. Un catálogo de publicación, como los usados para datos abiertos, exige metadatos comprensibles, vocabularios controlados y formatos interoperables. La Plataforma de Gobierno del Dato une ambos niveles: parte de activos técnicos en OpenMetadata y produce una salida DCAT-AP-ES validable.\ct{El tutor esperaba ver esta distinción antes (la había pedido en la introducción). Se ha añadido una versión breve en la sección 1.3 y aquí se desarrolla, enlazando ambas.}
 
 \section{RDF, JSON-LD y vocabularios semánticos}\label{sec:rdf-semantica}
 
@@ -32,33 +30,15 @@ La ventaja decisiva de \ac{RDF} respecto a otros modelos de descripción es el u
 
 \ac{RDF} no impone una sintaxis concreta. Las mismas tripletas pueden serializarse en distintos formatos según el caso de uso: \ac{XML}-RDF para herramientas históricas, Turtle (\ac{TTL}) para legibilidad humana, N-Triples para flujos línea a línea o \ac{JSONLD} para integración con tecnologías web. La elección del formato no cambia el grafo subyacente.
 
-Sobre \ac{RDF} se construyen capas adicionales habituales en gobierno de datos:
-\begin{itemize}
-    \item \textbf{\ac{RDFS}}: permite declarar clases, jerarquías de clases y dominio/rango de las propiedades.
-    \item \textbf{\ac{OWL}}: añade lógica descriptiva para definir restricciones, equivalencias y reglas más expresivas.
-    \item \textbf{\ac{SKOS}}: estandariza vocabularios controlados, taxonomías y listas temáticas, muy utilizado para describir temas, categorías o licencias en catálogos.
-    \item \textbf{\ac{SPARQL}}: lenguaje de consulta para grafos \ac{RDF}; equivalente conceptual a \ac{SQL} pero sobre tripletas.
-\end{itemize}
+Sobre \ac{RDF} se construyen capas habituales en gobierno de datos: \ac{RDFS} declara clases, jerarquías y dominio o rango de las propiedades, \ac{OWL} añade lógica descriptiva para restricciones y equivalencias, \ac{SKOS} estandariza vocabularios controlados y taxonomías (temas, categorías o licencias) y \ac{SPARQL} es el lenguaje de consulta sobre grafos \ac{RDF}, equivalente conceptual a \ac{SQL}.
 
 \subsection{JSON-LD como serialización elegida}
 
 \ac{JSONLD} es una serialización de \ac{RDF} basada en \ac{JSON}~\cite{w3cJsonLd}. Conserva las tripletas, pero las expresa con la sintaxis que ya manejan los entornos web actuales. Tres elementos lo distinguen: el \texttt{@context}, que asocia nombres cortos con \acp{IRI} completas; el \texttt{@id}, que identifica unívocamente cada recurso; y el \texttt{@type}, que indica la clase \ac{RDF} a la que pertenece.
 
-El listado~\ref{code:turtle-dataset} muestra las mismas tripletas para un dataset \ac{DCAT} en sintaxis Turtle, y el listado~\ref{code:jsonld-dataset} las muestra en \ac{JSONLD}. Ambos describen el mismo grafo \ac{RDF}.
+El listado~\ref{code:jsonld-dataset} muestra un dataset \ac{DCAT} serializado en \ac{JSONLD}. El mismo grafo en sintaxis Turtle, más compacta y legible para humanos, se recoge en el listado~\ref{code:turtle-dataset} del Anexo~\ref{ap:capturas}.
 
-\begin{lstlisting}[language=Turtle, caption={Tripletas RDF que describen un dataset DCAT en sintaxis Turtle.}, label=code:turtle-dataset, captionpos=b]
-@prefix dcat: <http://www.w3.org/ns/dcat#> .
-@prefix dct:  <http://purl.org/dc/terms/> .
-@prefix ex:   <https://www.uclm.es/datos/plataforma-gobierno-dato/> .
-
-ex:agenda-cultural-publica a dcat:Dataset ;
-    dct:title       "Agenda cultural pública - servicio operativo"@es ;
-    dct:description "Relación de eventos culturales públicos con fecha, municipio, categoría y asistencia estimada."@es ;
-    dct:publisher   ex:UCLM ;
-    dcat:theme      <http://datos.gob.es/kos/sector-publico/sector/cultura-ocio> .
-\end{lstlisting}
-
-\begin{lstlisting}[language=jsonld, caption={Mismo grafo serializado en JSON-LD usando \texttt{@context} para acortar las IRIs.}, label=code:jsonld-dataset, captionpos=b]
+\begin{lstlisting}[language=jsonld, caption={Dataset DCAT serializado en JSON-LD usando \texttt{@context} para acortar las IRIs.}, label=code:jsonld-dataset, captionpos=b]
 {
   "@context": {
     "dcat": "http://www.w3.org/ns/dcat#",
@@ -68,20 +48,13 @@ ex:agenda-cultural-publica a dcat:Dataset ;
   "@id":   "ex:agenda-cultural-publica",
   "@type": "dcat:Dataset",
   "dct:title":       { "@value": "Agenda cultural pública - servicio operativo", "@language": "es" },
-  "dct:description": { "@value": "Relación de eventos culturales públicos con fecha, municipio, categoría y asistencia estimada.", "@language": "es" },
+  "dct:description": { "@value": "Relación de eventos culturales públicos.", "@language": "es" },
   "dct:publisher":   { "@id": "ex:UCLM" },
   "dcat:theme":      { "@id": "http://datos.gob.es/kos/sector-publico/sector/cultura-ocio" }
 }
 \end{lstlisting}
 
-En este TFM, \ac{JSONLD} es el formato canónico del catálogo exportado por tres razones prácticas:
-\begin{enumerate}
-    \item Es legible para una persona que revisa el artefacto en el repositorio, sin necesidad de herramientas \ac{RDF} especializadas.
-    \item Puede versionarse en Git como un archivo de texto plano y diferenciarse limpiamente entre ejecuciones.
-    \item Es entrada directa para validadores \ac{SHACL} y para portales que aceptan \ac{DCATAPES}.
-\end{enumerate}
-
-La consecuencia metodológica es que la interoperabilidad real no se obtiene por usar \ac{JSON}: se obtiene por usar \emph{vocabularios y perfiles} compartidos. Por eso la memoria se apoya en \ac{DCAT}, \ac{DCATAP} y \ac{DCATAPES}, que aportan clases, propiedades y restricciones conocidas para describir catálogos de datos.
+En este TFM, \ac{JSONLD} es el formato canónico del catálogo exportado por tres razones prácticas: es legible en el repositorio sin herramientas \ac{RDF} especializadas, se versiona en Git como texto plano y se diferencia limpiamente entre ejecuciones, y es entrada directa para los validadores \ac{SHACL} y los portales que aceptan \ac{DCATAPES}. La interoperabilidad real, en todo caso, no proviene de usar \ac{JSON}, sino de usar vocabularios y perfiles compartidos, idea que se retoma en la síntesis del estado del arte (sección~\ref{sec:sintesis-arte}). Por eso la memoria se apoya en \ac{DCAT}, \ac{DCATAP} y \ac{DCATAPES}.\ct{El tutor era partidario de llevar la justificación de ``por qué JSON-LD'' y la idea ``la interoperabilidad viene de los perfiles, no del JSON'' a la síntesis (3.14). Se ha compactado en prosa, se enlaza con la síntesis y se ha movido el listado Turtle al anexo.}
 
 \section{DCAT, DCAT-AP y DCAT-AP-ES}
 
@@ -93,40 +66,15 @@ DCAT-AP-ES concreta ese perfil para España. La documentación oficial de DCAT-A
 
 \section{Datos de alto valor y caso HVD}
 
-La regulación europea sobre conjuntos de datos de alto valor ha aumentado la importancia de describir correctamente categorías, licencias, servicios de acceso y legislación aplicable. En DCAT-AP-ES, el caso HVD incorpora restricciones adicionales sobre datasets, distribuciones y servicios de datos \cite{datosGobValidacionDcatApEs2025}. Para un proyecto académico, activar HVD tiene valor porque obliga a modelar más que un título y una descripción: exige relacionar dataset, distribución, servicio, categoría, legislación, licencia y contacto.
-
-En esta memoria la clasificación HVD se interpreta como hipótesis de diseño del caso de uso de validación. No equivale a una calificación jurídica automática de datos reales. Su papel es técnico: ejercitar el perfil más exigente y demostrar que el exportador puede construir una salida formalmente validable.
+La regulación europea sobre conjuntos de datos de alto valor ha aumentado la importancia de describir correctamente categorías, licencias, servicios de acceso y legislación aplicable. En DCAT-AP-ES, el caso HVD incorpora restricciones adicionales sobre datasets, distribuciones y servicios de datos \cite{datosGobValidacionDcatApEs2025}, por lo que obliga a modelar más que un título y una descripción: exige relacionar dataset, distribución, servicio, categoría, legislación, licencia y contacto. En esta memoria la clasificación HVD se interpreta como hipótesis de diseño del caso de uso de validación, no como una calificación jurídica automática de datos reales. Su papel es técnico: ejercitar el perfil más exigente y demostrar que el exportador construye una salida formalmente validable.
 
 \section{Validación SHACL}\label{sec:shacl}
 
 Apoyándose en los conceptos de \ac{RDF}, \ac{JSONLD} y \ac{DCATAPES} ya introducidos, esta sección describe el mecanismo de validación formal del catálogo. \ac{SHACL} (\emph{Shapes Constraint Language}) es un lenguaje del \ac{W3C} para validar grafos \ac{RDF} mediante \emph{shapes}~\cite{w3cShacl}. Una \emph{shape} describe restricciones que deben cumplir los nodos de un grafo: clases esperadas, propiedades obligatorias, cardinalidades, tipos de valor, severidades o relaciones entre recursos. En un catálogo \ac{DCATAPES}, \ac{SHACL} permite comprobar si el \ac{JSONLD} exportado contiene las piezas exigidas por el perfil.
 
-La validación \ac{SHACL} no garantiza que el dataset sea útil, legalmente publicable o editorialmente perfecto. Garantiza que el grafo cumple restricciones formales. Esta diferencia es importante: un catálogo puede pasar \ac{SHACL} y seguir necesitando revisión humana de redacción, licencias o pertinencia. Aun así, \ac{SHACL} aporta una base objetiva y reproducible para defender que el modelo cumple un contrato externo.
+La validación \ac{SHACL} no garantiza que el dataset sea útil o editorialmente perfecto, sino que el grafo cumple restricciones formales: un catálogo puede pasar \ac{SHACL} y seguir necesitando revisión humana de redacción, licencias o pertinencia. Aun así, aporta una base objetiva y reproducible para defender que el modelo cumple un contrato externo, y una \emph{shape} versionada permite repetir la comprobación en local, en \ac{CICD} o en la consola web. Por eso el TFM vendoriza las \emph{shapes} oficiales y evita descargarlas en tiempo de ejecución.
 
-El estado actual de las prácticas de interoperabilidad favorece este tipo de validación automática. Frente a una revisión manual de documentos, una \emph{shape} versionada permite repetir la comprobación en local, en \ac{CICD}, en una consola web o en un entorno cloud. Por eso el TFM vendoriza las \emph{shapes} oficiales y evita descargarlas en tiempo de ejecución.
-
-A modo de ejemplo, el listado~\ref{code:shacl-dataset} muestra cómo se declara, en \ac{SHACL}, que todo recurso de tipo \texttt{dcat:Dataset} debe tener al menos un título y una descripción. Si el grafo \ac{JSONLD} exportado infringe estas restricciones, el validador devuelve una violación con severidad \texttt{sh:Violation} que indica la \texttt{sh:focusNode}, la \texttt{sh:resultPath} y el mensaje correspondiente.
-
-\begin{lstlisting}[language=Turtle, caption={Fragmento ilustrativo de SHACL, serializado en Turtle, que exige título y descripción a cada Dataset DCAT.}, label=code:shacl-dataset, captionpos=b]
-@prefix sh:   <http://www.w3.org/ns/shacl#> .
-@prefix dct:  <http://purl.org/dc/terms/> .
-@prefix dcat: <http://www.w3.org/ns/dcat#> .
-
-[] a sh:NodeShape ;
-   sh:targetClass dcat:Dataset ;
-   sh:property [
-       sh:path     dct:title ;
-       sh:minCount 1 ;
-       sh:severity sh:Violation ;
-       sh:message  "Todo dcat:Dataset debe declarar al menos un dct:title."@es ;
-   ] ;
-   sh:property [
-       sh:path     dct:description ;
-       sh:minCount 1 ;
-       sh:severity sh:Violation ;
-       sh:message  "Todo dcat:Dataset debe declarar al menos una dct:description."@es ;
-   ] .
-\end{lstlisting}
+A modo de ejemplo, el listado~\ref{code:shacl-dataset} del Anexo~\ref{ap:capturas} declara en \ac{SHACL} que todo recurso de tipo \texttt{dcat:Dataset} debe tener al menos un título y una descripción. Si el grafo \ac{JSONLD} exportado infringe estas restricciones, el validador devuelve una violación con severidad \texttt{sh:Violation} que indica la \texttt{sh:focusNode}, la \texttt{sh:resultPath} y el mensaje correspondiente.
 
 \section{OpenMetadata}\label{sec:openmetadata}
 
@@ -138,9 +86,9 @@ A modo de ejemplo, el listado~\ref{code:shacl-dataset} muestra cómo se declara,
 
 Sobre \ac{OM} existen dos formas razonables de hacer que un catálogo cumpla \ac{DCATAPES}. La primera es la que se obtiene de fábrica: declarar el conjunto mínimo de propiedades \ac{DCATAPES} como \emph{custom properties} y editar cada dataset desde la interfaz de \ac{OM}, dataset por dataset, hasta que el grafo exportado contenga todos los campos requeridos. Este flujo es válido para una decena de tablas, pero presenta tres limitaciones cuando aumenta el volumen: el trabajo manual escala linealmente con el número de datasets, las reglas globales (publicador, licencia, taxonomía, legislación HVD) deben repetirse en cada activo, y la trazabilidad de quién editó qué se diluye en eventos de \ac{UI}.
 
-La segunda forma, que es la propuesta operativa de este TFM, consiste en \emph{externalizar la curación funcional} a una hoja de gobierno versionada y reconciliarla contra \ac{OM} desde un flujo idempotente. Una persona responsable del catálogo edita un único archivo \ac{CSV} en el que cada fila representa un dataset publicable; los valores comunes del catálogo (publicador, \emph{homepage}, licencia, idioma, contacto, taxonomía temática y legislación \ac{HVD}) viven como \emph{defaults} en un \ac{YAML} de configuración común. Conviene precisar el alcance de esos \emph{defaults}: operan en dos niveles. Por un lado describen las propiedades del \texttt{dcat:Catalog}; por otro, actúan como valor por defecto heredable por cada \texttt{dcat:Dataset} cuando este no declara uno propio. En el caso de uso de validación, publicador, licencia, idioma y contacto son homogéneos —un único organismo, la \ac{UCLM}—, de modo que centralizarlos evita repetir y desincronizar el mismo valor en cada fila. En un despliegue real con varios organismos, o con licencias, contactos y responsables distintos por dataset, esos campos pueden sobrescribirse por fila en la hoja sin tocar el núcleo: la jerarquía es \emph{default} global del catálogo, sobrescribible a nivel de dataset. Un servicio Python fusiona ambas fuentes, sincroniza los cambios contra la \ac{API} \ac{REST} de \ac{OM}, exporta el catálogo \ac{DCATAPES} en \ac{JSONLD} y lo valida con \ac{SHACL}. La consecuencia práctica es que el \emph{mismo} estado de gobierno se aplica en una sola operación, los valores comunes no se duplican y la exportación es \emph{determinista}: dos ejecuciones consecutivas sin cambios funcionales producen un catálogo idéntico, byte a byte, propiedad que se deriva directamente de la idempotencia del workflow (sección~\ref{sec:reproducibilidad}).
+La segunda forma, propuesta operativa de este TFM, externaliza la curación funcional a una hoja de gobierno versionada que se reconcilia contra \ac{OM} desde un flujo repetible. Una persona responsable edita un único archivo \ac{CSV} en el que cada fila es un dataset publicable, mientras que los valores comunes del catálogo (publicador, licencia, idioma, contacto, taxonomía y legislación \ac{HVD}) viven como \emph{defaults} en un \ac{YAML}, sobrescribibles por fila cuando un dataset concreto lo requiere. Un servicio Python fusiona ambas fuentes, sincroniza los cambios contra la \ac{API} \ac{REST} de \ac{OM}, exporta el catálogo \ac{DCATAPES} en \ac{JSONLD} y lo valida con \ac{SHACL}. Así, el mismo estado de gobierno se aplica en una sola operación, los valores comunes no se duplican y la exportación es determinista, una propiedad que se deriva de la idempotencia del workflow (sección~\ref{sec:reproducibilidad}).
 
-La propuesta no excluye usar las \emph{custom properties} de \ac{OM}: las requiere y las gobierna. La diferencia está en quién las gestiona. En el flujo dataset por dataset las gestiona un operador humano; en el flujo centralizado las gestiona el servicio Python a partir de una fuente declarativa, y \ac{OM} se reserva como sistema de captura técnica, búsqueda y autoridad de identificadores.
+La propuesta no excluye usar las \emph{custom properties} de \ac{OM}: las requiere y las gobierna. La diferencia está en quién las gestiona. En el flujo dataset por dataset las gestiona un operador humano. En el flujo centralizado las gestiona el servicio Python a partir de una fuente declarativa, y \ac{OM} se reserva como sistema de captura técnica, búsqueda y autoridad de identificadores.
 
 \section{Mercado de herramientas de gobierno alineadas con DCAT-AP-ES}\label{sec:mercado-dcatapes}
 
@@ -148,59 +96,44 @@ La adopción reciente de \ac{DCATAPES} ha llevado a los principales fabricantes 
 
 \paragraph{Plataformas comerciales de gobierno con módulo DCAT-AP-ES.} Productos como Anjana Data publican configuraciones alineadas con \ac{DCATAPES}~\cite{anjanaDcatApEs2026}, ofreciendo flujos editoriales, aprobaciones, jerarquías de dominios y publicación gestionada hacia portales nacionales. El valor que aportan es de producto completo: tienen \ac{UI} pulida, gestión de roles, multi-tenant, ciclo de vida de activos, soporte y certificaciones. Su contrapartida es el coste de licencia, la complejidad de despliegue y, en términos académicos, la opacidad: las reglas de mapeo y validación viven dentro del producto y no son reproducibles fuera de él.
 
-\paragraph{Portales de datos abiertos.} Sistemas como CKAN o las extensiones de portal nacional (datos.gob.es, data.europa.eu) describen el dataset en términos de \ac{DCATAP} y \ac{DCATAPES} desde el lado del consumidor: federan, agregan y publican. No están diseñados para gobernar metadatos técnicos desde la fuente; asumen que los catálogos productores ya entregan descripciones conformes. Por eso este TFM descarta CKAN como flujo operativo principal y lo mantiene únicamente como destino federable.
+\paragraph{Portales de datos abiertos.} Sistemas como CKAN o las extensiones de portal nacional (datos.gob.es, data.europa.eu) describen el dataset en términos de \ac{DCATAP} y \ac{DCATAPES} desde el lado del consumidor: federan, agregan y publican. No están diseñados para gobernar metadatos técnicos desde la fuente, sino que asumen que los catálogos productores ya entregan descripciones conformes. Por eso este TFM descarta CKAN como flujo operativo principal y lo mantiene únicamente como destino federable.
 
 \paragraph{Plataformas open source de metadatos.} Soluciones como OpenMetadata~\cite{openmetadataDocs}, DataHub~\cite{datahubDocs} o Amundsen~\cite{amundsenDocs} ofrecen catálogo técnico, ingesta y gestión de \emph{custom properties}, pero no incluyen un exportador \ac{DCATAPES} oficial certificado ni una validación \ac{SHACL} contra las \emph{shapes} \ac{HVD}. Para cumplir el perfil hay que extenderlas con código propio, que es precisamente la aportación de este TFM sobre \ac{OM}.
 
 \subsection{Posicionamiento de la Plataforma de Gobierno del Dato del TFM}
 
-La Plataforma de Gobierno del Dato propuesta no pretende competir con un producto comercial. Su valor académico y técnico se sitúa en una franja concreta:
+La Plataforma de Gobierno del Dato no pretende competir con un producto comercial. Su valor se sitúa en una franja concreta: reproducibilidad total (todo el flujo es código versionado, sin componentes propietarios), conformidad verificable (validación \ac{SHACL} con las \emph{shapes} oficiales, incluido el perfil \ac{HVD}), gobierno centralizado y declarativo (una hoja \ac{CSV} y defaults \ac{YAML} en lugar de la edición dataset por dataset de la sección~\ref{sec:gobierno-centralizado-vs-distribuido}) y operación cerrada desde una consola web. A cambio, acepta no cubrir flujos avanzados de aprobación, búsqueda editorial sofisticada, multi-tenant ni publicación automática hacia portales externos. Ofrece, eso sí, el mismo perfil \ac{DCATAPES} que prometen las herramientas comerciales, construido con piezas estándar (Python, \ac{API} \ac{REST}, \ac{JSONLD}, \ac{SHACL}) y reproducible en cualquier entorno con Kubernetes local.
 
-\begin{itemize}
-    \item \textbf{Reproducibilidad total}: todo el flujo (ingesta, gobierno, exportación, validación) es código versionado, sin componentes propietarios.
-    \item \textbf{Conformidad verificable}: la validación \ac{SHACL} usa las \emph{shapes} oficiales vendorizadas, incluyendo el perfil \ac{HVD}, y produce informes objetivos.
-    \item \textbf{Gobierno centralizado y declarativo}: una hoja de gobierno \ac{CSV} más defaults \ac{YAML} sustituyen la edición manual dataset por dataset descrita en la sección~\ref{sec:gobierno-centralizado-vs-distribuido}.
-    \item \textbf{Operación cerrada}: una consola web ejecuta operaciones versionadas sin duplicar reglas, ideal para perfiles no desarrolladores.
-\end{itemize}
+La tabla~\ref{tab:benchmark-mercado} resume, a modo de \emph{benchmark}, dónde aporta valor la propuesta frente a las tres familias de herramientas, evitando una comparación puramente narrativa.\ct{El tutor indica que no queda claro el aporte de la solución frente a lo existente y sugiere mostrarlo en una tabla estilo benchmark. Se añade la tabla comparativa por capacidades.}
 
-Frente a un producto comercial, el TFM acepta no cubrir flujos avanzados de aprobación, búsqueda editorial sofisticada, multi-tenant ni publicación automática hacia portales externos. A cambio, ofrece una capa abierta, auditable y formalmente validada sobre \ac{OM}: el mismo perfil \ac{DCATAPES} que las herramientas comerciales prometen, construido con piezas estándar (Python, \ac{API} \ac{REST}, \ac{JSONLD}, \ac{SHACL}) y reproducible en cualquier entorno con Kubernetes local.
-
-\section{PostgreSQL como fuente técnica reproducible}
-
-PostgreSQL es una base de datos relacional ampliamente utilizada y adecuada para construir un caso de uso reproducible. En el mundo real, los catálogos técnicos suelen ingerir metadatos desde múltiples motores: PostgreSQL, MySQL, sistemas cloud, data lakes o almacenes analíticos. Para el TFM, una única tecnología de origen es suficiente siempre que permita demostrar estructura técnica real: servicio, base de datos, esquemas, tablas y columnas.
-
-La doble ingesta usada en el caso de uso de validación no pretende simular dos organizaciones distintas, sino evidenciar que la lógica de gobierno opera por identificadores completos de OpenMetadata. Dos servicios pueden contener tablas con el mismo nombre. Si el sistema mezclara filas por \texttt{schema.table}, el resultado sería incorrecto. Por eso el FQN del activo técnico se convierte en un identificador esencial.
-
-\section{Docker, Kind, Kubernetes y Helm}
-
-Docker proporciona contenedores: paquetes ejecutables con aplicación, dependencias y configuración de runtime \cite{dockerOverview}. Kind permite ejecutar clústeres Kubernetes locales usando nodos como contenedores Docker, lo que resulta adecuado para desarrollo, pruebas y CI \cite{kindDocs}. Kubernetes es una plataforma portable y extensible para gestionar cargas de trabajo y servicios contenedorizados mediante configuración declarativa y automatización \cite{kubernetesConcepts}. Helm actúa como gestor de paquetes para Kubernetes, empaquetando aplicaciones como charts y desplegándolas como releases \cite{helmDocs}.
-
-En el estado actual de la ingeniería cloud, esta combinación es habitual para construir entornos reproducibles. No hace falta contratar un clúster gestionado para demostrar una arquitectura portable: Kind permite trabajar localmente, Kubernetes mantiene el modelo operativo y Helm aproxima el despliegue a prácticas profesionales. La limitación es evidente: no aporta alta disponibilidad ni hardening productivo. Para un TFM, esa limitación es aceptable porque el objetivo es reproducibilidad y claridad, no operación empresarial avanzada.
-
-\figuraMemoria{fig_kubernetes_reproducible.png}{Despliegue Kubernetes reproducible usado como base del caso de uso de validación. Elaboración propia.}{fig:kubernetes-reproducible}
-
-\section{Consolas web operativas y experiencia de usuario}
-
-Una consola web operativa convierte comandos reproducibles en una experiencia de uso guiada. En proyectos de gobierno de datos, esto es relevante porque no todos los perfiles que revisan metadatos son desarrolladores. Una persona responsable de catálogo puede necesitar revisar la hoja de gobierno, lanzar una validación o consultar artefactos sin recordar comandos de PowerShell o Python.
-
-La tecnología web actual facilita construir este tipo de consola con componentes reutilizables y separación entre cliente y servidor. React permite definir interfaces mediante componentes y estado \cite{reactDocs}. Next.js añade estructura de aplicación, rutas, componentes de servidor y una capa backend integrada \cite{nextjsDocs}. TypeScript aporta comprobación estática de tipos sobre JavaScript, ayudando a detectar errores antes de ejecutar el código \cite{typescriptHandbook}.
-
-En este TFM, la web forma parte del estado del arte aplicado porque representa una forma habitual de operar flujos técnicos desde una interfaz controlada. Sin embargo, la regla arquitectónica es estricta: la UI no contiene lógica de gobierno. Solo invoca operaciones cerradas, edita la hoja funcional y muestra resultados, logs y artefactos.
+\begin{table}[h]
+\footnotesize
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{|L{4.1cm}|C{1.7cm}|C{1.7cm}|C{1.7cm}|C{1.7cm}|}
+\hline
+\rowcolor{tema!10}
+\bft{Capacidad} & \bft{TFM} & \bft{Comercial} & \bft{Open source} & \bft{Portal abierto} \\ \hline
+Exportación DCAT-AP-ES               & \vmarkt & \vmarkt & \xmarkt & Parcial \\ \hline
+Validación SHACL HVD reproducible    & \vmarkt & Parcial & \xmarkt & \xmarkt \\ \hline
+Gobierno centralizado declarativo (CSV + YAML) & \vmarkt & Parcial & \xmarkt & \xmarkt \\ \hline
+Reproducibilidad total sin componentes propietarios & \vmarkt & \xmarkt & \vmarkt & Parcial \\ \hline
+Sin coste de licencia                & \vmarkt & \xmarkt & \vmarkt & \vmarkt \\ \hline
+Multi-tenant, roles y aprobaciones editoriales & \xmarkt & \vmarkt & Parcial & Parcial \\ \hline
+Publicación/federación automática a portales & \xmarkt & \vmarkt & \xmarkt & \vmarkt \\ \hline
+\end{tabular}
+\caption{Comparativa de capacidades de la Plataforma del TFM frente a plataformas comerciales de gobierno (p.\,ej.\ Anjana Data), plataformas open source de metadatos (OpenMetadata, DataHub) y portales de datos abiertos (CKAN). Elaboración propia.}
+\label{tab:benchmark-mercado}
+\end{table}
 
 \section{Reproducibilidad, idempotencia y \emph{Infrastructure as Code}}\label{sec:reproducibilidad}
 
-La reproducibilidad es un requisito transversal del estado actual de la ingeniería de plataformas: un entorno debe poder reconstruirse de forma determinista a partir de su descripción declarativa, sin depender del estado mutable de la máquina que lo levantó por primera vez~\cite{kubernetesConcepts}. La combinación de Docker, Kind, Helm y manifiestos versionados implementa este principio: el clúster se describe como datos (\ac{YAML}), no como una secuencia de pasos manuales.
-
-La idempotencia es el complemento operativo de la reproducibilidad. Una operación es idempotente cuando aplicarla múltiples veces produce el mismo resultado que aplicarla una sola vez. En gobierno de metadatos esto es crítico: si un \emph{workflow} de sincronización no es idempotente, repetir la ejecución duplica etiquetas, sobrescribe campos curados o genera ruido en el catálogo. \ac{OM} expone una \ac{API} \ac{REST}~\cite{openmetadataDocs} en la que los \texttt{PATCH} JSON-Patch son naturalmente idempotentes para la mayoría de operaciones; la plataforma del TFM aprovecha esta semántica para garantizar que la segunda ejecución del \emph{workflow} no aplique cambios, propiedad que se verifica empíricamente en el capítulo~\ref{cap:validacion}.
-
-Las herramientas de prueba completan este marco: pytest~\cite{pytestDocs} permite expresar invariantes funcionales sobre el núcleo Python con \emph{fixtures} reutilizables, mientras que Vitest~\cite{vitestDocs} cumple el rol equivalente en la consola web Next.js. La combinación de pruebas, idempotencia y reproducibilidad de infraestructura constituye el conjunto mínimo aceptable para defender la calidad técnica de una plataforma de gobierno hoy.
+La reproducibilidad es un requisito transversal de la ingeniería de plataformas: un entorno debe poder reconstruirse de forma determinista a partir de su descripción declarativa, sin depender del estado mutable de la máquina que lo levantó~\cite{kubernetesConcepts}. La combinación de Docker, Kind, Helm y manifiestos versionados implementa este principio, al describir el clúster como datos (\ac{YAML}) y no como pasos manuales. Su complemento operativo es la idempotencia: una operación es idempotente cuando aplicarla varias veces produce el mismo resultado que aplicarla una sola vez. En gobierno de metadatos es crítica, porque un workflow no idempotente duplicaría etiquetas o sobrescribiría campos curados. La plataforma se apoya en que los \texttt{PATCH} de la \ac{API} \ac{REST} de \ac{OM}~\cite{openmetadataDocs} son idempotentes para garantizar que la segunda ejecución no aplique cambios, propiedad verificada en la sección~\ref{cap:validacion}. Las pruebas completan el marco, con pytest~\cite{pytestDocs} sobre el núcleo Python y Vitest~\cite{vitestDocs} sobre la consola web.
 
 \section{Validación frente a verificación}\label{sec:validacion-vs-verificacion}
 
-La memoria distingue de manera consistente entre \emph{verificación} y \emph{validación}. \emph{Verificación} comprueba que el sistema se ha construido correctamente según su especificación interna: pasan los tests unitarios, los tipos son consistentes, las operaciones son idempotentes. \emph{Validación} comprueba que el sistema construido cumple un contrato externo: el catálogo exportado satisface las \emph{shapes} \ac{SHACL} oficiales de \ac{DCATAPES}~\cite{datosGobValidacionDcatApEs2025}, las propiedades obligatorias del perfil \ac{HVD} están presentes y los vocabularios temáticos provienen de la taxonomía \ac{NTIRISP}~\cite{datosGobNtiRisp}.
+La memoria distingue \emph{verificación} y \emph{validación}. La verificación comprueba que el sistema se construye correctamente según su especificación interna (tests unitarios, tipos consistentes, operaciones idempotentes). La validación comprueba que cumple un contrato externo: el catálogo exportado satisface las \emph{shapes} \ac{SHACL} oficiales de \ac{DCATAPES}~\cite{datosGobValidacionDcatApEs2025}, con las propiedades obligatorias del perfil \ac{HVD} y los vocabularios temáticos de la taxonomía \ac{NTIRISP}~\cite{datosGobNtiRisp}. Ambas capas se necesitan: la verificación sin validación produce software estable pero quizá irrelevante, y la validación sin verificación produce conformidad puntual que puede romperse en la siguiente ejecución.
 
-Esta distinción es relevante para una memoria académica porque permite separar lo que demuestra el TFM (validación externa contra un perfil estándar) de lo que asegura el código (verificación interna). Las dos capas se necesitan: la verificación sin validación produce software estable pero opcionalmente irrelevante; la validación sin verificación produce conformidad puntual que puede romperse en la siguiente ejecución.
-
-\section{Síntesis del estado del arte}
+\section{Síntesis del estado del arte}\label{sec:sintesis-arte}
 
 El estado actual combina varias capas: gobierno del dato para definir responsabilidades, catálogos de metadatos para inventariar activos, perfiles \ac{DCAT} para interoperar, \ac{SHACL} para validar, \ac{OM} para capturar y gobernar metadatos técnicos, Kubernetes y Helm para reproducir infraestructura, y una consola web para operar el flujo. La aportación del TFM consiste en ensamblar esas piezas con un alcance reducido, reproducible y defendible: doble ingesta PostgreSQL, gobierno funcional de tablas \texttt{gold}, exportación \ac{DCATAPES} y validación \ac{SHACL}, con una capa centralizada de curación que diferencia la propuesta frente a la edición \emph{custom property} dataset por dataset descrita en la sección~\ref{sec:gobierno-centralizado-vs-distribuido}.
