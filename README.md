@@ -48,7 +48,7 @@ Trabajo Fin de Máster (curso 2025-2026) del **Máster Universitario en Big Data
 
 ## 2. Recorrido visual end-to-end
 
-La consola web (`web/`, Next.js + pnpm) materializa el flujo en nueve pantallas que un operario recorre sin tocar línea de comandos. El recorrido completo, paso a paso, con artefactos producidos en cada etapa, está documentado en el **Anexo E de la memoria** (`TFM/Memoria/appendices/apendice_demo_operativa.tex`).
+La consola web (`web/`, Next.js + pnpm) materializa el flujo en nueve pantallas que un operario recorre sin tocar línea de comandos. El recorrido completo, paso a paso, con artefactos producidos en cada etapa, está documentado en el **Anexo F de la memoria** (`TFM/Memoria/appendices/apendice_demo_operativa.tex`).
 
 | Etapa | Pantalla web | Acción | Artefacto producido |
 |---:|---|---|---|
@@ -146,7 +146,7 @@ flowchart LR
     PUB --> ES[datos.gob.es]
 ```
 
-Decisión documentada: solo la capa `gold` entra en el catálogo de publicación. La justificación completa (conformidad semántica, alineación DAMA, separación catálogo técnico/publicación) está en la sección 4.5.2 de la memoria.
+Decisión documentada: solo la capa `gold` entra en el catálogo de publicación. La justificación completa (conformidad semántica, alineación DAMA, separación catálogo técnico/publicación) está en el capítulo de Resultados de la memoria, dentro de la arquitectura de la solución (decisión de gobierno restringido a la capa `gold`).
 
 ---
 
@@ -265,7 +265,7 @@ cd .\web
 pnpm dev
 ```
 
-Abrir `http://localhost:3000` y recorrer las pantallas en orden: *Infraestructura → Ingesta → Gobierno → Workflow → DCAT → Validación → SHACL → Artefactos*. El recorrido completo está descrito paso a paso en el Anexo E de la memoria.
+Abrir `http://localhost:3000` y recorrer las pantallas en orden: *Infraestructura → Ingesta → Gobierno → Workflow → DCAT → Validación → SHACL → Artefactos*. El recorrido completo está descrito paso a paso en el Anexo F de la memoria.
 
 ### 8.5 Operación desde CLI (alternativa)
 
@@ -354,29 +354,30 @@ Esta separación es deliberada: lo que varía dataset por dataset se cura en la 
 - **Sin RBAC/SSO/HA**: el alcance no incluye alta disponibilidad, hardening corporativo ni control de acceso granular; corresponden a programas de plataforma con presupuesto y ciclo de vida diferentes.
 - **CKAN como flujo operativo activo**: descartado en favor de PostgreSQL como fuente canónica, porque cosechar un catálogo externo replicaría metadatos ya publicados y no demostraría gobierno desde sistemas fuente. CKAN se mantiene como destino federable, no como origen.
 
-Detalle completo en el capítulo 7 (Discusión) de la memoria técnica.
+Detalle completo en el capítulo de Resultados (sección «Discusión de los resultados») y en Conclusiones y trabajos futuros de la memoria técnica.
 
 ---
 
 ## 13. Documentación técnica completa
 
-La memoria técnica (PDF compilado con XeLaTeX) cubre en detalle:
+La memoria técnica (PDF compilado con XeLaTeX) sigue la estructura normativa del MUBDCN en seis capítulos:
 
 | Capítulo | Contenido |
 |---|---|
-| 01 | Introducción: contexto DCAT-AP-ES, problema, aportación |
-| 02 | Objetivos, alcance y trazabilidad |
-| 03 | Marco técnico y estado del arte (RDF, JSON-LD, DCAT-AP-ES, SHACL, OpenMetadata, Kubernetes, mercado de herramientas) |
-| 04 | Requisitos funcionales y no funcionales con criterios de aceptación, arquitectura, decisiones de diseño (incluida la decisión gold-only) |
-| 05 | Implementación: PostgreSQL, Kubernetes, núcleo Python, exportador DCAT, validador SHACL, consola web |
-| 06 | Validación y resultados con métricas reproducibles |
-| 07 | Discusión, limitaciones y amenazas a la validez |
-| 08 | Conclusiones |
-| A | Anexo de reproducción del caso de uso |
+| 01 | Introducción: contexto DCAT-AP-ES, problema, aportación, alcance y exclusiones |
+| 02 | Objetivos |
+| 03 | Estado del arte (RDF, JSON-LD, DCAT-AP-ES, SHACL, gobierno del dato, OpenMetadata, mercado de herramientas) |
+| 04 | Metodología de trabajo (Kanban/PMBOK, tablero GitHub Projects, fases del roadmap, stack tecnológico y organización del repositorio) |
+| 05 | Resultados: arquitectura (con actores y requisitos), implementación (PostgreSQL, Kubernetes, núcleo Python, exportador DCAT, validador SHACL, consola web), validación con métricas reproducibles, discusión y trazabilidad |
+| 06 | Conclusiones y trabajos futuros |
+| A | Reproducción del caso de uso de validación |
 | B | Detalle de infraestructura |
-| C | Esquema completo de la hoja de gobierno |
-| D | Comandos de validación y estructura de la consola web |
-| E | **Demostración guiada end-to-end** (recorrido visual paso a paso) |
+| C | Esquema de gobierno funcional (hoja de gobierno) |
+| D | Mapeo DCAT-AP-ES y entregables |
+| E | Validación y consola web |
+| F | **Demostración guiada de la plataforma** (recorrido visual end-to-end paso a paso) |
+| G | Capturas y listados complementarios |
+| H | Posicionamiento Big Data y gobierno supervisado |
 
 > Archivo: [`TFM/Memoria/TFM.pdf`](TFM/Memoria/TFM.pdf) (compilable con `xelatex TFM.tex; bibtex TFM; xelatex TFM.tex; xelatex TFM.tex`).
 
