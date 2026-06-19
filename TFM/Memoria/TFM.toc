@@ -43,7 +43,7 @@
 \contentsline {chapter}{\numberline {5}Resultados}{24}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Arquitectura de la solución}{24}{section.5.1}%
 \contentsline {subsection}{\numberline {5.1.1}Actores del sistema}{24}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}Requisitos funcionales}{24}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.2}Requisitos funcionales}{25}{subsection.5.1.2}%
 \contentsline {subsection}{\numberline {5.1.3}Requisitos no funcionales}{26}{subsection.5.1.3}%
 \contentsline {subsection}{\numberline {5.1.4}Arquitectura lógica}{26}{subsection.5.1.4}%
 \contentsline {subsection}{\numberline {5.1.5}Arquitectura física}{28}{subsection.5.1.5}%

@@ -1,9 +1,382 @@
 \chapter{Resultados}\label{cap:resultados}
 
-Este capítulo presenta los resultados del trabajo. Primero describe la arquitectura de la solución y las decisiones de diseño que la sustentan; después, su implementación en código; a continuación, la validación realizada y los resultados obtenidos; y, por último, discute beneficios, limitaciones y amenazas a la validez, cerrando con la trazabilidad entre los objetivos y las evidencias generadas.
+Este capítulo presenta los resultados del trabajo: la arquitectura de la solución y sus decisiones de diseño, la implementación en código, la validación realizada y la discusión de beneficios, limitaciones y trazabilidad.
 
-\input{chapters/res_arquitectura}
-\input{chapters/res_implementacion}
-\input{chapters/res_validacion}
-\input{chapters/res_discusion}
-\input{chapters/res_trazabilidad}
+% =====================================================================
+% Arquitectura de la solución
+% =====================================================================
+\section{Arquitectura de la solución}\label{cap:arquitectura}
+
+\subsection{Actores del sistema}\label{sec:actores}
+
+El sistema tiene un actor principal y dos secundarios. El actor principal es el \textbf{responsable del catálogo} (\emph{steward} u operario de gobierno), que cura los metadatos y ejecuta el flujo, indistintamente desde la hoja CSV o desde la consola web. Como actores secundarios intervienen el \textbf{perfil técnico} (sistemas e ingeniería de datos), que prepara y mantiene la infraestructura, y los \textbf{consumidores} del catálogo publicado (portales de datos abiertos, analistas u otras organizaciones), que reutilizan la salida DCAT-AP-ES.
+
+El diagrama de secuencia de la figura~\ref{fig:secuencia} resume esa interacción de extremo a extremo, desde la edición de la hoja de gobierno hasta la validación SHACL.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.62\linewidth,height=0.22\textheight,keepaspectratio]{figs/fig_secuencia_operacion.png}
+\caption{Diagrama de secuencia de la operación del responsable del catálogo, desde la curación de la hoja hasta el catálogo validado. Elaboración propia.}
+\label{fig:secuencia}
+\end{figure}
+
+\subsection{Requisitos funcionales}\label{sec:requisitos-funcionales}
+
+Los requisitos funcionales identifican capacidades observables que la plataforma debe ofrecer al usuario operador y al evaluador externo.\ct{El tutor pedía reubicar este capítulo de requisitos y arquitectura: la arquitectura y las decisiones de diseño se integran como sección de Resultados, y el stack tecnológico se ha movido a Metodología de trabajo.} La tabla~\ref{tab:requisitos-funcionales} los enumera con identificador, descripción y criterio de aceptación verificable.
+
+\begin{table}[ht]
+\footnotesize
+\centering
+\renewcommand{\arraystretch}{1.05}
+\begin{tabular}{|L{1.1cm}|L{5.2cm}|L{6.2cm}|}
+\hline
+\rowcolor{tema!10}
+\bft{ID} & \bft{Requisito} & \bft{Criterio de aceptación} \\ \hline
+RF-01 & Despliegue reproducible de OpenMetadata y sus dependencias. & El script \texttt{launch\_infra.ps1} levanta el clúster con \texttt{kubectl get pods} sin errores. \\ \hline
+RF-02 & PostgreSQL de referencia con capas \texttt{bronze}/\texttt{silver}/\texttt{gold}. & \texttt{opendata\_demo\_init.sql} aplicado; los tres esquemas son visibles. \\ \hline
+RF-03 & Doble ingesta de PostgreSQL en OpenMetadata. & Dos \texttt{DatabaseService} diferenciados con tablas \texttt{gold}. \\ \hline
+RF-04 & Selección de datasets publicables. & Solo filas con \texttt{publicar=si} aparecen en el catálogo exportado. \\ \hline
+RF-05 & Curación funcional por \ac{FQN} de tabla. & La hoja \ac{CSV} identifica filas únicas por \texttt{table\_fqn}. \\ \hline
+RF-06 & Sincronización idempotente con OpenMetadata. & Una segunda ejecución consecutiva aplica 0 cambios. \\ \hline
+RF-07 & Exportación a \ac{JSONLD} conforme al perfil activo. & Se genera \texttt{dcat\_catalog.jsonld} con clases \ac{DCAT} activas. \\ \hline
+RF-08 & Validación \ac{SHACL} contra el bundle vendorizado. & Se genera \texttt{dcat\_validation\_report.ttl} sin violaciones bloqueantes. \\ \hline
+RF-09 & Consola web operativa para todo el flujo. & La \ac{UI} ejecuta cada etapa y muestra logs y artefactos. \\ \hline
+\end{tabular}
+\caption{Requisitos funcionales con criterio de aceptación. Elaboración propia.}
+\label{tab:requisitos-funcionales}
+\end{table}
+\FloatBarrier
+
+\subsection{Requisitos no funcionales}\label{sec:requisitos-no-funcionales}
+
+Los requisitos no funcionales recogen las propiedades de calidad transversales que la plataforma debe sostener:
+
+\begin{itemize}
+  \item \textbf{Reproducibilidad}: toda ejecución parte de comandos versionados y un repositorio limpio reconstruye el entorno completo.
+  \item \textbf{Idempotencia}: la sincronización contra \ac{OM} no duplica etiquetas, propiedades ni recursos.
+  \item \textbf{Simplicidad operativa}: una única capa Python concentra las reglas, mientras que la \ac{CLI}, los scripts y la web son envoltorios.
+  \item \textbf{Trazabilidad}: cada artefacto se asocia a su configuración, código y comando de origen.
+  \item \textbf{Separación de responsabilidades}: la consola web no implementa reglas, las delega en el núcleo.
+  \item \textbf{Portabilidad}: el despliegue es transferible entre entornos compatibles con Kubernetes y Helm.
+  \item \textbf{Auditabilidad}: cada ejecución produce evidencia regenerable y consultable.
+\end{itemize}
+
+Se priorizan la reproducibilidad y la idempotencia por encima de capacidades habituales en sistemas productivos, como la alta disponibilidad, el \ac{RBAC} avanzado o el escalado, que quedan fuera del alcance funcional declarado en la introducción.
+
+\subsection{Arquitectura lógica}
+
+La arquitectura se organiza en cinco capas. En lugar de describirlas con una tabla, se representan mediante un diagrama (figura~\ref{fig:arq-logica-detalle}), que hace explícita la responsabilidad de cada capa y la dirección de las dependencias y del flujo de datos entre ellas~\cite{mermaidDocs}. De abajo arriba, la fuente técnica (PostgreSQL de referencia) alimenta el catálogo técnico (OpenMetadata), del que el gobierno funcional toma los activos descubiertos; el núcleo Python fusiona hoja y defaults, aplica gobierno idempotente sobre OpenMetadata y produce el catálogo \ac{DCATAPES} validado; la capa de operación (\ac{CLI}, scripts y consola web) invoca ese mismo núcleo sin duplicar reglas.
+
+Cada capa se respalda con evidencia versionada en el repositorio: la fuente técnica en \fqn{sql/opendata_demo_init.sql}; el catálogo técnico en \fqn{ingest_postgres_double.ps1}; el gobierno funcional en \fqn{gold_governance.csv} y \fqn{governance_defaults.yaml}; el núcleo en \fqn{tfm_ingestor/src/tfm_ingestor/}; y la operación en \fqn{scripts/infra/} y \fqn{web/}.
+
+\figuraMemoria{fig_arquitectura_logica_detalle.png}{Arquitectura lógica por capas y responsabilidades: fuente técnica, catálogo técnico, gobierno funcional, núcleo Python y operación. Elaboración propia.}{fig:arq-logica-detalle}
+
+\subsection{Arquitectura física}
+
+La vista física (figura~\ref{fig:arq-fisica}) muestra cómo se materializan esas capas en el despliegue. Todo se ejecuta sobre un único host (portátil, VPS o nube) con Docker como motor de contenedores y un clúster Kubernetes local gestionado por Kind. OpenMetadata, sus dependencias (MySQL y OpenSearch) y el PostgreSQL de referencia se ejecutan como cargas dentro del clúster. El operario interactúa a través de la consola web y del \ac{CLI}, que se comunican con OpenMetadata mediante un \texttt{port-forward} sobre la \ac{API} \ac{REST} autenticada con \ac{JWT}. El detalle de los \emph{values} Helm y de los manifiestos se recoge en el Anexo~\ref{ap:infraestructura}.
+
+\figuraMemoria{fig_arquitectura_fisica.png}{Arquitectura física de despliegue: host con Docker y clúster Kind que ejecuta OpenMetadata, sus dependencias y el PostgreSQL de referencia. Elaboración propia.}{fig:arq-fisica}
+
+\subsection{Flujo extremo a extremo}
+
+El flujo implementado sigue una secuencia cerrada, resumida en el diagrama de secuencia de la figura~\ref{fig:secuencia}. Primero se levanta la infraestructura. Después se ingiere PostgreSQL dos veces en OpenMetadata, bajo dos servicios diferenciados. A continuación se preparan etiquetas y custom properties. El workflow refresca la hoja de gobierno, permite revisar los metadatos funcionales, aplica cambios en OpenMetadata, exporta JSON-LD y ejecuta la validación SHACL. La vista operativa por pasos y la transformación conceptual de los metadatos se recogen en las figuras~\ref{fig:flujo-operativo} y~\ref{fig:pipeline-metadatos} del Anexo~\ref{ap:capturas}.
+
+\subsection{Decisiones de diseño}
+
+\subsubsection{PostgreSQL como fuente canónica}
+
+El origen técnico se fija en PostgreSQL porque permite controlar la estructura, reproducir el entorno y demostrar descubrimiento real de activos técnicos. El SQL de referencia crea seis tablas distribuidas en tres capas. Las tablas \fqn{gold.movilidad_resumen_municipio} y \fqn{gold.agenda_cultural_publica} representan el catálogo publicable.
+
+\subsubsection{Gobierno restringido a la capa \texttt{gold}}\label{sec:decision-gold-only}
+
+La arquitectura \emph{medallion} (bronze/silver/gold) es una convención consolidada en plataformas de datos modernas, popularizada por Databricks como patrón de zonas progresivas de refinamiento~\cite{databricksMedallion}, que separa tres estados de madurez: datos crudos ingeridos sin transformar (\texttt{bronze}), datos limpios y conformados (\texttt{silver}) y datos refinados, agregados y listos para consumo final (\texttt{gold}). La plataforma gobierna \emph{únicamente} la capa \texttt{gold}; las capas \texttt{bronze} y \texttt{silver} se ingieren en \ac{OM} pero no se exportan como datasets \ac{DCATAPES}. Esta restricción es deliberada y se apoya en cuatro razones convergentes.
+
+La restricción se apoya en cuatro razones convergentes. Por \textbf{conformidad semántica}, el perfil exige que un \ident{dcat:Dataset} sea un conjunto «publicable» con título, descripción, publicador y temática (y, en HVD, categoría y legislación), algo que las tablas \texttt{bronze} y \texttt{silver} no satisfacen, pues contienen estructuras transitorias sin significado funcional fuera del pipeline; publicarlas falsearía el catálogo y haría fracasar la validación \ac{SHACL}. Por \textbf{coherencia con DAMA-DMBOK}, que establece que el gobierno aplica sobre activos cuyo significado, propiedad y calidad son estables~\cite{damaDmbok}, condición que las capas transitorias no cumplen. Por \textbf{separación entre catálogo técnico y de publicación}, ya que \ac{OM} mantiene visibles las tres capas como inventario interno mientras que la frontera se aplica solo en la exportación, igual que en los portales de datos abiertos, que nunca publican el inventario técnico completo. Y por \textbf{foco en el valor evaluado}, porque añadir \texttt{bronze} y \texttt{silver} multiplicaría el trabajo editorial sin añadir capacidad demostrable: el flujo, la idempotencia y las shapes son los mismos.
+
+La decisión, por tanto, no es una limitación de implementación, sino una alineación con la semántica del perfil, con el marco de gobierno y con la práctica de los portales de datos abiertos. La plataforma puede gobernar tablas adicionales sin cambios estructurales: basta marcar \fqn{publicar=si} en \fqn{gold_governance.csv}, lo que demuestra que la decisión es de alcance, no de capacidad técnica.
+
+\subsubsection{Doble ingesta como validación multi-fuente}
+
+La doble ingesta usa la misma base de referencia, pero crea dos \texttt{DatabaseService} en OpenMetadata: \texttt{postgres\_demo\_service} y \texttt{postgres\_validation\_service}. El objetivo no es duplicar datos por volumen, sino comprobar que el gobierno funciona cuando existen tablas con el mismo nombre en servicios distintos. Por eso la hoja funcional conserva \texttt{schema\_name}, \texttt{table\_name} y, sobre todo, \texttt{table\_fqn}.
+
+\subsubsection{Hoja funcional para gobierno editorial}
+
+En este trabajo, \emph{curación} designa la actividad editorial de seleccionar, describir, enriquecer y mantener los metadatos de un activo para que sean comprensibles y publicables. Es el término consolidado en gestión del dato (\emph{data curation}~\cite{damaDmbok}), frente a «edición», demasiado genérica, o a «limpieza» y «saneamiento», que aluden a la calidad del dato de negocio y no a sus metadatos. La \emph{curación funcional} es esa misma actividad aplicada a los metadatos funcionales o de negocio de cada dataset (título, descripción, publicador, temática y categoría \ac{HVD}), por oposición a los metadatos técnicos que \ac{OM} captura de forma automática.
+
+La curación funcional se concentra en \texttt{tfm\_ingestor/config/gold\_governance.csv}. Esta hoja permite editar los metadatos que varían por dataset: decisión de publicación, título, descripción, publicador, temática DCAT, categoría HVD y URL de acceso. Los campos técnicos (esquema, tabla y \ac{FQN}) no deben editarse manualmente salvo regeneración controlada del caso de uso. Las columnas de la hoja se resumen en la tabla~\ref{tab:hoja-gobierno-columnas} del Anexo~\ref{ap:capturas}, y el detalle completo con criterios de validación, en el Anexo~\ref{ap:ingesta-gobierno}.
+
+El campo \fqn{publicar} merece una explicación de gobierno y no de mero filtrado técnico. La exportación del catálogo es idempotente y, por defecto, recorre el total de activos gobernados (datasets, distribuciones y servicios de datos). El valor \texttt{si}/\texttt{no} introduce un control editorial sobre qué entra realmente en el catálogo \ac{DCATAPES} publicado. Esa distinción alinea la plataforma con el principio \ac{DAMA} de gestionar el ciclo de vida del dato~\cite{damaDmbok}: permite diferenciar los datasets publicables de aquellos que permanecen privados, en estado de borrador o catalogados internamente pero todavía no federables. De este modo, una misma hoja puede reflejar estados de publicación distintos por dataset y acompañar su evolución hacia la federación sin perder ni trazabilidad ni reproducibilidad.
+
+\subsubsection{Configuración global por YAML}
+
+Los metadatos globales del catálogo se derivan de \texttt{governance\_defaults.yaml}: nombre del catálogo, descripción, publicador, URI de organismo, página principal, idioma, licencia, legislación HVD, contacto y bases de URLs. Estos valores operan como \emph{defaults} a dos niveles: describen el \ident{dcat:Catalog} y, además, sirven de valor por defecto heredable por cada \ident{dcat:Dataset}. Esta separación evita repetir información común en cada dataset y reduce errores de consistencia. Cuando un dataset concreto requiere un publicador, una licencia, un idioma o un contacto propios, algo habitual cuando coexisten varios organismos o responsables, la hoja funcional puede sobrescribir el default global a nivel de fila sin modificar el núcleo. El perfil operativo que conecta esos defaults con la hoja \ac{CSV} y fija el caso \ac{HVD} como modo de validación se recoge en el listado~\ref{code:operational-profile-yaml} del Anexo~\ref{ap:capturas}.
+
+\subsubsection{Núcleo único de lógica}
+
+La regla arquitectónica principal es que la lógica de gobierno vive en Python. El \ac{CLI}, los scripts y la web invocan ese núcleo. Esta decisión evita que la interfaz web acabe definiendo reglas paralelas y facilita probar la solución con \texttt{pytest}. El entrypoint canónico es una \texttt{dataclass} inmutable (\texttt{frozen=True}) que fija de manera explícita todos los parámetros del workflow (rutas de configuración, conexión a \ac{OM}, modo \emph{dry-run}, refresco de hoja, salidas de exportación y caso de validación); su firma se recoge en el listado~\ref{code:workflow-service} del Anexo~\ref{ap:capturas}. El término \emph{dry-run} («ejecución en seco») designa una ejecución que calcula y muestra el plan de cambios sin aplicarlos sobre \ac{OM}; se conserva en inglés por ser el nombre literal de la opción del \ac{CLI} (\texttt{-{}-dry-run}) y un estándar de facto en herramientas de línea de comandos.
+
+\subsection{Modelo activo DCAT-AP-ES}
+
+El modelo activo del TFM cubre las clases \ident{dcat:Catalog}, \ident{dcat:Dataset}, \ident{dcat:Distribution}, \ident{dcat:DataService} y \ident{foaf:Agent}. OpenMetadata mantiene únicamente los metadatos que conviene gobernar manualmente: \texttt{displayName}, \texttt{description}, \fqn{dcat_publisher_name}, \fqn{dcat_hvd_category}, \fqn{dcat_access_url} y tags \fqn{dcat_theme.*}. El resto se deriva durante la exportación.
+
+\figuraMemoria{fig_mapeo_activo_dcat_openmetadata.png}{Mapeo activo entre clases DCAT-AP-ES y elementos de la plataforma. Elaboración propia.}{fig:mapeo-activo}
+
+Esta decisión prioriza el camino completo sobre la cobertura exhaustiva. El alcance funcional declarado en el capítulo~\ref{cap:objetivos} no incluye los metadatos opcionales que no inciden en la conformidad \ac{HVD}; modelarlos exigiría duplicar trabajo editorial sin aportar valor adicional al ciclo de validación, y queda explícitamente reservado como evolución posterior. La plataforma demuestra, por tanto, un camino completo y validable para el subconjunto obligatorio y operativo del caso \ac{HVD}.
+
+% =====================================================================
+% Implementación
+% =====================================================================
+\section{Implementación}\label{cap:implementacion}
+
+Esta sección describe cómo se materializan en código las decisiones de diseño de la sección~\ref{cap:arquitectura}. La narrativa sigue el orden lógico de la plataforma: fuente técnica, ingesta, núcleo Python, configuración funcional, consola web y, por último, el despliegue reproducible. La organización del repositorio se describe en la sección~\ref{sec:metodologia-repo}. Los comandos exactos para reproducir cada bloque están en el Anexo~\ref{ap:reproduccion}; las capturas que evidencian cada paso y los listados de configuración extensos, en el Anexo~\ref{ap:capturas}; y el recorrido visual completo desde la consola web, en el Anexo~\ref{ap:demo-operativa}.\ct{El tutor indica que esto es Resultados, no ``Implementación'': en la estructura normativa la implementación forma parte de Resultados.}
+
+\subsection{Fuente técnica reproducible: PostgreSQL en tres capas}\label{sec:implementacion-postgres}
+
+La fuente técnica es un PostgreSQL desplegado en el mismo clúster Kubernetes que \ac{OM}, inicializado a partir de \texttt{sql/opendata\_demo\_init.sql}~\cite{postgresqlDocs}.\ct{Hecho: la arquitectura precede ahora a la implementación dentro de Resultados, como pedía el tutor.} El \ac{SQL} crea tres esquemas alineados con el patrón \emph{medallion} (bronze/silver/gold), de modo que el caso de uso de validación dispone de datos sintéticos verosímiles sin depender de descargas externas. Únicamente el esquema \texttt{gold} se considera publicable: las capas \texttt{bronze} y \texttt{silver} se ingieren para mantener visible la cadena de transformaciones, pero no se exportan como datasets \ac{DCATAPES}, por las razones de conformidad semántica, alineamiento con \ac{DMBOK} y separación entre catálogo técnico y de publicación que se argumentan en la sección~\ref{sec:decision-gold-only}. El listado~\ref{code:postgres-gold} muestra la creación de una de las tablas \texttt{gold} publicables, con una estructura suficientemente expresiva (claves temporales, dimensiones territoriales y métricas) para que el catálogo exportado contenga campos significativos al validar con \ac{SHACL}.
+
+\begin{lstlisting}[language=SQL, caption={Fragmento de \texttt{sql/opendata\_demo\_init.sql}: tabla publicable de la capa gold.}, label=code:postgres-gold, captionpos=b]
+CREATE TABLE IF NOT EXISTS gold.agenda_cultural_publica (
+    evento_id        BIGINT      PRIMARY KEY,
+    fecha            DATE        NOT NULL,
+    municipio        TEXT        NOT NULL,
+    categoria        TEXT        NOT NULL,
+    titulo           TEXT        NOT NULL,
+    asistencia_est   INTEGER     CHECK (asistencia_est >= 0),
+    actualizado_en   TIMESTAMPTZ DEFAULT now()
+);
+\end{lstlisting}
+
+\subsection{Doble ingesta técnica}\label{sec:implementacion-ingesta}
+
+En OpenMetadata, una \emph{ingesta} consiste en conectarse a una fuente de datos y registrar automáticamente sus metadatos técnicos (el servicio, las bases de datos, los esquemas, las tablas y las columnas), sin copiar los datos de negocio. La \emph{doble ingesta} ejecuta ese proceso dos veces sobre la misma base PostgreSQL, registrándola bajo dos servicios lógicos distintos en \ac{OM}: \fqn{postgres_demo_service} y \fqn{postgres_validation_service}.\ct{El tutor avisa de que la doble ingesta no se entiende para quien la lea sin contexto. Se explica qué es una ingesta en OpenMetadata, por qué se ejecuta dos veces y qué problema (tablas homónimas en fuentes distintas) sirve para validar.}
+
+El motivo no es duplicar datos, sino reproducir de forma controlada un escenario habitual en organizaciones reales: que una misma tabla, por ejemplo \fqn{gold.agenda_cultural_publica}, exista con idéntico nombre en dos fuentes diferentes. Con ello se comprueba que la lógica de gobierno identifica cada activo por su nombre completo en \ac{OM} (\ac{FQN}, que incluye servicio, base de datos, esquema y tabla) y no por el nombre corto de la tabla. De lo contrario, las dos tablas homónimas se mezclarían y el catálogo resultante sería incorrecto. La ingesta se invoca desde \fqn{scripts/infra/ingest_postgres_double.ps1} y su resultado es visible en la \ac{UI} de \ac{OM} (figura~\ref{fig:om-services}): cuatro tablas publicables, dos por servicio, cada una con su \ac{FQN} único.
+
+\subsection{Núcleo Python: paquete \texttt{om\_dcat\_sync}}\label{sec:implementacion-nucleo}
+
+El paquete \texttt{tfm\_ingestor} (alias importable \texttt{om\_dcat\_sync}) concentra toda la lógica de gobierno, exportación y validación. Está estructurado en módulos con responsabilidades acotadas, conforme al principio de núcleo único declarado en la sección~\ref{cap:arquitectura}. La tabla~\ref{tab:modulos-python} lista los módulos principales y la figura~\ref{fig:modulos-python} del Anexo~\ref{ap:capturas} resume su composición.\ct{El tutor considera la figura de la estructura interna del paquete candidata a moverse a un anexo.}
+
+\begin{table}[h]
+\footnotesize
+\centering
+\begin{tabular}{|L{4cm}|L{8cm}|}
+\hline
+\rowcolor{tema!10}
+\bft{Módulo} & \bft{Responsabilidad} \\ \hline
+\texttt{workflow\_service.py} & Orquestador canónico del workflow end-to-end. \\ \hline
+\texttt{governance\_service.py} & Sincroniza gobierno entre hoja \ac{CSV} y \ac{OM}. \\ \hline
+\texttt{governance\_sheet.py} & Lectura, escritura y validación de la hoja \ac{CSV}. \\ \hline
+\texttt{om\_api.py} & Cliente \ac{REST} ligero para la \ac{API} de \ac{OM}. \\ \hline
+\texttt{dcat\_export.py} & Construye el grafo \ac{DCATAPES} y lo serializa en \ac{JSONLD}. \\ \hline
+\texttt{shacl\_validation.py} & Aplica las \emph{shapes} vendorizadas con pySHACL. \\ \hline
+\texttt{config.py} & Carga defaults \ac{YAML} y reglas de mapeo. \\ \hline
+\texttt{operational\_profile.py} & Une defaults, reglas y caso de validación. \\ \hline
+\texttt{runtime\_validation.py} & Verifica coherencia del estado vivo de \ac{OM}. \\ \hline
+\texttt{main.py} & \ac{CLI} basado en \texttt{argparse}. \\ \hline
+\end{tabular}
+\caption{Módulos principales de \texttt{tfm\_ingestor}. Elaboración propia.}
+\label{tab:modulos-python}
+\end{table}
+
+\subsubsection{Configuración inmutable y entrypoint}
+
+El módulo \fqn{workflow_service.py} define una \texttt{dataclass} inmutable (\texttt{frozen=True})~\cite{pythonDataclasses} que fija todos los parámetros del workflow antes de su ejecución, lo que evita estados mutables compartidos entre llamadas. El entrypoint \texttt{run\_workflow} encadena las cuatro etapas (refresco de hoja, sincronización de gobierno, exportación y validación); su esqueleto completo, que amplía el listado~\ref{code:workflow-service} con la secuencia operativa real, se recoge en el listado~\ref{code:workflow-service-impl} del Anexo~\ref{ap:capturas}.
+
+\subsubsection{Sincronización repetible (idempotente) de gobierno}
+
+En este contexto, \emph{sincronización idempotente} significa, sencillamente, que la operación es \textbf{repetible sin efectos colaterales}: ejecutarla una vez o varias veces seguidas deja OpenMetadata en el mismo estado. La primera ejecución aplica los cambios necesarios y las siguientes no vuelven a modificar nada.\ct{El tutor sigue sin ver clara la palabra ``idempotente'' en este contexto. Se renombra el subtítulo a ``Sincronización repetible (idempotente)'' y se abre con una definición llana: repetible sin efectos colaterales.} \texttt{governance\_service.py} mapea cada fila de la hoja \ac{CSV} a operaciones \texttt{PATCH} o \texttt{POST} sobre la entidad correspondiente en \ac{OM} usando su \ac{FQN}. Esa propiedad se materializa por dos vías: las propiedades gestionadas (\texttt{MANAGED\_DCAT\_CUSTOM\_PROPERTIES}) solo se reescriben si cambian, y las etiquetas \texttt{dcat\_theme.*} se aplican como conjuntos, nunca como acumulación lineal. La consecuencia es que ejecutar el workflow dos veces consecutivas produce cero cambios en la segunda ejecución, una de las métricas de validación de la sección~\ref{cap:validacion}.
+
+El resultado del gobierno es directamente observable en \ac{OM}: tras el workflow, cada tabla \texttt{gold} publicable conserva sus propiedades personalizadas DCAT (\fqn{dcat_publisher_name}, \fqn{dcat_hvd_category}, \fqn{dcat_access_url}) y sus etiquetas \fqn{dcat_theme.*}, que son la materia prima que el exportador transforma en el grafo \ac{DCATAPES} (figura~\ref{fig:om-tabla-propiedades}, Anexo~\ref{ap:capturas}).
+
+\subsubsection{Exportador \texorpdfstring{\ac{DCATAPES}}{DCAT-AP-ES}}
+
+\texttt{dcat\_export.py} compone el grafo conceptual a partir de las clases activas \ident{dcat:Catalog}, \ident{dcat:Dataset}, \ident{dcat:Distribution}, \ident{dcat:DataService} y \ident{foaf:Agent}. La construcción se hace en Python puro mediante diccionarios anidados que respetan el contexto \ac{JSONLD}, y cuando es necesario manipular el grafo (normalización o deduplicación) se delega en RDFLib~\cite{rdflib}. El contexto \ac{JSONLD} canónico, con prefijos estables, idioma por defecto en español y enlace a los vocabularios temáticos de NTI-RISP~\cite{datosGobNtiRisp}, se recoge en el listado~\ref{code:dcat-export-context} del Anexo~\ref{ap:capturas}.
+
+\subsubsection{Validación SHACL del catálogo exportado}
+
+Esta etapa comprueba formalmente que el catálogo cumple el perfil DCAT-AP-ES. \fqn{shacl_validation.py} toma como entrada el grafo \ac{JSONLD} exportado en la etapa anterior y un \emph{grafo de shapes} (el conjunto de restricciones del perfil), y los confronta con el motor pySHACL~\cite{pyshacl}, implementación de referencia de \ac{SHACL} para Python. El concepto de \emph{shape} y un ejemplo mínimo se introdujeron en la sección~\ref{sec:shacl}. Aquí se aplican las shapes oficiales completas.\ct{El tutor pide desarrollar más esta sección. Se amplía con el flujo de validación (entrada JSON-LD y grafo de shapes, motor pySHACL), el papel del caso HVD, la estructura del informe, la distinción Violation/Warning y el criterio de aceptación.}
+
+El bundle de shapes está vendorizado en \fqn{tfm_ingestor/resources/shacl/} y congelado en el commit \texttt{f2c8a888} del repositorio oficial \fqn{datosgobes/DCAT-AP-ES}~\cite{datosGobValidacionDcatApEs2025}. Congelarlo, en lugar de descargarlo en cada ejecución, evita dependencias de red y garantiza que dos validaciones del mismo catálogo den siempre el mismo resultado. El caso \texttt{hvd} carga, además de las restricciones generales, las shapes específicas de los conjuntos de datos de alto valor, que exigen propiedades adicionales como la categoría HVD, la legislación aplicable y el servicio de acceso.
+
+El resultado de pySHACL tiene dos partes: un valor booleano \texttt{conforms}, que indica si el grafo cumple todas las restricciones \emph{obligatorias}, y un informe en Turtle que detalla cada incidencia mediante \texttt{sh:focusNode} (el recurso afectado), \texttt{sh:resultPath} (la propiedad implicada), \texttt{sh:severity} (la gravedad) y \texttt{sh:resultMessage} (la explicación). La gravedad distingue dos casos con tratamiento distinto. Una \texttt{sh:Violation} señala el incumplimiento de una restricción obligatoria y hace que \texttt{conforms} sea falso. Un \texttt{sh:Warning} indica solo una recomendación no cubierta y no invalida la conformidad. Por eso el módulo postprocesa el informe para filtrar los \texttt{sh:Warning} cuando se ejecuta con \texttt{-{}-allow-warnings}, dejando visibles únicamente las incidencias bloqueantes. El criterio de aceptación es, por tanto, inequívoco: el catálogo se considera conforme cuando no contiene ninguna \texttt{sh:Violation}. Este resultado se consolida como la métrica de conformidad SHACL de la sección~\ref{cap:validacion} y se contrasta con un validador europeo independiente en la sección~\ref{sec:validacion-europea}.
+
+\subsection{Hoja funcional de gobierno y defaults globales}\label{sec:implementacion-hoja}
+
+La curación funcional se concentra en \texttt{tfm\_ingestor/config/gold\_governance.csv}, cuya estructura columnar se describe en la tabla~\ref{tab:hoja-gobierno-columnas} y se detalla con criterios de validación en el Anexo~\ref{ap:ingesta-gobierno}. El uso de \ac{CSV} con separador \texttt{;} no es accidental: facilita la edición en hojas de cálculo locales sin Excel y, sobre todo, hace que el diff en Git sea legible para revisión editorial. Los defaults globales viven en \texttt{governance\_defaults.yaml}, que centraliza publicador, homepage, idioma, licencia, contacto y la legislación \ac{HVD} aplicable. La pantalla \emph{Gobierno} de la consola web (figura~\ref{fig:web-pantalla-gobierno}, Anexo~\ref{ap:capturas}) actúa sobre la misma hoja y aplica las mismas reglas de validación que el \ac{CLI}; su uso real se narra en la sección~\ref{sec:demo-gobierno} del Anexo~\ref{ap:demo-operativa}.
+
+\subsection{Consola web operativa Next.js}\label{sec:implementacion-web}
+
+La consola web se construye con Next.js~\cite{nextjsDocs}, React~\cite{reactDocs} y TypeScript~\cite{typescriptHandbook}, organizada en rutas que mapean uno a uno con las etapas del workflow: \emph{Infraestructura}, \emph{Ingesta}, \emph{Gobierno}, \emph{Workflow}, \emph{DCAT}, \emph{Estado vivo}, \emph{Validación}, \emph{SHACL}, \emph{Artefactos} y \emph{Ejecuciones}. La arquitectura interna respeta la regla de núcleo único: la \ac{UI} nunca habla directamente con \ac{OM} ni reimplementa reglas, sino que invoca una lista cerrada de operaciones de servidor (\texttt{operations.ts}) que ejecutan el \ac{CLI} o los scripts PowerShell. La descripción pantalla a pantalla, con los artefactos producidos en cada paso y sus capturas, se desarrolla en el Anexo~\ref{ap:demo-operativa}, y los comandos equivalentes desde \ac{CLI} y \texttt{pnpm} en el Anexo~\ref{ap:validacion-web}.
+
+Cada ejecución crea un \emph{job} versionado en \texttt{state/web\_jobs/} con identificador único, log completo, código de salida, duración y artefactos generados. El listado~\ref{code:web-job-state} del Anexo~\ref{ap:capturas} muestra la estructura de un \emph{job} persistido, que la pantalla \emph{Ejecuciones} consume para renderizar el historial.
+
+\subsection{Despliegue reproducible en Kubernetes}\label{sec:implementacion-k8s}
+
+El despliegue local utiliza Kind como motor de clúster Kubernetes encima de Docker~\cite{dockerOverview, kindDocs, kubernetesConcepts}. \ac{OM} y sus dependencias (MySQL y OpenSearch) se instalan mediante Helm~\cite{helmDocs} usando los \emph{values} canónicos del repositorio, cuyo fragmento mínimo se recoge en el listado~\ref{code:k8s-values} del Anexo~\ref{ap:capturas}.\ct{Hecho: el tutor pedía explicar primero los módulos y dejar el despliegue de infraestructura para el final. Se ha movido esta subsección al cierre de la implementación.} El script \texttt{scripts/infra/launch\_infra.ps1} encadena la creación del clúster, la instalación de los charts y los \texttt{port-forward} necesarios para exponer la \ac{UI} de \ac{OM} en \texttt{localhost:8585} y el PostgreSQL de referencia en \texttt{localhost:5432}. La idempotencia se garantiza mediante \texttt{helm upgrade --install} y comprobaciones con \texttt{kubectl get} previas a cada paso destructivo. Los contenedores Docker y los \emph{pods} resultantes (figuras~\ref{fig:docker-containers} y~\ref{fig:pods-kubernetes}, Anexo~\ref{ap:capturas}), así como los \emph{values} Helm canónicos, se detallan en el Anexo~\ref{ap:infraestructura}.
+
+\subsection{Resumen de implementación}
+
+La implementación cumple las tres reglas duras declaradas en la sección~\ref{cap:arquitectura}: una única lógica de negocio en Python, idempotencia comprobable y separación estricta entre datos técnicos, curación funcional y derivaciones automáticas. La sección siguiente describe cómo se valida formalmente este ensamblaje y qué evidencias produce.
+
+% =====================================================================
+% Validación y resultados de la validación
+% =====================================================================
+\section{Validación y resultados de la validación}\label{cap:validacion}
+
+Esta sección evalúa la corrección de la salida producida por la plataforma. Complementa el recorrido operativo \emph{end-to-end} documentado en el Anexo~\ref{ap:demo-operativa}, donde se narran las pantallas de la consola web y los artefactos producidos en cada paso. Aquí se mide qué garantiza esa salida. Allí se muestra cómo se obtiene paso a paso.\ct{Hecho: el tutor pedía que este capítulo fuera la última parte de Resultados (y le parecía muy bien). Se integra como sección final del capítulo Resultados.}
+
+La validación combina tres niveles:\ct{El tutor pide quitar el título ``Estrategia de validación'' (6.1) y que su contenido vaya a continuación del párrafo anterior. Se elimina el encabezado de sección y el texto enlaza directamente con la introducción del capítulo.}
+
+\begin{enumerate}
+  \item pruebas automatizadas de módulos Python y servidor web;
+  \item validación estructural del estado vivo de OpenMetadata;
+  \item validación semántica del catálogo JSON-LD mediante SHACL.
+\end{enumerate}
+
+Esta estrategia evita depender de una comprobación visual de la interfaz. Cada resultado debe poder reproducirse mediante comandos versionados y artefactos generados.
+
+\subsection{Pruebas automatizadas}
+
+El repositorio contiene pruebas \texttt{pytest} para configuración, reglas de mapeo, hoja funcional, exportación DCAT, validación SHACL, validación runtime y workflow. La consola web incluye tests (Vitest) para operaciones, lectura y escritura de CSV, resumen de jobs, artefactos y redacción de secretos. La suite se ejecuta con \texttt{python -m pytest} en el núcleo y \texttt{pnpm test} en \texttt{web/}, con los comandos exactos recogidos en el Anexo~\ref{ap:validacion-web}. Estas pruebas cubren la lógica interna sin exigir que el tribunal inspeccione manualmente cada módulo.
+
+\subsection{Validación estructural del estado vivo}
+
+La validación runtime compara la instancia de OpenMetadata con el contrato esperado. Comprueba que existan servicio, base de datos, esquemas, tablas y columnas definidos por \texttt{sql/opendata\_demo\_init.sql}, y que los datasets \texttt{gold} publicados tengan los metadatos de gobierno esperados según la hoja funcional. Se invoca con \texttt{om\_dcat\_sync validate-runtime -{}-strict} y valida la trazabilidad entre la fuente técnica, OpenMetadata y la configuración funcional.
+
+\subsection{Validación SHACL}
+
+La validación SHACL usa el caso \texttt{hvd} de DCAT-AP-ES, que incluye las restricciones generales y las formas específicas para conjuntos de datos de alto valor \cite{datosGobValidacionDcatApEs2025}. Esas shapes están vendorizadas en \texttt{tfm\_ingestor/.../resources/shacl/}, junto con un manifiesto que fija el origen. Puede ejecutarse de forma aislada con \texttt{om\_dcat\_sync validate-dcat -{}-profile-case hvd}, aunque la ruta recomendada es integrarla en el workflow completo (listado~\ref{code:workflow-run}), que ejecuta sincronización, exportación y validación en un único paso repetible.
+
+\begin{lstlisting}[language=PowerShell, caption={Workflow canónico end-to-end: sincroniza gobierno, exporta DCAT-AP-ES y valida SHACL HVD.}, label=code:workflow-run, captionpos=b]
+python -m om_dcat_sync workflow run --allow-warnings
+\end{lstlisting}
+
+\subsection{Validación externa con el validador europeo (SEMIC/ITB)}\label{sec:validacion-europea}
+
+Además de la validación \ac{SHACL} local con las \emph{shapes} \ac{DCATAPES} congeladas, el catálogo exportado se ha sometido a una validación externa e independiente con el \emph{SEMIC SHACL Validator} del \emph{Interoperability Test Bed} (ITB) de la Comisión Europea~\cite{itbSemicShacl}. Este servicio comprueba la conformidad de un grafo \ac{RDF} frente a las especificaciones SEMIC oficiales. Se cargó el catálogo \fqn{validation_suite_catalog.jsonld} y se validó contra el grupo DCAT-AP, perfil \textbf{DCAT-AP HVD}, versión \textbf{3.0.0 Base Zero} (sin conocimiento de fondo), con sintaxis de entrada \ac{JSONLD}.
+
+El resultado, recogido en la figura~\ref{fig:validacion-europea}, fue \textbf{SUCCESS} con \textbf{0 errores, 0 advertencias y 0 mensajes}. Este hallazgo es relevante por dos motivos. Primero, confirma que la salida no solo cumple el perfil nacional \ac{DCATAPES} validado localmente, sino también el perfil europeo \emph{DCAT-AP HVD} verificado por una herramienta oficial ajena a la plataforma. Segundo, la modalidad \emph{Base Zero} aplica las restricciones sin resolver vocabularios externos, de modo que una conformidad sin hallazgos evidencia que la estructura, las relaciones y las propiedades del grafo son correctas por sí mismas y no por inferencias del validador.
+
+\figuraMemoria{fig_validation_shacl_europe.png}{Validación externa del catálogo en el \emph{SEMIC SHACL Validator} (ITB, Comisión Europea): perfil DCAT-AP HVD 3.0.0 Base Zero, resultado SUCCESS sin errores ni advertencias. Elaboración propia.}{fig:validacion-europea}
+
+\subsection{Resultados del caso de uso de validación}
+
+El caso de uso de validación parte de dos conjuntos de datos de negocio de la capa \texttt{gold}:
+
+\begin{itemize}
+  \item \emph{Agenda cultural pública}, a partir de \fqn{gold.agenda_cultural_publica};
+  \item \emph{Resumen de movilidad por municipio}, a partir de \fqn{gold.movilidad_resumen_municipio}.
+\end{itemize}
+
+Como cada una se ingiere bajo los dos servicios de la doble ingesta (\fqn{postgres_demo_service} y \fqn{postgres_validation_service}), el catálogo exportado contiene \textbf{cuatro datasets publicables} (dos por servicio), cada uno identificado por su \ac{FQN}.
+
+La documentación del repositorio registra una ejecución completa de la suite con los siguientes resultados: conformidad runtime, conformidad técnica, conformidad de gobierno, conformidad SHACL, idempotencia positiva, cuatro datasets exportados, cuatro cambios aplicados en la primera ejecución y cero cambios aplicados en la segunda. Esta última cifra evidencia la idempotencia: una vez sincronizado el estado, repetir el workflow no vuelve a aplicar operaciones innecesarias.
+
+\begin{table}[h]
+\footnotesize
+\centering
+\begin{tabular}{|L{5.5cm}|L{4cm}|L{4cm}|}
+\hline
+\rowcolor{tema!10}
+\bft{Comprobación} & \bft{Resultado documentado} & \bft{Interpretación} \\ \hline
+Estado runtime & Conforme & OpenMetadata contiene los activos esperados. \\ \hline
+Gobierno aplicado & Conforme & La hoja funcional coincide con metadatos vivos. \\ \hline
+SHACL HVD (local) & Conforme con warnings permitidos & No hay violaciones bloqueantes. \\ \hline
+Validación europea (ITB) & SUCCESS (0/0/0) & Conforme con DCAT-AP HVD 3.0.0 en el validador oficial europeo. \\ \hline
+Datasets exportados & 4 & Dos tablas \texttt{gold} por cada uno de los dos servicios. \\ \hline
+Segunda ejecución & 0 cambios aplicados & El workflow es idempotente. \\ \hline
+\end{tabular}
+\caption{Resumen de resultados del caso de uso de validación. Elaboración propia a partir de la documentación del repositorio.}
+\label{tab:resultados}
+\end{table}
+
+\subsection{Artefactos generados}
+
+Los artefactos esperados son:
+
+\begin{itemize}
+  \item catálogo JSON-LD exportado;
+  \item informe SHACL en Turtle;
+  \item informe runtime en JSON;
+  \item plan de workflow en JSON;
+  \item resumen de suite de validación;
+  \item informe de validación legible en HTML y PDF.
+\end{itemize}
+
+A partir del resumen JSON de la validación, la plataforma genera un \emph{informe legible} en HTML y PDF mediante el comando \texttt{om\_dcat\_sync render-report}, que se apoya en la biblioteca \texttt{fpdf2} para el PDF. El informe resalta los indicadores de conformidad (estado runtime, gobierno, idempotencia y \ac{SHACL}) y aplana el resto de resultados en un listado consultable. Puede generarse desde la consola web (pantalla \emph{Validación}) o desde el \ac{CLI}, y queda disponible como evidencia autocontenida para revisión, defensa o entrega a terceros sin necesidad de inspeccionar el \ac{JSON} en bruto. La consola web sirve el informe HTML con su tipo \ac{MIME} real mediante el botón \emph{Abrir}, de modo que se renderiza directamente en el navegador (figura~\ref{fig:informe-html-renderizado}, Anexo~\ref{ap:capturas}).
+
+Estos ficheros se generan en \texttt{tmp\_pytest/}. No se versionan porque son reproducibles y dependen de la ejecución local, pero sí se referencian como evidencia regenerable. La cadena de pasos para regenerarlos desde un repositorio limpio se describe en el Anexo~\ref{ap:reproduccion}, y el recorrido visual que conduce a cada artefacto en el Anexo~\ref{ap:demo-operativa}.
+
+% =====================================================================
+% Discusión de los resultados
+% =====================================================================
+\section{Discusión de los resultados}\label{sec:discusion-resultados}
+
+\subsection{Cumplimiento del problema planteado}
+
+La solución resuelve el problema principal: conectar un catálogo técnico en OpenMetadata con una salida interoperable DCAT-AP-ES validable.\ct{Hecho: el tutor reorganizó este capítulo. 7.1-7.4 (cumplimiento, beneficios, limitaciones, amenazas) pasan a Resultados como ``Discusión de los resultados''; 7.5 (Big Data) y 7.6 (gobierno supervisado) se mueven a anexos; el trabajo futuro y las conclusiones se reestructuran en el capítulo ``Conclusiones y trabajos futuros''.} La plataforma no se limita a documentar un mapeo, sino que implementa un flujo ejecutable que descubre activos técnicos, permite curación funcional, aplica metadatos, exporta JSON-LD y valida el resultado. El Anexo~\ref{ap:demo-operativa} narra ese flujo de extremo a extremo desde la consola web, hasta dejar el archivo RDF listo para entregarlo a un harvester compatible.
+
+La decisión de usar PostgreSQL de referencia en lugar de cosechar CKAN refuerza la defendibilidad del trabajo. CKAN habría permitido transformar metadatos ya publicados. PostgreSQL y OpenMetadata permiten demostrar gobierno desde activos técnicos, que es más coherente con las competencias de ingeniería, Big Data y cloud del máster.
+
+\subsection{Beneficios obtenidos}
+
+Los principales beneficios son:
+
+\begin{itemize}
+  \item reproducibilidad del entorno y del caso de uso;
+  \item separación entre metadatos técnicos y curación funcional;
+  \item núcleo Python único para CLI, scripts y web;
+  \item validación formal mediante SHACL;
+  \item trazabilidad entre SQL, OpenMetadata, hoja funcional, JSON-LD e informe de validación;
+  \item facilidad de operación mediante consola web.
+\end{itemize}
+
+\subsection{Limitaciones}
+
+La solución tiene limitaciones deliberadas:
+
+\begin{itemize}
+  \item una tabla SQL no equivale semánticamente a un \texttt{dcat:Dataset}; en el caso de uso se usa como aproximación técnica gobernable;
+  \item se genera una única \texttt{Distribution} y un único \texttt{DataService} por dataset;
+  \item la clasificación HVD es una hipótesis de validación dentro de la plataforma, no una calificación jurídica automática;
+  \item la validación se centra en metadatos, no en profiling de contenido ni calidad fila a fila;
+  \item no se publica automáticamente en datos.gob.es, CKAN ni data.europa.eu;
+  \item el modelo OpenMetadata se mantiene mínimo y no cubre todos los campos opcionales de DCAT-AP-ES.
+\end{itemize}
+
+La primera limitación merece una precisión. Un \texttt{dcat:Dataset} es una abstracción editorial: una colección publicada y mantenida por un agente como unidad coherente, con independencia de su almacenamiento físico~\cite{w3cDcat3}. Una tabla \ac{SQL} es una estructura física, de modo que la correspondencia «una tabla es un dataset» es una decisión de modelado y no una equivalencia natural: un dataset podría corresponder igualmente a una vista, a una agregación o a la unión de varias tablas. En el caso de uso de validación se elige la tabla \texttt{gold} como unidad publicable por ser la representación más estable del dato refinado. En un escenario real, la hoja de gobierno permitiría asociar el dataset a la vista o agregación que mejor lo represente, sin alterar el núcleo.
+
+Estas limitaciones no invalidan el trabajo: forman parte del alcance funcional declarado y delimitan la frontera entre lo que la plataforma demuestra de forma reproducible y lo que correspondería a una iniciativa de portal de datos abiertos a escala institucional, con presupuesto, equipo y compromisos de servicio diferenciados.
+
+\subsection{Amenazas a la validez}
+
+La principal amenaza a la validez externa es que el caso de uso trabaja con datos sintéticos y un número reducido de datasets publicables. La arquitectura, sin embargo, está diseñada para escalar a más tablas \texttt{gold} mediante la misma hoja funcional y el mismo workflow.
+
+Conviene aclarar que la conformidad \ac{SHACL} «con warnings permitidos» no constituye una amenaza a la validez. En \ac{SHACL}, una violación con severidad \texttt{sh:Violation} indica el incumplimiento de una restricción obligatoria. Un \texttt{sh:Warning}, en cambio, señala únicamente que el perfil \emph{recomienda} cubrir propiedades adicionales, recomendadas u opcionales, que no son obligatorias~\cite{w3cShacl}. El catálogo exportado no presenta violaciones bloqueantes: los warnings solo invitan a enriquecer metadatos no exigidos por el perfil. Aumentar esa cobertura mejora la calidad editorial del catálogo, pero su ausencia no invalida la conformidad obligatoria demostrada.
+
+% =====================================================================
+% Trazabilidad entre objetivos y evidencias
+% =====================================================================
+\section{Trazabilidad entre objetivos y evidencias}\label{sec:trazabilidad}
+
+La tabla~\ref{tab:trazabilidad} relaciona cada objetivo con el bloque donde se aborda y con la evidencia versionada que lo respalda.\ct{Hecho: la trazabilidad objetivos-evidencias se ha movido a Resultados (antes estaba en Objetivos), como pedía el tutor.}
+
+\begin{table}[h]
+\footnotesize
+\centering
+\begin{tabular}{|L{3.6cm}|L{4.6cm}|L{5.2cm}|}
+\hline
+\rowcolor{tema!10}
+\bft{Objetivo} & \bft{Bloque} & \bft{Evidencia del repositorio} \\ \hline
+Análisis DCAT-AP-ES & Estado del arte & \texttt{docs/dcat\_mapping.md}, bibliografía oficial \\ \hline
+Mapeo OpenMetadata & Arquitectura e implementación & \texttt{dcat\_export.py}, \texttt{governance\_service.py} \\ \hline
+Configuración de gobierno & Implementación & \texttt{gold\_governance.csv}, \texttt{governance\_defaults.yaml} \\ \hline
+Doble ingesta PostgreSQL & Implementación y validación & \texttt{ingest\_postgres\_double.ps1}, \texttt{gold\_governance.csv} \\ \hline
+Workflow reproducible & Implementación y validación & \texttt{workflow\_service.py}, \texttt{run\_validation\_suite.ps1} \\ \hline
+Exportación JSON-LD & Validación & \texttt{dcat\_export.py}, artefactos \texttt{*.jsonld} \\ \hline
+Validación SHACL & Validación & \texttt{shacl\_validation.py}, shapes vendorizadas \\ \hline
+Consola operativa & Implementación & \texttt{web/}, \texttt{operations.ts}, \texttt{jobRunner.ts} \\ \hline
+\end{tabular}
+\caption{Trazabilidad entre objetivos, bloques de la memoria y evidencias. Elaboración propia.}
+\label{tab:trazabilidad}
+\end{table}

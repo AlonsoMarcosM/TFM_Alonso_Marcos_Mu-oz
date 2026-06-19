@@ -32,7 +32,7 @@
 \contentsline {todo}{[C32]~Hecho: Docker/Kind/Kubernetes/Helm movidos al stack tecnológico (metodología), no al estado del arte.}{22}{section*.47}%
 \contentsline {todo}{[C33]~Hecho: la consola web (React/Next.js/TypeScript) se trata aquí como parte del stack tecnológico (metodología), no del estado del arte.}{22}{section*.48}%
 \contentsline {todo}{[C34]~Hecho: la organización del repositorio se ubica en la metodología de trabajo, como pedía el tutor.}{23}{section*.49}%
-\contentsline {todo}{[C35]~El tutor pedía reubicar este capítulo de requisitos y arquitectura: la arquitectura y las decisiones de diseño se integran como sección de Resultados, y el stack tecnológico se ha movido a Metodología de trabajo.}{24}{section*.52}%
+\contentsline {todo}{[C35]~El tutor pedía reubicar este capítulo de requisitos y arquitectura: la arquitectura y las decisiones de diseño se integran como sección de Resultados, y el stack tecnológico se ha movido a Metodología de trabajo.}{25}{section*.52}%
 \contentsline {todo}{[C36]~El tutor indica que esto es Resultados, no ``Implementación'': en la estructura normativa la implementación forma parte de Resultados.}{33}{section*.57}%
 \contentsline {todo}{[C37]~Hecho: la arquitectura precede ahora a la implementación dentro de Resultados, como pedía el tutor.}{33}{section*.58}%
 \contentsline {todo}{[C38]~El tutor avisa de que la doble ingesta no se entiende para quien la lea sin contexto. Se explica qué es una ingesta en OpenMetadata, por qué se ejecuta dos veces y qué problema (tablas homónimas en fuentes distintas) sirve para validar.}{34}{section*.59}%
