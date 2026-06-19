@@ -1,5 +1,29 @@
 \begin{thebibliography}{10}
 
+\bibitem{euDataStrategy}
+{Comisión Europea}.
+\newblock {Una Estrategia Europea de Datos}.
+\newblock
+  \url{https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:52020DC0066},
+  2020.
+\newblock Comunicación COM(2020) 66 final; impulsa los espacios europeos de
+  datos (data spaces); última consulta: mayo de 2026.
+
+\bibitem{datosGobDcatApEs2025}
+{Iniciativa Aporta}.
+\newblock {Guía técnica y modelo DCAT-AP-ES 1.0.0}.
+\newblock \url{https://datosgobes.github.io/DCAT-AP-ES/}, 2025.
+\newblock Última consulta: mayo de 2026.
+
+\bibitem{euHvdRegulation}
+{Comisión Europea}.
+\newblock {Reglamento de Ejecución (UE) 2023/138 relativo a conjuntos de datos
+  de alto valor (HVD)}.
+\newblock
+  \url{https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32023R0138},
+  2023.
+\newblock Diario Oficial de la Unión Europea; última consulta: mayo de 2026.
+
 \bibitem{europeDcatAp}
 {SEMIC -- European Commission}.
 \newblock {DCAT Application Profile for Data Portals in Europe (DCAT-AP)}.
@@ -23,21 +47,6 @@
 \newblock {Data Catalog Vocabulary (DCAT) - Version 3}.
 \newblock \url{https://www.w3.org/TR/vocab-dcat-3/}, 2024.
 \newblock W3C Recommendation; última consulta: mayo de 2026.
-
-\bibitem{datosGobDcatApEs2025}
-{Iniciativa Aporta}.
-\newblock {Guía técnica y modelo DCAT-AP-ES 1.0.0}.
-\newblock \url{https://datosgobes.github.io/DCAT-AP-ES/}, 2025.
-\newblock Última consulta: mayo de 2026.
-
-\bibitem{euHvdRegulation}
-{Comisión Europea}.
-\newblock {Reglamento de Ejecución (UE) 2023/138 relativo a conjuntos de datos
-  de alto valor (HVD)}.
-\newblock
-  \url{https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX:32023R0138},
-  2023.
-\newblock Diario Oficial de la Unión Europea; última consulta: mayo de 2026.
 
 \bibitem{damaDmbok}
 {DAMA International}.
@@ -224,6 +233,13 @@ David~J. Anderson.
 \newblock \url{https://www.itb.ec.europa.eu/shacl/semic-shacl/upload}, 2026.
 \newblock Servicio oficial de validación SHACL del Interoperability Test Bed
   (ITB); última consulta: mayo de 2026.
+
+\bibitem{wohlinExperimentation}
+Claes Wohlin, Per Runeson, Martin H{\"o}st, Magnus~C. Ohlsson, Bj{\"o}rn
+  Regnell, and Anders Wessl{\'e}n.
+\newblock {\em {Experimentation in Software Engineering}}.
+\newblock Springer, 2012.
+\newblock ISBN 978-3-642-29043-5.
 
 \bibitem{openmetadataKubernetes}
 {OpenMetadata}.

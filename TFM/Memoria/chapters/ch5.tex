@@ -15,14 +15,14 @@ El diagrama de secuencia de la figura~\ref{fig:secuencia} resume esa interacció
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.62\linewidth,height=0.22\textheight,keepaspectratio]{figs/fig_secuencia_operacion.png}
+\includegraphics[width=\linewidth,height=0.34\textheight,keepaspectratio]{figs/fig_secuencia_operacion.png}
 \caption{Diagrama de secuencia de la operación del responsable del catálogo, desde la curación de la hoja hasta el catálogo validado. Elaboración propia.}
 \label{fig:secuencia}
 \end{figure}
 
 \subsection{Requisitos funcionales}\label{sec:requisitos-funcionales}
 
-Los requisitos funcionales identifican capacidades observables que la plataforma debe ofrecer al usuario operador y al evaluador externo.\ct{El tutor pedía reubicar este capítulo de requisitos y arquitectura: la arquitectura y las decisiones de diseño se integran como sección de Resultados, y el stack tecnológico se ha movido a Metodología de trabajo.} La tabla~\ref{tab:requisitos-funcionales} los enumera con identificador, descripción y criterio de aceptación verificable.
+Los requisitos funcionales identifican capacidades observables que la plataforma debe ofrecer al usuario operador y al evaluador externo. La tabla~\ref{tab:requisitos-funcionales} los enumera con identificador, descripción y criterio de aceptación verificable.
 
 \begin{table}[ht]
 \footnotesize
@@ -65,11 +65,16 @@ Se priorizan la reproducibilidad y la idempotencia por encima de capacidades hab
 
 \subsection{Arquitectura lógica}
 
-La arquitectura se organiza en cinco capas. En lugar de describirlas con una tabla, se representan mediante un diagrama (figura~\ref{fig:arq-logica-detalle}), que hace explícita la responsabilidad de cada capa y la dirección de las dependencias y del flujo de datos entre ellas~\cite{mermaidDocs}. De abajo arriba, la fuente técnica (PostgreSQL de referencia) alimenta el catálogo técnico (OpenMetadata), del que el gobierno funcional toma los activos descubiertos; el núcleo Python fusiona hoja y defaults, aplica gobierno idempotente sobre OpenMetadata y produce el catálogo \ac{DCATAPES} validado; la capa de operación (\ac{CLI}, scripts y consola web) invoca ese mismo núcleo sin duplicar reglas.
+La arquitectura se organiza en cinco capas. En lugar de describirlas con una tabla, se representan mediante un diagrama (figura~\ref{fig:arq-logica-detalle}), que hace explícita la responsabilidad de cada capa y la dirección de las dependencias y del flujo de datos entre ellas~\cite{mermaidDocs}. De arriba abajo, la fuente técnica (PostgreSQL de referencia) alimenta el catálogo técnico (OpenMetadata), del que el gobierno funcional toma los activos descubiertos; el núcleo Python fusiona hoja y defaults, aplica gobierno idempotente sobre OpenMetadata y produce el catálogo \ac{DCATAPES} validado; la capa de operación (\ac{CLI}, scripts y consola web), en la base, invoca ese mismo núcleo sin duplicar reglas.
 
 Cada capa se respalda con evidencia versionada en el repositorio: la fuente técnica en \fqn{sql/opendata_demo_init.sql}; el catálogo técnico en \fqn{ingest_postgres_double.ps1}; el gobierno funcional en \fqn{gold_governance.csv} y \fqn{governance_defaults.yaml}; el núcleo en \fqn{tfm_ingestor/src/tfm_ingestor/}; y la operación en \fqn{scripts/infra/} y \fqn{web/}.
 
-\figuraMemoria{fig_arquitectura_logica_detalle.png}{Arquitectura lógica por capas y responsabilidades: fuente técnica, catálogo técnico, gobierno funcional, núcleo Python y operación. Elaboración propia.}{fig:arq-logica-detalle}
+\begin{figure}[p]
+\centering
+\includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{figs/fig_arquitectura_logica_detalle.png}
+\caption{Arquitectura lógica por capas y responsabilidades: fuente técnica, catálogo técnico, gobierno funcional, núcleo Python y operación. Elaboración propia.}
+\label{fig:arq-logica-detalle}
+\end{figure}
 
 \subsection{Arquitectura física}
 
@@ -79,7 +84,9 @@ La vista física (figura~\ref{fig:arq-fisica}) muestra cómo se materializan esa
 
 \subsection{Flujo extremo a extremo}
 
-El flujo implementado sigue una secuencia cerrada, resumida en el diagrama de secuencia de la figura~\ref{fig:secuencia}. Primero se levanta la infraestructura. Después se ingiere PostgreSQL dos veces en OpenMetadata, bajo dos servicios diferenciados. A continuación se preparan etiquetas y custom properties. El workflow refresca la hoja de gobierno, permite revisar los metadatos funcionales, aplica cambios en OpenMetadata, exporta JSON-LD y ejecuta la validación SHACL. La vista operativa por pasos y la transformación conceptual de los metadatos se recogen en las figuras~\ref{fig:flujo-operativo} y~\ref{fig:pipeline-metadatos} del Anexo~\ref{ap:capturas}.
+El flujo implementado sigue una secuencia cerrada, resumida en el diagrama de secuencia de la figura~\ref{fig:secuencia}. Primero se levanta la infraestructura. Después se ingiere PostgreSQL dos veces en OpenMetadata, bajo dos servicios diferenciados. A continuación se preparan etiquetas y custom properties. El workflow refresca la hoja de gobierno, permite revisar los metadatos funcionales, aplica cambios en OpenMetadata, exporta JSON-LD y ejecuta la validación SHACL. La figura~\ref{fig:flujo-operativo} muestra esa secuencia operativa por pasos; la transformación conceptual de los metadatos, desde los activos técnicos hasta la salida validada, se representa más adelante en la figura~\ref{fig:pipeline-metadatos}.
+
+\figuraMemoria[0.78\linewidth]{fig_flujo_operativo_validacion.png}{Flujo operativo del caso de uso de validación, paso a paso. Elaboración propia.}{fig:flujo-operativo}
 
 \subsection{Decisiones de diseño}
 
@@ -89,9 +96,11 @@ El origen técnico se fija en PostgreSQL porque permite controlar la estructura,
 
 \subsubsection{Gobierno restringido a la capa \texttt{gold}}\label{sec:decision-gold-only}
 
-La arquitectura \emph{medallion} (bronze/silver/gold) es una convención consolidada en plataformas de datos modernas, popularizada por Databricks como patrón de zonas progresivas de refinamiento~\cite{databricksMedallion}, que separa tres estados de madurez: datos crudos ingeridos sin transformar (\texttt{bronze}), datos limpios y conformados (\texttt{silver}) y datos refinados, agregados y listos para consumo final (\texttt{gold}). La plataforma gobierna \emph{únicamente} la capa \texttt{gold}; las capas \texttt{bronze} y \texttt{silver} se ingieren en \ac{OM} pero no se exportan como datasets \ac{DCATAPES}. Esta restricción es deliberada y se apoya en cuatro razones convergentes.
+La arquitectura \emph{medallion} (bronze/silver/gold) es una convención consolidada en plataformas de datos modernas, popularizada por Databricks como patrón de zonas progresivas de refinamiento~\cite{databricksMedallion}, que separa tres estados de madurez: datos crudos ingeridos sin transformar (\texttt{bronze}), datos limpios y conformados (\texttt{silver}) y datos refinados, agregados y listos para consumo final (\texttt{gold}). La plataforma gobierna \emph{únicamente} la capa \texttt{gold}; las capas \texttt{bronze} y \texttt{silver} se ingieren en \ac{OM} pero no se exportan como datasets \ac{DCATAPES}. La figura~\ref{fig:medallion} ilustra estas tres capas de refinamiento progresivo.
 
-La restricción se apoya en cuatro razones convergentes. Por \textbf{conformidad semántica}, el perfil exige que un \ident{dcat:Dataset} sea un conjunto «publicable» con título, descripción, publicador y temática (y, en HVD, categoría y legislación), algo que las tablas \texttt{bronze} y \texttt{silver} no satisfacen, pues contienen estructuras transitorias sin significado funcional fuera del pipeline; publicarlas falsearía el catálogo y haría fracasar la validación \ac{SHACL}. Por \textbf{coherencia con DAMA-DMBOK}, que establece que el gobierno aplica sobre activos cuyo significado, propiedad y calidad son estables~\cite{damaDmbok}, condición que las capas transitorias no cumplen. Por \textbf{separación entre catálogo técnico y de publicación}, ya que \ac{OM} mantiene visibles las tres capas como inventario interno mientras que la frontera se aplica solo en la exportación, igual que en los portales de datos abiertos, que nunca publican el inventario técnico completo. Y por \textbf{foco en el valor evaluado}, porque añadir \texttt{bronze} y \texttt{silver} multiplicaría el trabajo editorial sin añadir capacidad demostrable: el flujo, la idempotencia y las shapes son los mismos.
+\figuraMemoria[0.72\linewidth]{fig_medallion_arquitectura.png}{Arquitectura \emph{medallion}: capas \texttt{bronze}, \texttt{silver} y \texttt{gold} de refinamiento progresivo del dato. Adaptado de la documentación de Databricks.}{fig:medallion}
+
+Esta restricción es deliberada y se apoya en cuatro razones convergentes. Por \textbf{conformidad semántica}, el perfil exige que un \ident{dcat:Dataset} sea un conjunto «publicable» con título, descripción, publicador y temática (y, en HVD, categoría y legislación), algo que las tablas \texttt{bronze} y \texttt{silver} no satisfacen, pues contienen estructuras transitorias sin significado funcional fuera del pipeline; publicarlas falsearía el catálogo y haría fracasar la validación \ac{SHACL}. Por \textbf{coherencia con DAMA-DMBOK}, que establece que el gobierno aplica sobre activos cuyo significado, propiedad y calidad son estables~\cite{damaDmbok}, condición que las capas transitorias no cumplen. Por \textbf{separación entre catálogo técnico y de publicación}, ya que \ac{OM} mantiene visibles las tres capas como inventario interno mientras que la frontera se aplica solo en la exportación, igual que en los portales de datos abiertos, que nunca publican el inventario técnico completo. Y por \textbf{foco en el valor evaluado}, porque añadir \texttt{bronze} y \texttt{silver} multiplicaría el trabajo editorial sin añadir capacidad demostrable: el flujo, la idempotencia y las shapes son los mismos.
 
 La decisión, por tanto, no es una limitación de implementación, sino una alineación con la semántica del perfil, con el marco de gobierno y con la práctica de los portales de datos abiertos. La plataforma puede gobernar tablas adicionales sin cambios estructurales: basta marcar \fqn{publicar=si} en \fqn{gold_governance.csv}, lo que demuestra que la decisión es de alcance, no de capacidad técnica.
 
@@ -113,7 +122,7 @@ Los metadatos globales del catálogo se derivan de \texttt{governance\_defaults.
 
 \subsubsection{Núcleo único de lógica}
 
-La regla arquitectónica principal es que la lógica de gobierno vive en Python. El \ac{CLI}, los scripts y la web invocan ese núcleo. Esta decisión evita que la interfaz web acabe definiendo reglas paralelas y facilita probar la solución con \texttt{pytest}. El entrypoint canónico es una \texttt{dataclass} inmutable (\texttt{frozen=True}) que fija de manera explícita todos los parámetros del workflow (rutas de configuración, conexión a \ac{OM}, modo \emph{dry-run}, refresco de hoja, salidas de exportación y caso de validación); su firma se recoge en el listado~\ref{code:workflow-service} del Anexo~\ref{ap:capturas}. El término \emph{dry-run} («ejecución en seco») designa una ejecución que calcula y muestra el plan de cambios sin aplicarlos sobre \ac{OM}; se conserva en inglés por ser el nombre literal de la opción del \ac{CLI} (\texttt{-{}-dry-run}) y un estándar de facto en herramientas de línea de comandos.
+La regla arquitectónica principal es que la lógica de gobierno vive en Python: el \ac{CLI}, los scripts y la web invocan ese núcleo, lo que evita reglas paralelas en la interfaz y facilita probar la solución con \texttt{pytest}. El entrypoint canónico es una \texttt{dataclass} inmutable (\texttt{frozen=True}) que fija todos los parámetros del workflow antes de ejecutarlo (su firma se detalla en la implementación). El término \emph{dry-run} («ejecución en seco») designa una ejecución que calcula y muestra el plan de cambios sin aplicarlos sobre \ac{OM}; se conserva en inglés por ser el nombre literal de la opción del \ac{CLI} (\texttt{-{}-dry-run}).
 
 \subsection{Modelo activo DCAT-AP-ES}
 
@@ -128,11 +137,13 @@ Esta decisión prioriza el camino completo sobre la cobertura exhaustiva. El alc
 % =====================================================================
 \section{Implementación}\label{cap:implementacion}
 
-Esta sección describe cómo se materializan en código las decisiones de diseño de la sección~\ref{cap:arquitectura}. La narrativa sigue el orden lógico de la plataforma: fuente técnica, ingesta, núcleo Python, configuración funcional, consola web y, por último, el despliegue reproducible. La organización del repositorio se describe en la sección~\ref{sec:metodologia-repo}. Los comandos exactos para reproducir cada bloque están en el Anexo~\ref{ap:reproduccion}; las capturas que evidencian cada paso y los listados de configuración extensos, en el Anexo~\ref{ap:capturas}; y el recorrido visual completo desde la consola web, en el Anexo~\ref{ap:demo-operativa}.\ct{El tutor indica que esto es Resultados, no ``Implementación'': en la estructura normativa la implementación forma parte de Resultados.}
+Esta sección describe cómo se materializan en código las decisiones de diseño de la sección~\ref{cap:arquitectura}. La narrativa sigue el orden lógico de la plataforma: fuente técnica, ingesta, núcleo Python, configuración funcional, consola web y, por último, el despliegue reproducible. La figura~\ref{fig:pipeline-metadatos} resume esa transformación de los metadatos, desde los activos técnicos descubiertos en OpenMetadata hasta la salida validada con SHACL, y sirve de hilo conductor de la sección. La organización del repositorio se describe en la sección~\ref{sec:metodologia-repo}. Los comandos exactos para reproducir cada bloque están en el Anexo~\ref{ap:reproduccion}; las capturas que evidencian cada paso y los listados de configuración extensos, en el Anexo~\ref{ap:capturas}; y el recorrido visual completo desde la consola web, en el Anexo~\ref{ap:demo-operativa}.
+
+\figuraMemoria[0.78\linewidth]{fig_pipeline_metadatos.png}{Pipeline de metadatos desde OpenMetadata hasta la validación SHACL. Elaboración propia.}{fig:pipeline-metadatos}
 
 \subsection{Fuente técnica reproducible: PostgreSQL en tres capas}\label{sec:implementacion-postgres}
 
-La fuente técnica es un PostgreSQL desplegado en el mismo clúster Kubernetes que \ac{OM}, inicializado a partir de \texttt{sql/opendata\_demo\_init.sql}~\cite{postgresqlDocs}.\ct{Hecho: la arquitectura precede ahora a la implementación dentro de Resultados, como pedía el tutor.} El \ac{SQL} crea tres esquemas alineados con el patrón \emph{medallion} (bronze/silver/gold), de modo que el caso de uso de validación dispone de datos sintéticos verosímiles sin depender de descargas externas. Únicamente el esquema \texttt{gold} se considera publicable: las capas \texttt{bronze} y \texttt{silver} se ingieren para mantener visible la cadena de transformaciones, pero no se exportan como datasets \ac{DCATAPES}, por las razones de conformidad semántica, alineamiento con \ac{DMBOK} y separación entre catálogo técnico y de publicación que se argumentan en la sección~\ref{sec:decision-gold-only}. El listado~\ref{code:postgres-gold} muestra la creación de una de las tablas \texttt{gold} publicables, con una estructura suficientemente expresiva (claves temporales, dimensiones territoriales y métricas) para que el catálogo exportado contenga campos significativos al validar con \ac{SHACL}.
+La fuente técnica es un PostgreSQL desplegado en el mismo clúster Kubernetes que \ac{OM}, inicializado a partir de \texttt{sql/opendata\_demo\_init.sql}~\cite{postgresqlDocs}. El \ac{SQL} crea tres esquemas alineados con el patrón \emph{medallion} (bronze/silver/gold), de modo que el caso de uso de validación dispone de datos sintéticos verosímiles sin depender de descargas externas. Únicamente el esquema \texttt{gold} se considera publicable: las capas \texttt{bronze} y \texttt{silver} se ingieren para mantener visible la cadena de transformaciones, pero no se exportan como datasets \ac{DCATAPES}, por las razones de conformidad semántica, alineamiento con \ac{DMBOK} y separación entre catálogo técnico y de publicación que se argumentan en la sección~\ref{sec:decision-gold-only}. El listado~\ref{code:postgres-gold} muestra la creación de una de las tablas \texttt{gold} publicables, con una estructura suficientemente expresiva (claves temporales, dimensiones territoriales y métricas) para que el catálogo exportado contenga campos significativos al validar con \ac{SHACL}.
 
 \begin{lstlisting}[language=SQL, caption={Fragmento de \texttt{sql/opendata\_demo\_init.sql}: tabla publicable de la capa gold.}, label=code:postgres-gold, captionpos=b]
 CREATE TABLE IF NOT EXISTS gold.agenda_cultural_publica (
@@ -148,13 +159,15 @@ CREATE TABLE IF NOT EXISTS gold.agenda_cultural_publica (
 
 \subsection{Doble ingesta técnica}\label{sec:implementacion-ingesta}
 
-En OpenMetadata, una \emph{ingesta} consiste en conectarse a una fuente de datos y registrar automáticamente sus metadatos técnicos (el servicio, las bases de datos, los esquemas, las tablas y las columnas), sin copiar los datos de negocio. La \emph{doble ingesta} ejecuta ese proceso dos veces sobre la misma base PostgreSQL, registrándola bajo dos servicios lógicos distintos en \ac{OM}: \fqn{postgres_demo_service} y \fqn{postgres_validation_service}.\ct{El tutor avisa de que la doble ingesta no se entiende para quien la lea sin contexto. Se explica qué es una ingesta en OpenMetadata, por qué se ejecuta dos veces y qué problema (tablas homónimas en fuentes distintas) sirve para validar.}
+En OpenMetadata, una \emph{ingesta} consiste en conectarse a una fuente de datos y registrar automáticamente sus metadatos técnicos (el servicio, las bases de datos, los esquemas, las tablas y las columnas), sin copiar los datos de negocio. La \emph{doble ingesta} ejecuta ese proceso dos veces sobre la misma base PostgreSQL, registrándola bajo dos servicios lógicos distintos en \ac{OM}: \fqn{postgres_demo_service} y \fqn{postgres_validation_service}.
 
-El motivo no es duplicar datos, sino reproducir de forma controlada un escenario habitual en organizaciones reales: que una misma tabla, por ejemplo \fqn{gold.agenda_cultural_publica}, exista con idéntico nombre en dos fuentes diferentes. Con ello se comprueba que la lógica de gobierno identifica cada activo por su nombre completo en \ac{OM} (\ac{FQN}, que incluye servicio, base de datos, esquema y tabla) y no por el nombre corto de la tabla. De lo contrario, las dos tablas homónimas se mezclarían y el catálogo resultante sería incorrecto. La ingesta se invoca desde \fqn{scripts/infra/ingest_postgres_double.ps1} y su resultado es visible en la \ac{UI} de \ac{OM} (figura~\ref{fig:om-services}): cuatro tablas publicables, dos por servicio, cada una con su \ac{FQN} único.
+El descubrimiento de activos es automático y no depende de la arquitectura \emph{medallion}: el conector de \ac{OM} lee el catálogo interno de la propia fuente (en PostgreSQL, las vistas de \texttt{information\_schema}) y registra cuanto encuentra, es decir, \emph{las tres capas} \texttt{bronze}, \texttt{silver} y \texttt{gold} con todas sus tablas y columnas, no solo \texttt{gold}. A cada activo descubierto \ac{OM} le asigna su \ac{FQN} (servicio, base de datos, esquema y tabla), que es la nomenclatura con la que el resto del flujo lo identifica sin ambigüedad. La restricción a \texttt{gold} no se aplica en el descubrimiento, sino después, como decisión editorial: la hoja de gobierno marca con \fqn{publicar} qué activos descubiertos entran en el catálogo publicable (sección~\ref{sec:decision-gold-only}). Por eso una fuente que no use \emph{medallion} se descubre exactamente igual; lo único que cambia es qué filas se marcan como publicables, sin tocar el núcleo.
+
+El motivo de la doble ingesta no es duplicar datos, sino reproducir de forma controlada un escenario habitual en organizaciones reales: que una misma tabla, por ejemplo \fqn{gold.agenda_cultural_publica}, exista con idéntico nombre en dos fuentes diferentes. Con ello se comprueba que la lógica de gobierno identifica cada activo por su nombre completo en \ac{OM} (\ac{FQN}, que incluye servicio, base de datos, esquema y tabla) y no por el nombre corto de la tabla. De lo contrario, las dos tablas homónimas se mezclarían y el catálogo resultante sería incorrecto. La ingesta se invoca desde \fqn{scripts/infra/ingest_postgres_double.ps1} y su resultado es visible en la \ac{UI} de \ac{OM} (figura~\ref{fig:om-services}): cuatro tablas publicables, dos por servicio, cada una con su \ac{FQN} único.
 
 \subsection{Núcleo Python: paquete \texttt{om\_dcat\_sync}}\label{sec:implementacion-nucleo}
 
-El paquete \texttt{tfm\_ingestor} (alias importable \texttt{om\_dcat\_sync}) concentra toda la lógica de gobierno, exportación y validación. Está estructurado en módulos con responsabilidades acotadas, conforme al principio de núcleo único declarado en la sección~\ref{cap:arquitectura}. La tabla~\ref{tab:modulos-python} lista los módulos principales y la figura~\ref{fig:modulos-python} del Anexo~\ref{ap:capturas} resume su composición.\ct{El tutor considera la figura de la estructura interna del paquete candidata a moverse a un anexo.}
+El paquete \texttt{tfm\_ingestor} (alias importable \texttt{om\_dcat\_sync}) concentra toda la lógica de gobierno, exportación y validación. Está estructurado en módulos con responsabilidades acotadas, conforme al principio de núcleo único declarado en la sección~\ref{cap:arquitectura}. La tabla~\ref{tab:modulos-python} lista los módulos principales y la figura~\ref{fig:modulos-python} del Anexo~\ref{ap:capturas} resume su composición.
 
 \begin{table}[h]
 \footnotesize
@@ -184,7 +197,7 @@ El módulo \fqn{workflow_service.py} define una \texttt{dataclass} inmutable (\t
 
 \subsubsection{Sincronización repetible (idempotente) de gobierno}
 
-En este contexto, \emph{sincronización idempotente} significa, sencillamente, que la operación es \textbf{repetible sin efectos colaterales}: ejecutarla una vez o varias veces seguidas deja OpenMetadata en el mismo estado. La primera ejecución aplica los cambios necesarios y las siguientes no vuelven a modificar nada.\ct{El tutor sigue sin ver clara la palabra ``idempotente'' en este contexto. Se renombra el subtítulo a ``Sincronización repetible (idempotente)'' y se abre con una definición llana: repetible sin efectos colaterales.} \texttt{governance\_service.py} mapea cada fila de la hoja \ac{CSV} a operaciones \texttt{PATCH} o \texttt{POST} sobre la entidad correspondiente en \ac{OM} usando su \ac{FQN}. Esa propiedad se materializa por dos vías: las propiedades gestionadas (\texttt{MANAGED\_DCAT\_CUSTOM\_PROPERTIES}) solo se reescriben si cambian, y las etiquetas \texttt{dcat\_theme.*} se aplican como conjuntos, nunca como acumulación lineal. La consecuencia es que ejecutar el workflow dos veces consecutivas produce cero cambios en la segunda ejecución, una de las métricas de validación de la sección~\ref{cap:validacion}.
+En este contexto, \emph{sincronización idempotente} significa, sencillamente, que la operación es \textbf{repetible sin efectos colaterales}: ejecutarla una vez o varias veces seguidas deja OpenMetadata en el mismo estado. La primera ejecución aplica los cambios necesarios y las siguientes no vuelven a modificar nada. \texttt{governance\_service.py} mapea cada fila de la hoja \ac{CSV} a operaciones \texttt{PATCH} o \texttt{POST} sobre la entidad correspondiente en \ac{OM} usando su \ac{FQN}. Esa propiedad se materializa por dos vías: las propiedades gestionadas (\texttt{MANAGED\_DCAT\_CUSTOM\_PROPERTIES}) solo se reescriben si cambian, y las etiquetas \texttt{dcat\_theme.*} se aplican como conjuntos, nunca como acumulación lineal. La consecuencia es que ejecutar el workflow dos veces consecutivas produce cero cambios en la segunda ejecución, una de las métricas de validación de la sección~\ref{cap:validacion}.
 
 El resultado del gobierno es directamente observable en \ac{OM}: tras el workflow, cada tabla \texttt{gold} publicable conserva sus propiedades personalizadas DCAT (\fqn{dcat_publisher_name}, \fqn{dcat_hvd_category}, \fqn{dcat_access_url}) y sus etiquetas \fqn{dcat_theme.*}, que son la materia prima que el exportador transforma en el grafo \ac{DCATAPES} (figura~\ref{fig:om-tabla-propiedades}, Anexo~\ref{ap:capturas}).
 
@@ -194,7 +207,7 @@ El resultado del gobierno es directamente observable en \ac{OM}: tras el workflo
 
 \subsubsection{Validación SHACL del catálogo exportado}
 
-Esta etapa comprueba formalmente que el catálogo cumple el perfil DCAT-AP-ES. \fqn{shacl_validation.py} toma como entrada el grafo \ac{JSONLD} exportado en la etapa anterior y un \emph{grafo de shapes} (el conjunto de restricciones del perfil), y los confronta con el motor pySHACL~\cite{pyshacl}, implementación de referencia de \ac{SHACL} para Python. El concepto de \emph{shape} y un ejemplo mínimo se introdujeron en la sección~\ref{sec:shacl}. Aquí se aplican las shapes oficiales completas.\ct{El tutor pide desarrollar más esta sección. Se amplía con el flujo de validación (entrada JSON-LD y grafo de shapes, motor pySHACL), el papel del caso HVD, la estructura del informe, la distinción Violation/Warning y el criterio de aceptación.}
+Esta etapa comprueba formalmente que el catálogo cumple el perfil DCAT-AP-ES. \fqn{shacl_validation.py} toma como entrada el grafo \ac{JSONLD} exportado en la etapa anterior y un \emph{grafo de shapes} (el conjunto de restricciones del perfil), y los confronta con el motor pySHACL~\cite{pyshacl}, implementación de referencia de \ac{SHACL} para Python. El concepto de \emph{shape} y un ejemplo mínimo se introdujeron en la sección~\ref{sec:shacl}. Aquí se aplican las shapes oficiales completas.
 
 El bundle de shapes está vendorizado en \fqn{tfm_ingestor/resources/shacl/} y congelado en el commit \texttt{f2c8a888} del repositorio oficial \fqn{datosgobes/DCAT-AP-ES}~\cite{datosGobValidacionDcatApEs2025}. Congelarlo, en lugar de descargarlo en cada ejecución, evita dependencias de red y garantiza que dos validaciones del mismo catálogo den siempre el mismo resultado. El caso \texttt{hvd} carga, además de las restricciones generales, las shapes específicas de los conjuntos de datos de alto valor, que exigen propiedades adicionales como la categoría HVD, la legislación aplicable y el servicio de acceso.
 
@@ -212,7 +225,7 @@ Cada ejecución crea un \emph{job} versionado en \texttt{state/web\_jobs/} con i
 
 \subsection{Despliegue reproducible en Kubernetes}\label{sec:implementacion-k8s}
 
-El despliegue local utiliza Kind como motor de clúster Kubernetes encima de Docker~\cite{dockerOverview, kindDocs, kubernetesConcepts}. \ac{OM} y sus dependencias (MySQL y OpenSearch) se instalan mediante Helm~\cite{helmDocs} usando los \emph{values} canónicos del repositorio, cuyo fragmento mínimo se recoge en el listado~\ref{code:k8s-values} del Anexo~\ref{ap:capturas}.\ct{Hecho: el tutor pedía explicar primero los módulos y dejar el despliegue de infraestructura para el final. Se ha movido esta subsección al cierre de la implementación.} El script \texttt{scripts/infra/launch\_infra.ps1} encadena la creación del clúster, la instalación de los charts y los \texttt{port-forward} necesarios para exponer la \ac{UI} de \ac{OM} en \texttt{localhost:8585} y el PostgreSQL de referencia en \texttt{localhost:5432}. La idempotencia se garantiza mediante \texttt{helm upgrade --install} y comprobaciones con \texttt{kubectl get} previas a cada paso destructivo. Los contenedores Docker y los \emph{pods} resultantes (figuras~\ref{fig:docker-containers} y~\ref{fig:pods-kubernetes}, Anexo~\ref{ap:capturas}), así como los \emph{values} Helm canónicos, se detallan en el Anexo~\ref{ap:infraestructura}.
+El despliegue local utiliza Kind como motor de clúster Kubernetes encima de Docker~\cite{dockerOverview, kindDocs, kubernetesConcepts}. \ac{OM} y sus dependencias (MySQL y OpenSearch) se instalan mediante Helm~\cite{helmDocs} usando los \emph{values} canónicos del repositorio, cuyo fragmento mínimo se recoge en el listado~\ref{code:k8s-values} del Anexo~\ref{ap:capturas}. El script \texttt{scripts/infra/launch\_infra.ps1} encadena la creación del clúster, la instalación de los charts y los \texttt{port-forward} necesarios para exponer la \ac{UI} de \ac{OM} en \texttt{localhost:8585} y el PostgreSQL de referencia en \texttt{localhost:5432}. La idempotencia se garantiza mediante \texttt{helm upgrade --install} y comprobaciones con \texttt{kubectl get} previas a cada paso destructivo. Los contenedores Docker y los \emph{pods} resultantes (figuras~\ref{fig:docker-containers} y~\ref{fig:pods-kubernetes}, Anexo~\ref{ap:capturas}), así como los \emph{values} Helm canónicos, se detallan en el Anexo~\ref{ap:infraestructura}.
 
 \subsection{Resumen de implementación}
 
@@ -223,9 +236,9 @@ La implementación cumple las tres reglas duras declaradas en la sección~\ref{c
 % =====================================================================
 \section{Validación y resultados de la validación}\label{cap:validacion}
 
-Esta sección evalúa la corrección de la salida producida por la plataforma. Complementa el recorrido operativo \emph{end-to-end} documentado en el Anexo~\ref{ap:demo-operativa}, donde se narran las pantallas de la consola web y los artefactos producidos en cada paso. Aquí se mide qué garantiza esa salida. Allí se muestra cómo se obtiene paso a paso.\ct{Hecho: el tutor pedía que este capítulo fuera la última parte de Resultados (y le parecía muy bien). Se integra como sección final del capítulo Resultados.}
+Esta sección evalúa la corrección de la salida producida por la plataforma. Complementa el recorrido operativo \emph{end-to-end} documentado en el Anexo~\ref{ap:demo-operativa}, donde se narran las pantallas de la consola web y los artefactos producidos en cada paso. Aquí se mide qué garantiza esa salida. Allí se muestra cómo se obtiene paso a paso.
 
-La validación combina tres niveles:\ct{El tutor pide quitar el título ``Estrategia de validación'' (6.1) y que su contenido vaya a continuación del párrafo anterior. Se elimina el encabezado de sección y el texto enlaza directamente con la introducción del capítulo.}
+La validación combina tres niveles:
 
 \begin{enumerate}
   \item pruebas automatizadas de módulos Python y servidor web;
@@ -237,7 +250,7 @@ Esta estrategia evita depender de una comprobación visual de la interfaz. Cada 
 
 \subsection{Pruebas automatizadas}
 
-El repositorio contiene pruebas \texttt{pytest} para configuración, reglas de mapeo, hoja funcional, exportación DCAT, validación SHACL, validación runtime y workflow. La consola web incluye tests (Vitest) para operaciones, lectura y escritura de CSV, resumen de jobs, artefactos y redacción de secretos. La suite se ejecuta con \texttt{python -m pytest} en el núcleo y \texttt{pnpm test} en \texttt{web/}, con los comandos exactos recogidos en el Anexo~\ref{ap:validacion-web}. Estas pruebas cubren la lógica interna sin exigir que el tribunal inspeccione manualmente cada módulo.
+El repositorio contiene pruebas \texttt{pytest} para configuración, reglas de mapeo, hoja funcional, exportación DCAT, validación SHACL, validación runtime y workflow. La consola web incluye tests (Vitest) para operaciones, lectura y escritura de CSV, resumen de jobs, artefactos y redacción de secretos. La suite se ejecuta con \texttt{python -m pytest} en el núcleo y \texttt{pnpm test} en \texttt{web/}, con los comandos exactos recogidos en el Anexo~\ref{ap:validacion-web}. Estas pruebas cubren la lógica interna de forma reproducible, sin necesidad de inspeccionar manualmente cada módulo.
 
 \subsection{Validación estructural del estado vivo}
 
@@ -314,7 +327,7 @@ Estos ficheros se generan en \texttt{tmp\_pytest/}. No se versionan porque son r
 
 \subsection{Cumplimiento del problema planteado}
 
-La solución resuelve el problema principal: conectar un catálogo técnico en OpenMetadata con una salida interoperable DCAT-AP-ES validable.\ct{Hecho: el tutor reorganizó este capítulo. 7.1-7.4 (cumplimiento, beneficios, limitaciones, amenazas) pasan a Resultados como ``Discusión de los resultados''; 7.5 (Big Data) y 7.6 (gobierno supervisado) se mueven a anexos; el trabajo futuro y las conclusiones se reestructuran en el capítulo ``Conclusiones y trabajos futuros''.} La plataforma no se limita a documentar un mapeo, sino que implementa un flujo ejecutable que descubre activos técnicos, permite curación funcional, aplica metadatos, exporta JSON-LD y valida el resultado. El Anexo~\ref{ap:demo-operativa} narra ese flujo de extremo a extremo desde la consola web, hasta dejar el archivo RDF listo para entregarlo a un harvester compatible.
+La solución resuelve el problema principal: conectar un catálogo técnico en OpenMetadata con una salida interoperable DCAT-AP-ES validable. La plataforma no se limita a documentar un mapeo, sino que implementa un flujo ejecutable que descubre activos técnicos, permite curación funcional, aplica metadatos, exporta JSON-LD y valida el resultado. El Anexo~\ref{ap:demo-operativa} narra ese flujo de extremo a extremo desde la consola web, hasta dejar el archivo RDF listo para entregarlo a un harvester compatible.
 
 La decisión de usar PostgreSQL de referencia en lugar de cosechar CKAN refuerza la defendibilidad del trabajo. CKAN habría permitido transformar metadatos ya publicados. PostgreSQL y OpenMetadata permiten demostrar gobierno desde activos técnicos, que es más coherente con las competencias de ingeniería, Big Data y cloud del máster.
 
@@ -350,16 +363,21 @@ Estas limitaciones no invalidan el trabajo: forman parte del alcance funcional d
 
 \subsection{Amenazas a la validez}
 
-La principal amenaza a la validez externa es que el caso de uso trabaja con datos sintéticos y un número reducido de datasets publicables. La arquitectura, sin embargo, está diseñada para escalar a más tablas \texttt{gold} mediante la misma hoja funcional y el mismo workflow.
+Siguiendo la clasificación habitual de amenazas a la validez en ingeniería del software experimental~\cite{wohlinExperimentation}, se consideran los cuatro tipos:
 
-Conviene aclarar que la conformidad \ac{SHACL} «con warnings permitidos» no constituye una amenaza a la validez. En \ac{SHACL}, una violación con severidad \texttt{sh:Violation} indica el incumplimiento de una restricción obligatoria. Un \texttt{sh:Warning}, en cambio, señala únicamente que el perfil \emph{recomienda} cubrir propiedades adicionales, recomendadas u opcionales, que no son obligatorias~\cite{w3cShacl}. El catálogo exportado no presenta violaciones bloqueantes: los warnings solo invitan a enriquecer metadatos no exigidos por el perfil. Aumentar esa cobertura mejora la calidad editorial del catálogo, pero su ausencia no invalida la conformidad obligatoria demostrada.
+\begin{itemize}
+  \item \textbf{Validez interna}: el riesgo de que los resultados (conformidad e idempotencia) se deban al diseño de la prueba y no a la plataforma. Se mitiga porque cada resultado se obtiene con comandos versionados, \emph{shapes} congeladas por \emph{commit} y exportación determinista, de modo que lo observado es atribuible al sistema y no a un estado puntual del entorno.
+  \item \textbf{Validez externa}: el caso de uso emplea datos sintéticos y un número reducido de datasets de una única fuente PostgreSQL, por lo que la generalización a catálogos institucionales a gran escala queda fuera de lo demostrado. La arquitectura está diseñada para escalar a más tablas \texttt{gold} y a otras fuentes con la misma hoja funcional y el mismo workflow.
+  \item \textbf{Validez de constructo}: la conformidad \ac{SHACL} mide la corrección estructural del grafo frente al perfil, no su calidad editorial ni su utilidad. Por eso un catálogo conforme puede contener \texttt{sh:Warning}: el perfil \emph{recomienda} propiedades adicionales no obligatorias~\cite{w3cShacl}, cuya ausencia no invalida la conformidad demostrada. La conformidad «con warnings permitidos» es, por tanto, una distinción explícita entre lo obligatorio y lo recomendado, no una amenaza.
+  \item \textbf{Validez de conclusión}: los artefactos son reproducibles y deterministas, y la conformidad se corrobora con un validador europeo independiente (sección~\ref{sec:validacion-europea}), lo que reduce el riesgo de que las conclusiones dependan de la implementación local.
+\end{itemize}
 
 % =====================================================================
 % Trazabilidad entre objetivos y evidencias
 % =====================================================================
 \section{Trazabilidad entre objetivos y evidencias}\label{sec:trazabilidad}
 
-La tabla~\ref{tab:trazabilidad} relaciona cada objetivo con el bloque donde se aborda y con la evidencia versionada que lo respalda.\ct{Hecho: la trazabilidad objetivos-evidencias se ha movido a Resultados (antes estaba en Objetivos), como pedía el tutor.}
+La tabla~\ref{tab:trazabilidad} relaciona cada objetivo con el bloque donde se aborda y con la evidencia versionada que lo respalda.
 
 \begin{table}[h]
 \footnotesize

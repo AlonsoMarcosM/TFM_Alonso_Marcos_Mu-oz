@@ -2,28 +2,28 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {3.1}{\ignorespaces Comparativa de capacidades de la Plataforma del TFM frente a plataformas comerciales de gobierno (p.\,ej.\ Anjana Data), plataformas open source de metadatos (OpenMetadata, DataHub) y portales de datos abiertos (CKAN). Elaboración propia.}}{17}{table.caption.41}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces Comparativa de capacidades de la Plataforma del TFM frente a plataformas comerciales de gobierno (p.\,ej.\ Anjana Data), plataformas open source de metadatos (OpenMetadata, DataHub) y portales de datos abiertos (CKAN). Elaboración propia.}}{17}{table.caption.12}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces Fases del roadmap del TFM con su área DAMA-DMBOK predominante. Elaboración propia, sincronizada con {\small \nolinkurl {scripts/planning/github_project_planificacion.json}}.}}{21}{table.caption.45}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces Bloques principales del repositorio. Elaboración propia.}}{23}{table.caption.50}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Fases del roadmap del TFM con su área DAMA-DMBOK predominante. Elaboración propia, sincronizada con {\small \nolinkurl {scripts/planning/github_project_planificacion.json}}.}}{21}{table.caption.14}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Bloques principales del repositorio. Elaboración propia.}}{23}{table.caption.15}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {5.1}{\ignorespaces Requisitos funcionales con criterio de aceptación. Elaboración propia.}}{25}{table.caption.53}%
-\contentsline {table}{\numberline {5.2}{\ignorespaces Módulos principales de \texttt {tfm\_ingestor}. Elaboración propia.}}{34}{table.caption.61}%
-\contentsline {table}{\numberline {5.3}{\ignorespaces Resumen de resultados del caso de uso de validación. Elaboración propia a partir de la documentación del repositorio.}}{40}{table.caption.68}%
-\contentsline {table}{\numberline {5.4}{\ignorespaces Trazabilidad entre objetivos, bloques de la memoria y evidencias. Elaboración propia.}}{43}{table.caption.71}%
+\contentsline {table}{\numberline {5.1}{\ignorespaces Requisitos funcionales con criterio de aceptación. Elaboración propia.}}{27}{table.caption.17}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Módulos principales de \texttt {tfm\_ingestor}. Elaboración propia.}}{37}{table.caption.24}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces Resumen de resultados del caso de uso de validación. Elaboración propia a partir de la documentación del repositorio.}}{43}{table.caption.26}%
+\contentsline {table}{\numberline {5.4}{\ignorespaces Trazabilidad entre objetivos, bloques de la memoria y evidencias. Elaboración propia.}}{46}{table.caption.27}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {6.1}{\ignorespaces Cumplimiento de los objetivos del TFE y bloque donde se evidencian. Elaboración propia.}}{45}{table.caption.73}%
-\addvspace {10\p@ }
-\addvspace {10\p@ }
-\contentsline {table}{\numberline {B.1}{\ignorespaces Matriz de versiones fijadas del sistema. Elaboración propia.}}{54}{table.caption.75}%
+\contentsline {table}{\numberline {6.1}{\ignorespaces Cumplimiento de los objetivos del TFE y bloque donde se evidencian. Elaboración propia.}}{48}{table.caption.28}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {D.1}{\ignorespaces Correspondencia mínima OpenMetadata $\rightarrow $ DCAT-AP-ES. Elaboración propia a partir de {\small \nolinkurl {docs/dcat_mapping.md}}.}}{58}{table.caption.76}%
-\contentsline {table}{\numberline {D.2}{\ignorespaces Entregables del caso de uso de validación y su visualización en la memoria. Elaboración propia.}}{59}{table.caption.77}%
+\contentsline {table}{\numberline {B.1}{\ignorespaces Matriz de versiones fijadas del sistema. Elaboración propia.}}{58}{table.caption.30}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {F.1}{\ignorespaces Mapa del recorrido demo: acción del operario, artefacto producido y sección de la memoria donde se justifica formalmente. Elaboración propia.}}{70}{table.caption.88}%
+\contentsline {table}{\numberline {D.1}{\ignorespaces Correspondencia mínima OpenMetadata $\rightarrow $ DCAT-AP-ES. Elaboración propia a partir de {\small \nolinkurl {docs/dcat_mapping.md}}.}}{63}{table.caption.31}%
+\contentsline {table}{\numberline {D.2}{\ignorespaces Entregables del caso de uso de validación y su visualización en la memoria. Elaboración propia.}}{64}{table.caption.32}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {G.1}{\ignorespaces Columnas de la hoja funcional \texttt {gold\_governance.csv}. Elaboración propia.}}{86}{table.caption.105}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {F.1}{\ignorespaces Mapa del recorrido demo: acción del operario, artefacto producido y sección de la memoria donde se justifica formalmente. Elaboración propia.}}{75}{table.caption.43}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {G.1}{\ignorespaces Columnas de la hoja funcional \texttt {gold\_governance.csv}. Elaboración propia.}}{89}{table.caption.58}%
 \addvspace {10\p@ }
 \contentsfinish 

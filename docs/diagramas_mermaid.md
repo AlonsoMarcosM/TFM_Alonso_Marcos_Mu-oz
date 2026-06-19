@@ -169,32 +169,19 @@ Todos los artefactos viven en `tmp_pytest/`, ignorado por Git pero regenerable d
 
 ```mermaid
 flowchart TB
-  subgraph L1["1 - Fuente técnica"]
-    PG[(PostgreSQL de referencia<br/>esquemas bronze / silver / gold)]
-  end
-  subgraph L2["2 - Catálogo técnico"]
-    OM[OpenMetadata<br/>dos servicios PostgreSQL ingeridos]
-  end
-  subgraph L3["3 - Gobierno funcional"]
-    SHEET[(gold_governance.csv<br/>curación por dataset)]
-    CFG[(governance_defaults.yaml<br/>defaults del catálogo)]
-  end
-  subgraph L4["4 - Núcleo Python (om_dcat_sync)"]
-    WF[workflow: descubrir, sincronizar,<br/>exportar y validar]
-  end
-  subgraph L5["5 - Operación"]
-    CLI[CLI]
-    SCR[Scripts PowerShell]
-    WEB[Consola web Next.js]
-  end
-  OUT[Catálogo DCAT-AP-ES / HVD<br/>JSON-LD validado con SHACL]
+  PG["<b>Capa 1 · Fuente técnica</b><br/>PostgreSQL de referencia<br/>(esquemas bronze · silver · gold)"]
+  OM["<b>Capa 2 · Catálogo técnico</b><br/>OpenMetadata: descubre servicios,<br/>esquemas, tablas y columnas (dos servicios)"]
+  GOV["<b>Capa 3 · Gobierno funcional</b><br/>gold_governance.csv + governance_defaults.yaml<br/>(curación por dataset + defaults del catálogo)"]
+  CORE["<b>Capa 4 · Núcleo Python (om_dcat_sync)</b><br/>descubrir · sincronizar · exportar · validar"]
+  OUT["Catálogo DCAT-AP-ES / HVD<br/>JSON-LD validado con SHACL"]
+  OPER["<b>Capa 5 · Operación</b><br/>CLI · scripts PowerShell · consola web Next.js"]
 
   PG -->|ingesta técnica| OM
-  OM -->|activos descubiertos| L3
-  L3 -->|metadatos + defaults| WF
-  WF -->|gobierno idempotente| OM
-  WF -->|exporta y valida| OUT
-  L5 -->|invocan el mismo núcleo| WF
+  OM -->|activos descubiertos| GOV
+  GOV -->|metadatos + defaults| CORE
+  CORE -->|gobierno idempotente| OM
+  CORE ==>|exporta y valida| OUT
+  CORE -.->|operable desde, sin duplicar reglas| OPER
 ```
 
 ## 11) Arquitectura física de despliegue
@@ -260,3 +247,15 @@ sequenceDiagram
 ```
 
 El diagrama 13 (figura `fig_secuencia_operacion.png`) muestra la interacción del actor principal con la plataforma de extremo a extremo, para la sección de actores del sistema.
+
+## 14) Arquitectura medallion (bronze/silver/gold)
+
+```mermaid
+flowchart LR
+    SRC[Datos de origen] --> B[Bronze<br/>Datos crudos<br/>sin transformar]
+    B --> S[Silver<br/>Datos limpios<br/>y conformados]
+    S --> G[Gold<br/>Datos refinados<br/>listos para consumo]
+    G --> C([Consumo y publicación])
+```
+
+El diagrama 14 (figura `fig_medallion_arquitectura.png`) ilustra el patrón medallion de zonas progresivas de refinamiento, adaptado de la documentación de Databricks, para la decisión de gobernar solo la capa `gold` en Resultados.

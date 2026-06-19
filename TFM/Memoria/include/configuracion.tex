@@ -298,38 +298,8 @@
 \newcommand{\ps}{\bfr{\huge[--}\,} % Pricipio de un bloque en sucio
 \newcommand{\fs}{\bfr{\huge--]}\,} % Fin de un bloque en sucio.
 
-% Notas
-\usepackage[textsize=tiny,spanish,shadow,textwidth=2cm]{todonotes}
-
-% =====================================================================
-% PROVISIONAL  --  Comentarios de revisión del tutor.
-% Genera una marca pequeña al margen en el cuerpo (C1, C2, ...) y un
-% "Índice de comentarios del tutor" mediante \listoftodos en el frontmatter.
-% Cada \ct{...} registra el comentario / el cambio realizado.
-%
-% BORRAR ANTES DE LA ENTREGA FINAL:
-%   1) eliminar la línea \listoftodos[\ctlistname] de TFM.tex (frontmatter),
-%   2) cambiar el \usepackage de todonotes a la opción [disable]
-%      (o retirar las llamadas \ct{...} del cuerpo).
-% Con la opción [disable] todas las marcas \ct y el índice desaparecen
-% sin tocar el cuerpo de la memoria.
-% =====================================================================
-\newcounter{ctcount}
-\newcommand{\ctlistname}{Índice de comentarios del tutor (provisional)}
-% \ct{texto del comentario del tutor o del cambio realizado}
-% Marca al margen "Cn" + entrada "[Cn] texto" en el índice de comentarios.
-% La marca al margen "Cn" es un hiperenlace al destino \hypertarget{idx:ct}
-% situado en el "Índice de comentarios del tutor" (frontmatter), para poder
-% saltar del texto al índice con un clic. El índice (\listoftodos) ya enlaza
-% de vuelta a cada marca (todonotes + hyperref).
-\newcommand{\ct}[1]{%
-  \refstepcounter{ctcount}%
-  \todo[color=orange!25, bordercolor=orange!80, linecolor=orange!80,
-        size=\tiny, caption={[C\thectcount]~#1}]{\hyperlink{idx:ct}{\textbf{C\thectcount}}}%
-}
-
 % Para generar textos "random"
- 
+
 
 % -------------------------------
 % Algoritmos y código
@@ -515,14 +485,15 @@
 \renewcommand{\lstlistingname}{Código}
 \renewcommand{\lstlistlistingname}{Índice de Códigos}
 
-% Figuras de la memoria: ancho por defecto 0.9\linewidth, altura limitada a
-% 0.7\textheight para evitar floats demasiado grandes; conserva relación de
-% aspecto. Si la figura no existe, muestra una caja "Captura pendiente".
-\newcommand{\figuraMemoria}[4][\linewidth]{%
+% Figuras de la memoria: ancho por defecto 0.8\linewidth y altura limitada a
+% 0.45\textheight para que las figuras (sobre todo los diagramas) no ocupen
+% demasiado y ayudar a ajustar el cuerpo al límite de 50 páginas; conserva
+% relación de aspecto. Si la figura no existe, muestra "Captura pendiente".
+\newcommand{\figuraMemoria}[4][0.8\linewidth]{%
 \begin{figure}[htbp]
 \centering
 \IfFileExists{figs/#2}{%
-  \includegraphics[width=#1,height=0.62\textheight,keepaspectratio]{figs/#2}%
+  \includegraphics[width=#1,height=0.45\textheight,keepaspectratio]{figs/#2}%
 }{%
   \fbox{%
     \begin{minipage}[c][5cm][c]{0.85\linewidth}

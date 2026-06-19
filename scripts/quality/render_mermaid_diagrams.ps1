@@ -40,6 +40,8 @@ $mapping = @(
     @{ File = "diagramas_mermaid.md"; Index = 10; OutName = "fig_arquitectura_logica_detalle.png" },
     @{ File = "diagramas_mermaid.md"; Index = 11; OutName = "fig_arquitectura_fisica.png" },
     @{ File = "diagramas_mermaid.md"; Index = 12; OutName = "fig_vision_funcional_solucion.png" },
+    @{ File = "diagramas_mermaid.md"; Index = 13; OutName = "fig_secuencia_operacion.png" },
+    @{ File = "diagramas_mermaid.md"; Index = 14; OutName = "fig_medallion_arquitectura.png" },
     @{ File = "gobierno_funcional_gold.md"; Index = 1; OutName = "fig_gobierno_funcional_gold.png" },
     @{ File = "refactor_orquestacion_operativa.md"; Index = 1; OutName = "fig_refactor_orquestacion_operativa.png" }
 )

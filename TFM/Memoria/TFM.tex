@@ -2,10 +2,10 @@
 % Memoria del TFM en la ESIIAB/ESICR de la UCLM
 % Compilar con XeLaTeX
 % -------------------------------
-% openany: los capítulos pueden empezar en página par o impar, evitando
-% las páginas en blanco que openright (por defecto) inserta antes de cada
-% capítulo. Necesario para ajustar el cuerpo al límite de 50 páginas.
-\documentclass[12pt, a4paper, openany]{book}
+% openright: por petición del tutor, todo capítulo debe empezar en página
+% impar (recto). Reintroduce las páginas en blanco que el documento a doble
+% cara inserta antes de cada capítulo que arrancaría en par.
+\documentclass[12pt, a4paper, openright]{book}
 
 \input{include/opciones}
 \input{include/configuracion}
@@ -28,13 +28,16 @@
 \listoffigures
 \listoftables
 \lstlistoflistings
-\hypertarget{idx:ct}{}\listoftodos[\ctlistname] % PROVISIONAL: índice de comentarios del tutor. BORRAR antes de la entrega.
 \input{elements/acronimos}
 \cleardoublepage
 % Interlineado del cuerpo en torno a 1.4 (antes 1.5 con \onehalfspacing) para
 % ajustar el cuerpo principal (Introducción a Conclusiones) al límite de 50
-% páginas; la bibliografía y los anexos no cuentan. \setstretch{1.15} a 12pt
-% deja el cuerpo en 49 páginas (\onehalfspacing equivale a 1.5).
+% páginas; la bibliografía y los anexos no cuentan. Con openright (capítulos
+% en página impar) y los añadidos de la revisión del tutor, el cuerpo termina
+% en la página 49. OJO: la paginación está dominada por las figuras y por el
+% inicio de capítulo en impar; verificar siempre el conteo real de páginas y
+% las etiquetas impresas (no el page del .toc de la bibliografía, que recoge
+% su página final por estar \addcontentsline tras \bibliography).
 \setstretch{1.15}
 
 \mainmatter

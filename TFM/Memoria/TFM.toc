@@ -2,7 +2,7 @@
 \contentsline {chapter}{\numberline {1}Introducción}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Contexto}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Problema abordado}{2}{section.1.2}%
-\contentsline {section}{\numberline {1.3}Solución propuesta}{2}{section.1.3}%
+\contentsline {section}{\numberline {1.3}Solución propuesta}{3}{section.1.3}%
 \contentsline {section}{\numberline {1.4}Aportación del trabajo}{4}{section.1.4}%
 \contentsline {section}{\numberline {1.5}Alcance}{5}{section.1.5}%
 \contentsline {section}{\numberline {1.6}Exclusiones}{6}{section.1.6}%
@@ -27,7 +27,7 @@
 \contentsline {paragraph}{Portales de datos abiertos.}{15}{section.3.8}%
 \contentsline {paragraph}{Plataformas open source de metadatos.}{16}{section.3.8}%
 \contentsline {subsection}{\numberline {3.8.1}Posicionamiento de la Plataforma de Gobierno del Dato del TFM}{16}{subsection.3.8.1}%
-\contentsline {section}{\numberline {3.9}Reproducibilidad, idempotencia y \emph {Infrastructure as Code}}{17}{section.3.9}%
+\contentsline {section}{\numberline {3.9}Reproducibilidad, idempotencia e \emph {Infrastructure as Code}}{17}{section.3.9}%
 \contentsline {section}{\numberline {3.10}Validación frente a verificación}{17}{section.3.10}%
 \contentsline {section}{\numberline {3.11}Síntesis del estado del arte}{18}{section.3.11}%
 \contentsline {chapter}{\numberline {4}Metodología de trabajo}{19}{chapter.4}%
@@ -40,110 +40,110 @@
 \contentsline {subsection}{\numberline {4.5.2}Docker, Kind, Kubernetes y Helm}{22}{subsection.4.5.2}%
 \contentsline {subsection}{\numberline {4.5.3}Consola web: React, Next.js y TypeScript}{22}{subsection.4.5.3}%
 \contentsline {section}{\numberline {4.6}Organización del repositorio}{23}{section.4.6}%
-\contentsline {chapter}{\numberline {5}Resultados}{24}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Arquitectura de la solución}{24}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}Actores del sistema}{24}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}Requisitos funcionales}{25}{subsection.5.1.2}%
-\contentsline {subsection}{\numberline {5.1.3}Requisitos no funcionales}{26}{subsection.5.1.3}%
-\contentsline {subsection}{\numberline {5.1.4}Arquitectura lógica}{26}{subsection.5.1.4}%
+\contentsline {chapter}{\numberline {5}Resultados}{25}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Arquitectura de la solución}{25}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Actores del sistema}{25}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Requisitos funcionales}{26}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}Requisitos no funcionales}{27}{subsection.5.1.3}%
+\contentsline {subsection}{\numberline {5.1.4}Arquitectura lógica}{28}{subsection.5.1.4}%
 \contentsline {subsection}{\numberline {5.1.5}Arquitectura física}{28}{subsection.5.1.5}%
-\contentsline {subsection}{\numberline {5.1.6}Flujo extremo a extremo}{29}{subsection.5.1.6}%
-\contentsline {subsection}{\numberline {5.1.7}Decisiones de diseño}{29}{subsection.5.1.7}%
-\contentsline {subsubsection}{\numberline {5.1.7.1}PostgreSQL como fuente canónica}{29}{subsubsection.5.1.7.1}%
-\contentsline {subsubsection}{\numberline {5.1.7.2}Gobierno restringido a la capa \texttt {gold}}{29}{subsubsection.5.1.7.2}%
-\contentsline {subsubsection}{\numberline {5.1.7.3}Doble ingesta como validación multi-fuente}{30}{subsubsection.5.1.7.3}%
-\contentsline {subsubsection}{\numberline {5.1.7.4}Hoja funcional para gobierno editorial}{30}{subsubsection.5.1.7.4}%
-\contentsline {subsubsection}{\numberline {5.1.7.5}Configuración global por YAML}{31}{subsubsection.5.1.7.5}%
-\contentsline {subsubsection}{\numberline {5.1.7.6}Núcleo único de lógica}{31}{subsubsection.5.1.7.6}%
-\contentsline {subsection}{\numberline {5.1.8}Modelo activo DCAT-AP-ES}{31}{subsection.5.1.8}%
-\contentsline {section}{\numberline {5.2}Implementación}{33}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}Fuente técnica reproducible: PostgreSQL en tres capas}{33}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}Doble ingesta técnica}{33}{subsection.5.2.2}%
-\contentsline {subsection}{\numberline {5.2.3}Núcleo Python: paquete \texttt {om\_dcat\_sync}}{34}{subsection.5.2.3}%
-\contentsline {subsubsection}{\numberline {5.2.3.1}Configuración inmutable y entrypoint}{34}{subsubsection.5.2.3.1}%
-\contentsline {subsubsection}{\numberline {5.2.3.2}Sincronización repetible (idempotente) de gobierno}{35}{subsubsection.5.2.3.2}%
-\contentsline {subsubsection}{\numberline {5.2.3.3}Exportador \ac {DCATAPES}}{35}{subsubsection.5.2.3.3}%
-\contentsline {subsubsection}{\numberline {5.2.3.4}Validación SHACL del catálogo exportado}{35}{subsubsection.5.2.3.4}%
-\contentsline {subsection}{\numberline {5.2.4}Hoja funcional de gobierno y defaults globales}{36}{subsection.5.2.4}%
-\contentsline {subsection}{\numberline {5.2.5}Consola web operativa Next.js}{36}{subsection.5.2.5}%
-\contentsline {subsection}{\numberline {5.2.6}Despliegue reproducible en Kubernetes}{37}{subsection.5.2.6}%
-\contentsline {subsection}{\numberline {5.2.7}Resumen de implementación}{37}{subsection.5.2.7}%
-\contentsline {section}{\numberline {5.3}Validación y resultados de la validación}{37}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Pruebas automatizadas}{38}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}Validación estructural del estado vivo}{38}{subsection.5.3.2}%
-\contentsline {subsection}{\numberline {5.3.3}Validación SHACL}{38}{subsection.5.3.3}%
-\contentsline {subsection}{\numberline {5.3.4}Validación externa con el validador europeo (SEMIC/ITB)}{38}{subsection.5.3.4}%
-\contentsline {subsection}{\numberline {5.3.5}Resultados del caso de uso de validación}{40}{subsection.5.3.5}%
-\contentsline {subsection}{\numberline {5.3.6}Artefactos generados}{40}{subsection.5.3.6}%
-\contentsline {section}{\numberline {5.4}Discusión de los resultados}{41}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Cumplimiento del problema planteado}{41}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Beneficios obtenidos}{41}{subsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.4.3}Limitaciones}{42}{subsection.5.4.3}%
-\contentsline {subsection}{\numberline {5.4.4}Amenazas a la validez}{43}{subsection.5.4.4}%
-\contentsline {section}{\numberline {5.5}Trazabilidad entre objetivos y evidencias}{43}{section.5.5}%
-\contentsline {chapter}{\numberline {6}Conclusiones y trabajos futuros}{44}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Revisión del objetivo principal}{44}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Cumplimiento de los objetivos}{44}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Justificación de competencias}{45}{section.6.3}%
-\contentsline {section}{\numberline {6.4}Trabajo futuro}{46}{section.6.4}%
-\contentsline {chapter}{Referencia bibliográfica}{50}{chapter*.74}%
-\contentsline {chapter}{\numberline {A}Reproducción del caso de uso de validación}{51}{appendix.Alph1}%
-\contentsline {section}{\numberline {A.1}Preparación del entorno}{51}{section.Alph1.1}%
-\contentsline {section}{\numberline {A.2}Despliegue de infraestructura}{51}{section.Alph1.2}%
-\contentsline {section}{\numberline {A.3}Ejecución del workflow canónico}{52}{section.Alph1.3}%
-\contentsline {section}{\numberline {A.4}Suite reproducible}{52}{section.Alph1.4}%
-\contentsline {chapter}{\numberline {B}Detalle de infraestructura}{53}{appendix.Alph2}%
-\contentsline {section}{\numberline {B.1}Versión de OpenMetadata}{53}{section.Alph2.1}%
-\contentsline {section}{\numberline {B.2}Matriz de versiones del sistema}{53}{section.Alph2.2}%
-\contentsline {section}{\numberline {B.3}Valores Helm de OpenMetadata}{54}{section.Alph2.3}%
-\contentsline {section}{\numberline {B.4}Manifiesto de PostgreSQL de referencia}{54}{section.Alph2.4}%
-\contentsline {section}{\numberline {B.5}Diagrama de despliegue}{55}{section.Alph2.5}%
-\contentsline {section}{\numberline {B.6}Notas operativas}{55}{section.Alph2.6}%
-\contentsline {section}{\numberline {B.7}Instalación portable y organismos con OpenMetadata propio}{55}{section.Alph2.7}%
-\contentsline {chapter}{\numberline {C}Esquema de gobierno funcional}{57}{appendix.Alph3}%
-\contentsline {section}{\numberline {C.1}Estructura de la hoja \texttt {gold\_governance.csv}}{57}{section.Alph3.1}%
-\contentsline {section}{\numberline {C.2}Defaults globales}{57}{section.Alph3.2}%
-\contentsline {chapter}{\numberline {D}Mapeo DCAT-AP-ES y entregables}{58}{appendix.Alph4}%
-\contentsline {section}{\numberline {D.1}Correspondencia OpenMetadata $\rightarrow $ DCAT-AP-ES}{58}{section.Alph4.1}%
-\contentsline {section}{\numberline {D.2}Qué gobierna OpenMetadata y qué deriva el sistema}{58}{section.Alph4.2}%
-\contentsline {section}{\numberline {D.3}Qué aporta activar el caso HVD}{59}{section.Alph4.3}%
-\contentsline {section}{\numberline {D.4}Entregables del caso de uso}{59}{section.Alph4.4}%
-\contentsline {chapter}{\numberline {E}Validación y consola web}{60}{appendix.Alph5}%
-\contentsline {section}{\numberline {E.1}Comandos de validación}{60}{section.Alph5.1}%
-\contentsline {section}{\numberline {E.2}Estructura de la consola web}{60}{section.Alph5.2}%
-\contentsline {section}{\numberline {E.3}Pruebas de la consola web}{60}{section.Alph5.3}%
-\contentsline {chapter}{\numberline {F}Demostración guiada de la plataforma}{61}{appendix.Alph6}%
-\contentsline {section}{\numberline {F.1}Propósito y supuestos iniciales}{61}{section.Alph6.1}%
-\contentsline {section}{\numberline {F.2}Apertura de la consola}{62}{section.Alph6.2}%
-\contentsline {section}{\numberline {F.3}Estado de la infraestructura}{62}{section.Alph6.3}%
-\contentsline {section}{\numberline {F.4}Servicios y datasets ingeridos}{63}{section.Alph6.4}%
-\contentsline {section}{\numberline {F.5}Curación funcional en la pantalla \emph {Gobierno}}{64}{section.Alph6.5}%
-\contentsline {paragraph}{1. Refrescar hoja desde OpenMetadata.}{64}{section.Alph6.5}%
-\contentsline {paragraph}{2. Editar metadatos DCAT-AP-ES.}{64}{section.Alph6.5}%
-\contentsline {paragraph}{3. Validar la hoja.}{64}{section.Alph6.5}%
-\contentsline {paragraph}{4. Guardar.}{64}{section.Alph6.5}%
-\contentsline {section}{\numberline {F.6}Aplicación del workflow}{65}{section.Alph6.6}%
-\contentsline {paragraph}{Dry-run.}{65}{section.Alph6.6}%
-\contentsline {paragraph}{Apply.}{65}{section.Alph6.6}%
-\contentsline {paragraph}{Idempotencia.}{65}{section.Alph6.6}%
-\contentsline {section}{\numberline {F.7}Exportación DCAT-AP-ES}{66}{section.Alph6.7}%
-\contentsline {section}{\numberline {F.8}Validación SHACL y suite reproducible}{66}{section.Alph6.8}%
-\contentsline {section}{\numberline {F.9}Artefactos y descarga del catálogo RDF}{67}{section.Alph6.9}%
-\contentsline {section}{\numberline {F.10}Historial de ejecuciones}{68}{section.Alph6.10}%
-\contentsline {section}{\numberline {F.11}Federación del catálogo}{69}{section.Alph6.11}%
-\contentsline {section}{\numberline {F.12}Resumen del recorrido}{70}{section.Alph6.12}%
-\contentsline {chapter}{\numberline {G}Capturas y listados complementarios}{71}{appendix.Alph7}%
-\contentsline {section}{\numberline {G.1}Organización del repositorio y planificación}{71}{section.Alph7.1}%
-\contentsline {section}{\numberline {G.2}Infraestructura y despliegue}{74}{section.Alph7.2}%
-\contentsline {section}{\numberline {G.3}Ingesta y gobierno en OpenMetadata}{75}{section.Alph7.3}%
-\contentsline {section}{\numberline {G.4}Núcleo Python y pipeline de metadatos}{77}{section.Alph7.4}%
-\contentsline {section}{\numberline {G.5}Consola web operativa}{79}{section.Alph7.5}%
-\contentsline {section}{\numberline {G.6}Listados de código y configuración}{82}{section.Alph7.6}%
-\contentsline {subsection}{\numberline {G.6.1}Núcleo Python}{82}{subsection.Alph7.6.1}%
-\contentsline {subsection}{\numberline {G.6.2}Exportación, configuración e infraestructura}{83}{subsection.Alph7.6.2}%
-\contentsline {subsection}{\numberline {G.6.3}Ejemplos de RDF y SHACL}{84}{subsection.Alph7.6.3}%
-\contentsline {section}{\numberline {G.7}Columnas de la hoja de gobierno}{85}{section.Alph7.7}%
-\contentsline {chapter}{\numberline {H}Posicionamiento Big Data y gobierno supervisado}{87}{appendix.Alph8}%
-\contentsline {section}{\numberline {H.1}Posicionamiento frente a entornos Big Data}{87}{section.Alph8.1}%
-\contentsline {section}{\numberline {H.2}Gobierno supervisado y responsabilidad del operador}{88}{section.Alph8.2}%
+\contentsline {subsection}{\numberline {5.1.6}Flujo extremo a extremo}{28}{subsection.5.1.6}%
+\contentsline {subsection}{\numberline {5.1.7}Decisiones de diseño}{31}{subsection.5.1.7}%
+\contentsline {subsubsection}{\numberline {5.1.7.1}PostgreSQL como fuente canónica}{31}{subsubsection.5.1.7.1}%
+\contentsline {subsubsection}{\numberline {5.1.7.2}Gobierno restringido a la capa \texttt {gold}}{31}{subsubsection.5.1.7.2}%
+\contentsline {subsubsection}{\numberline {5.1.7.3}Doble ingesta como validación multi-fuente}{32}{subsubsection.5.1.7.3}%
+\contentsline {subsubsection}{\numberline {5.1.7.4}Hoja funcional para gobierno editorial}{32}{subsubsection.5.1.7.4}%
+\contentsline {subsubsection}{\numberline {5.1.7.5}Configuración global por YAML}{33}{subsubsection.5.1.7.5}%
+\contentsline {subsubsection}{\numberline {5.1.7.6}Núcleo único de lógica}{33}{subsubsection.5.1.7.6}%
+\contentsline {subsection}{\numberline {5.1.8}Modelo activo DCAT-AP-ES}{33}{subsection.5.1.8}%
+\contentsline {section}{\numberline {5.2}Implementación}{35}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Fuente técnica reproducible: PostgreSQL en tres capas}{35}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Doble ingesta técnica}{36}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Núcleo Python: paquete \texttt {om\_dcat\_sync}}{37}{subsection.5.2.3}%
+\contentsline {subsubsection}{\numberline {5.2.3.1}Configuración inmutable y entrypoint}{37}{subsubsection.5.2.3.1}%
+\contentsline {subsubsection}{\numberline {5.2.3.2}Sincronización repetible (idempotente) de gobierno}{37}{subsubsection.5.2.3.2}%
+\contentsline {subsubsection}{\numberline {5.2.3.3}Exportador \ac {DCATAPES}}{38}{subsubsection.5.2.3.3}%
+\contentsline {subsubsection}{\numberline {5.2.3.4}Validación SHACL del catálogo exportado}{38}{subsubsection.5.2.3.4}%
+\contentsline {subsection}{\numberline {5.2.4}Hoja funcional de gobierno y defaults globales}{39}{subsection.5.2.4}%
+\contentsline {subsection}{\numberline {5.2.5}Consola web operativa Next.js}{39}{subsection.5.2.5}%
+\contentsline {subsection}{\numberline {5.2.6}Despliegue reproducible en Kubernetes}{40}{subsection.5.2.6}%
+\contentsline {subsection}{\numberline {5.2.7}Resumen de implementación}{40}{subsection.5.2.7}%
+\contentsline {section}{\numberline {5.3}Validación y resultados de la validación}{40}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Pruebas automatizadas}{40}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Validación estructural del estado vivo}{41}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}Validación SHACL}{41}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}Validación externa con el validador europeo (SEMIC/ITB)}{41}{subsection.5.3.4}%
+\contentsline {subsection}{\numberline {5.3.5}Resultados del caso de uso de validación}{42}{subsection.5.3.5}%
+\contentsline {subsection}{\numberline {5.3.6}Artefactos generados}{43}{subsection.5.3.6}%
+\contentsline {section}{\numberline {5.4}Discusión de los resultados}{44}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Cumplimiento del problema planteado}{44}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Beneficios obtenidos}{44}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Limitaciones}{45}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}Amenazas a la validez}{45}{subsection.5.4.4}%
+\contentsline {section}{\numberline {5.5}Trazabilidad entre objetivos y evidencias}{46}{section.5.5}%
+\contentsline {chapter}{\numberline {6}Conclusiones y trabajos futuros}{47}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Revisión del objetivo principal}{47}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Cumplimiento de los objetivos}{47}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Justificación de competencias}{48}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Trabajo futuro}{49}{section.6.4}%
+\contentsline {chapter}{Referencia bibliográfica}{54}{chapter*.29}%
+\contentsline {chapter}{\numberline {A}Reproducción del caso de uso de validación}{55}{appendix.Alph1}%
+\contentsline {section}{\numberline {A.1}Preparación del entorno}{55}{section.Alph1.1}%
+\contentsline {section}{\numberline {A.2}Despliegue de infraestructura}{55}{section.Alph1.2}%
+\contentsline {section}{\numberline {A.3}Ejecución del workflow canónico}{56}{section.Alph1.3}%
+\contentsline {section}{\numberline {A.4}Suite reproducible}{56}{section.Alph1.4}%
+\contentsline {chapter}{\numberline {B}Detalle de infraestructura}{57}{appendix.Alph2}%
+\contentsline {section}{\numberline {B.1}Versión de OpenMetadata}{57}{section.Alph2.1}%
+\contentsline {section}{\numberline {B.2}Matriz de versiones del sistema}{57}{section.Alph2.2}%
+\contentsline {section}{\numberline {B.3}Valores Helm de OpenMetadata}{58}{section.Alph2.3}%
+\contentsline {section}{\numberline {B.4}Manifiesto de PostgreSQL de referencia}{58}{section.Alph2.4}%
+\contentsline {section}{\numberline {B.5}Diagrama de despliegue}{59}{section.Alph2.5}%
+\contentsline {section}{\numberline {B.6}Notas operativas}{59}{section.Alph2.6}%
+\contentsline {section}{\numberline {B.7}Instalación portable y organismos con OpenMetadata propio}{59}{section.Alph2.7}%
+\contentsline {chapter}{\numberline {C}Esquema de gobierno funcional}{61}{appendix.Alph3}%
+\contentsline {section}{\numberline {C.1}Estructura de la hoja \texttt {gold\_governance.csv}}{61}{section.Alph3.1}%
+\contentsline {section}{\numberline {C.2}Defaults globales}{61}{section.Alph3.2}%
+\contentsline {chapter}{\numberline {D}Mapeo DCAT-AP-ES y entregables}{63}{appendix.Alph4}%
+\contentsline {section}{\numberline {D.1}Correspondencia OpenMetadata $\rightarrow $ DCAT-AP-ES}{63}{section.Alph4.1}%
+\contentsline {section}{\numberline {D.2}Qué gobierna OpenMetadata y qué deriva el sistema}{63}{section.Alph4.2}%
+\contentsline {section}{\numberline {D.3}Qué aporta activar el caso HVD}{64}{section.Alph4.3}%
+\contentsline {section}{\numberline {D.4}Entregables del caso de uso}{64}{section.Alph4.4}%
+\contentsline {chapter}{\numberline {E}Validación y consola web}{65}{appendix.Alph5}%
+\contentsline {section}{\numberline {E.1}Comandos de validación}{65}{section.Alph5.1}%
+\contentsline {section}{\numberline {E.2}Estructura de la consola web}{65}{section.Alph5.2}%
+\contentsline {section}{\numberline {E.3}Pruebas de la consola web}{65}{section.Alph5.3}%
+\contentsline {chapter}{\numberline {F}Demostración guiada de la plataforma}{67}{appendix.Alph6}%
+\contentsline {section}{\numberline {F.1}Propósito y supuestos iniciales}{67}{section.Alph6.1}%
+\contentsline {section}{\numberline {F.2}Apertura de la consola}{68}{section.Alph6.2}%
+\contentsline {section}{\numberline {F.3}Estado de la infraestructura}{68}{section.Alph6.3}%
+\contentsline {section}{\numberline {F.4}Servicios y datasets ingeridos}{69}{section.Alph6.4}%
+\contentsline {section}{\numberline {F.5}Curación funcional en la pantalla \emph {Gobierno}}{69}{section.Alph6.5}%
+\contentsline {paragraph}{1. Refrescar hoja desde OpenMetadata.}{70}{section.Alph6.5}%
+\contentsline {paragraph}{2. Editar metadatos DCAT-AP-ES.}{70}{section.Alph6.5}%
+\contentsline {paragraph}{3. Validar la hoja.}{70}{section.Alph6.5}%
+\contentsline {paragraph}{4. Guardar.}{70}{section.Alph6.5}%
+\contentsline {section}{\numberline {F.6}Aplicación del workflow}{70}{section.Alph6.6}%
+\contentsline {paragraph}{Dry-run.}{70}{section.Alph6.6}%
+\contentsline {paragraph}{Apply.}{71}{section.Alph6.6}%
+\contentsline {paragraph}{Idempotencia.}{71}{section.Alph6.6}%
+\contentsline {section}{\numberline {F.7}Exportación DCAT-AP-ES}{71}{section.Alph6.7}%
+\contentsline {section}{\numberline {F.8}Validación SHACL y suite reproducible}{72}{section.Alph6.8}%
+\contentsline {section}{\numberline {F.9}Artefactos y descarga del catálogo RDF}{73}{section.Alph6.9}%
+\contentsline {section}{\numberline {F.10}Historial de ejecuciones}{74}{section.Alph6.10}%
+\contentsline {section}{\numberline {F.11}Federación del catálogo}{74}{section.Alph6.11}%
+\contentsline {section}{\numberline {F.12}Resumen del recorrido}{75}{section.Alph6.12}%
+\contentsline {chapter}{\numberline {G}Capturas y listados complementarios}{77}{appendix.Alph7}%
+\contentsline {section}{\numberline {G.1}Organización del repositorio y planificación}{77}{section.Alph7.1}%
+\contentsline {section}{\numberline {G.2}Infraestructura y despliegue}{79}{section.Alph7.2}%
+\contentsline {section}{\numberline {G.3}Ingesta y gobierno en OpenMetadata}{80}{section.Alph7.3}%
+\contentsline {section}{\numberline {G.4}Núcleo Python y pipeline de metadatos}{82}{section.Alph7.4}%
+\contentsline {section}{\numberline {G.5}Consola web operativa}{82}{section.Alph7.5}%
+\contentsline {section}{\numberline {G.6}Listados de código y configuración}{85}{section.Alph7.6}%
+\contentsline {subsection}{\numberline {G.6.1}Núcleo Python}{85}{subsection.Alph7.6.1}%
+\contentsline {subsection}{\numberline {G.6.2}Exportación, configuración e infraestructura}{86}{subsection.Alph7.6.2}%
+\contentsline {subsection}{\numberline {G.6.3}Ejemplos de RDF y SHACL}{88}{subsection.Alph7.6.3}%
+\contentsline {section}{\numberline {G.7}Columnas de la hoja de gobierno}{89}{section.Alph7.7}%
+\contentsline {chapter}{\numberline {H}Posicionamiento Big Data y gobierno supervisado}{91}{appendix.Alph8}%
+\contentsline {section}{\numberline {H.1}Posicionamiento frente a entornos Big Data}{91}{section.Alph8.1}%
+\contentsline {section}{\numberline {H.2}Gobierno supervisado y responsabilidad del operador}{92}{section.Alph8.2}%
 \contentsfinish 
