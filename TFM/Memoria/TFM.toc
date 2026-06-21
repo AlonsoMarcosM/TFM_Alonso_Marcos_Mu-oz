@@ -117,33 +117,33 @@
 \contentsline {section}{\numberline {F.2}Apertura de la consola}{68}{section.Alph6.2}%
 \contentsline {section}{\numberline {F.3}Estado de la infraestructura}{68}{section.Alph6.3}%
 \contentsline {section}{\numberline {F.4}Servicios y datasets ingeridos}{69}{section.Alph6.4}%
-\contentsline {section}{\numberline {F.5}Curación funcional en la pantalla \emph {Gobierno}}{69}{section.Alph6.5}%
+\contentsline {section}{\numberline {F.5}Curación funcional en la pantalla \emph {Gobierno}}{70}{section.Alph6.5}%
 \contentsline {paragraph}{1. Refrescar hoja desde OpenMetadata.}{70}{section.Alph6.5}%
 \contentsline {paragraph}{2. Editar metadatos DCAT-AP-ES.}{70}{section.Alph6.5}%
 \contentsline {paragraph}{3. Validar la hoja.}{70}{section.Alph6.5}%
 \contentsline {paragraph}{4. Guardar.}{70}{section.Alph6.5}%
-\contentsline {section}{\numberline {F.6}Aplicación del workflow}{70}{section.Alph6.6}%
-\contentsline {paragraph}{Dry-run.}{70}{section.Alph6.6}%
+\contentsline {section}{\numberline {F.6}Aplicación del workflow}{71}{section.Alph6.6}%
+\contentsline {paragraph}{Dry-run.}{71}{section.Alph6.6}%
 \contentsline {paragraph}{Apply.}{71}{section.Alph6.6}%
 \contentsline {paragraph}{Idempotencia.}{71}{section.Alph6.6}%
-\contentsline {section}{\numberline {F.7}Exportación DCAT-AP-ES}{71}{section.Alph6.7}%
+\contentsline {section}{\numberline {F.7}Exportación DCAT-AP-ES}{72}{section.Alph6.7}%
 \contentsline {section}{\numberline {F.8}Validación SHACL y suite reproducible}{72}{section.Alph6.8}%
 \contentsline {section}{\numberline {F.9}Artefactos y descarga del catálogo RDF}{73}{section.Alph6.9}%
 \contentsline {section}{\numberline {F.10}Historial de ejecuciones}{74}{section.Alph6.10}%
-\contentsline {section}{\numberline {F.11}Federación del catálogo}{74}{section.Alph6.11}%
-\contentsline {section}{\numberline {F.12}Resumen del recorrido}{75}{section.Alph6.12}%
+\contentsline {section}{\numberline {F.11}Federación del catálogo}{75}{section.Alph6.11}%
+\contentsline {section}{\numberline {F.12}Resumen del recorrido}{76}{section.Alph6.12}%
 \contentsline {chapter}{\numberline {G}Capturas y listados complementarios}{77}{appendix.Alph7}%
 \contentsline {section}{\numberline {G.1}Organización del repositorio y planificación}{77}{section.Alph7.1}%
-\contentsline {section}{\numberline {G.2}Infraestructura y despliegue}{79}{section.Alph7.2}%
-\contentsline {section}{\numberline {G.3}Ingesta y gobierno en OpenMetadata}{80}{section.Alph7.3}%
-\contentsline {section}{\numberline {G.4}Núcleo Python y pipeline de metadatos}{82}{section.Alph7.4}%
-\contentsline {section}{\numberline {G.5}Consola web operativa}{82}{section.Alph7.5}%
-\contentsline {section}{\numberline {G.6}Listados de código y configuración}{85}{section.Alph7.6}%
-\contentsline {subsection}{\numberline {G.6.1}Núcleo Python}{85}{subsection.Alph7.6.1}%
-\contentsline {subsection}{\numberline {G.6.2}Exportación, configuración e infraestructura}{86}{subsection.Alph7.6.2}%
-\contentsline {subsection}{\numberline {G.6.3}Ejemplos de RDF y SHACL}{88}{subsection.Alph7.6.3}%
-\contentsline {section}{\numberline {G.7}Columnas de la hoja de gobierno}{89}{section.Alph7.7}%
-\contentsline {chapter}{\numberline {H}Posicionamiento Big Data y gobierno supervisado}{91}{appendix.Alph8}%
-\contentsline {section}{\numberline {H.1}Posicionamiento frente a entornos Big Data}{91}{section.Alph8.1}%
-\contentsline {section}{\numberline {H.2}Gobierno supervisado y responsabilidad del operador}{92}{section.Alph8.2}%
+\contentsline {section}{\numberline {G.2}Infraestructura y despliegue}{80}{section.Alph7.2}%
+\contentsline {section}{\numberline {G.3}Ingesta y gobierno en OpenMetadata}{81}{section.Alph7.3}%
+\contentsline {section}{\numberline {G.4}Núcleo Python y pipeline de metadatos}{83}{section.Alph7.4}%
+\contentsline {section}{\numberline {G.5}Consola web operativa}{85}{section.Alph7.5}%
+\contentsline {section}{\numberline {G.6}Listados de código y configuración}{88}{section.Alph7.6}%
+\contentsline {subsection}{\numberline {G.6.1}Núcleo Python}{88}{subsection.Alph7.6.1}%
+\contentsline {subsection}{\numberline {G.6.2}Exportación, configuración e infraestructura}{89}{subsection.Alph7.6.2}%
+\contentsline {subsection}{\numberline {G.6.3}Ejemplos de RDF y SHACL}{90}{subsection.Alph7.6.3}%
+\contentsline {section}{\numberline {G.7}Columnas de la hoja de gobierno}{91}{section.Alph7.7}%
+\contentsline {chapter}{\numberline {H}Posicionamiento Big Data y gobierno supervisado}{93}{appendix.Alph8}%
+\contentsline {section}{\numberline {H.1}Posicionamiento frente a entornos Big Data}{93}{section.Alph8.1}%
+\contentsline {section}{\numberline {H.2}Gobierno supervisado y responsabilidad del operador}{94}{section.Alph8.2}%
 \contentsfinish 

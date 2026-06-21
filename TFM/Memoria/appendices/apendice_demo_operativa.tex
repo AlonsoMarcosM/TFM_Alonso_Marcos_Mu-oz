@@ -18,19 +18,19 @@ A partir de aquí toda la operación discurre por el navegador. La consola web n
 
 La página inicial muestra el resumen de la plataforma y un \emph{sidebar} con las once secciones de operación. El orden recomendado de uso reproduce el flujo lógico: \emph{Infraestructura} $\to$ \emph{Ingesta} $\to$ \emph{Gobierno} $\to$ \emph{Workflow} $\to$ \emph{DCAT} $\to$ \emph{Validación} $\to$ \emph{SHACL} $\to$ \emph{Artefactos}. Las dos secciones complementarias, \emph{Estado vivo} y \emph{Ejecuciones}, permiten consultar respectivamente la situación actual de \ac{OM} y el historial de \emph{jobs} versionados.
 
-\figuraMemoria{fig_web_home.png}{Pantalla inicial de la consola web y \emph{sidebar} con las secciones operativas. Elaboración propia.}{fig:demo-web-home}
+\figuraAnexo{fig_web_home.png}{Pantalla inicial de la consola web y \emph{sidebar} con las secciones operativas. Elaboración propia.}{fig:demo-web-home}
 
 \section{Estado de la infraestructura}\label{sec:demo-infra}
 
 La pantalla \emph{Infraestructura} expone dos acciones: comprobar prerrequisitos y, opcionalmente, ejecutar un reset limpio. La comprobación lanza un \emph{job} que verifica la presencia de los binarios (\texttt{docker}, \texttt{kubectl}, \texttt{helm}, \texttt{kind}) y la accesibilidad de los servicios desplegados. Tras unos segundos se muestra el resultado con código de salida, log completo y duración. En la demostración solo se ejecuta la comprobación, ya que el entorno está listo.
 
-\figuraMemoria{fig_web_pantalla_infraestructura.png}{Pantalla \emph{Infraestructura}: comprobación de prerrequisitos y opciones de reset limpio. Elaboración propia.}{fig:demo-infra}
+\figuraAnexo{fig_web_pantalla_infraestructura.png}{Pantalla \emph{Infraestructura}: comprobación de prerrequisitos y opciones de reset limpio. Elaboración propia.}{fig:demo-infra}
 
 \section{Servicios y datasets ingeridos}\label{sec:demo-ingesta}
 
 En la pantalla \emph{Ingesta} se observa el resultado de la doble ingesta técnica. Aparecen los dos \texttt{DatabaseService} en \ac{OM}, \fqn{postgres_demo_service} y \fqn{postgres_validation_service}, cada uno con la misma estructura interna: la base de datos \fqn{opendata_demo}, los esquemas \texttt{bronze}, \texttt{silver} y \texttt{gold}, y las tablas descubiertas en cada esquema. La demostración confirma que las dos tablas \texttt{gold} se han registrado en ambos servicios y, por tanto, generan cuatro datasets publicables identificados por su \ac{FQN}.
 
-\figuraMemoria{fig_web_pantalla_ingesta.png}{Pantalla \emph{Ingesta}: servicios PostgreSQL y datasets \texttt{gold} descubiertos por OpenMetadata. Elaboración propia.}{fig:demo-ingesta}
+\figuraAnexo{fig_web_pantalla_ingesta.png}{Pantalla \emph{Ingesta}: servicios PostgreSQL y datasets \texttt{gold} descubiertos por OpenMetadata. Elaboración propia.}{fig:demo-ingesta}
 
 \section{Curación funcional en la pantalla \emph{Gobierno}}\label{sec:demo-gobierno}
 
@@ -44,7 +44,7 @@ Esta pantalla es el centro del recorrido. Concentra toda la curación funcional 
 
 \paragraph{4. Guardar.} El guardado persiste la hoja \ac{CSV} en disco. Hasta este punto no se ha modificado el estado de \ac{OM}: solo se han preparado los datos editoriales que el \emph{workflow} aplicará en el siguiente paso.
 
-\figuraMemoria{fig_web_pantalla_gobierno.png}{Pantalla \emph{Gobierno}: edición de la hoja \fqn{gold_governance.csv} con listas controladas para temática y categoría \ac{HVD}. Elaboración propia.}{fig:demo-gobierno}
+\figuraAnexo{fig_web_pantalla_gobierno.png}{Pantalla \emph{Gobierno}: edición de la hoja \fqn{gold_governance.csv} con listas controladas para temática y categoría \ac{HVD}. Elaboración propia.}{fig:demo-gobierno}
 
 \section{Aplicación del workflow}\label{sec:demo-workflow}
 
@@ -56,35 +56,35 @@ La pantalla \emph{Workflow} ofrece dos botones equivalentes al listado~\ref{code
 
 \paragraph{Idempotencia.} Repetir el botón \emph{Apply} una segunda vez es ilustrativo: el resumen indica \emph{0 cambios aplicados}, lo que evidencia visualmente la propiedad de idempotencia que la sección~\ref{cap:validacion} valida formalmente.
 
-\figuraMemoria{fig_web_pantalla_workflow.png}{Pantalla \emph{Workflow}: dry-run y aplicación con resumen de cambios. Elaboración propia.}{fig:demo-workflow}
+\figuraAnexo{fig_web_pantalla_workflow.png}{Pantalla \emph{Workflow}: dry-run y aplicación con resumen de cambios. Elaboración propia.}{fig:demo-workflow}
 
 \section{Exportación DCAT-AP-ES}\label{sec:demo-dcat}
 
 La pantalla \emph{DCAT} dispara la exportación independiente del catálogo. Aunque el \emph{workflow} ya produce el mismo artefacto, esta pantalla permite regenerar el \ac{JSONLD} sin reaplicar el gobierno: útil si se ajusta únicamente algún \emph{default} global. El resultado es el archivo \texttt{tmp\_pytest/dcat\_catalog.jsonld} con las cinco clases \ac{DCAT} activas (\texttt{Catalog}, \texttt{Dataset}, \texttt{Distribution}, \texttt{DataService}, \texttt{Agent}).
 
-\figuraMemoria{fig_web_pantalla_dcat.png}{Pantalla \emph{DCAT}: exportación del catálogo \ac{JSONLD} y previsualización. Elaboración propia.}{fig:demo-dcat}
+\figuraAnexo{fig_web_pantalla_dcat.png}{Pantalla \emph{DCAT}: exportación del catálogo \ac{JSONLD} y previsualización. Elaboración propia.}{fig:demo-dcat}
 
 \section{Validación SHACL y suite reproducible}\label{sec:demo-validacion}
 
 La pantalla \emph{Validación} ejecuta la suite reproducible completa (\fqn{run_validation_suite.ps1}): comprueba el estado vivo de \ac{OM}, lanza el \emph{workflow} dos veces para verificar la idempotencia y valida el catálogo exportado contra las \emph{shapes} \ac{SHACL} \ac{HVD} vendorizadas. El resumen final consolida los códigos de salida de cada etapa en un único informe \ac{JSON}.
 
-\figuraMemoria{fig_web_pantalla_validacion.png}{Pantalla \emph{Validación}: ejecución de la suite reproducible y resumen consolidado. Elaboración propia.}{fig:demo-validacion}
+\figuraAnexo{fig_web_pantalla_validacion.png}{Pantalla \emph{Validación}: ejecución de la suite reproducible y resumen consolidado. Elaboración propia.}{fig:demo-validacion}
 
 La pantalla \emph{SHACL}, complementaria, muestra el \emph{manifiesto de las shapes \ac{DCATAPES} congeladas} en el repositorio (\fqn{resources/shacl/manifest.json}): origen, versión y \emph{commit} de las \emph{shapes}. Su función es evidenciar que la validación no descarga \emph{shapes} en tiempo de ejecución, sino que usa exclusivamente las locales. El informe \ac{SHACL} propiamente dicho, el Turtle con severidades (\texttt{sh:Violation}, \texttt{sh:Warning}, \texttt{sh:Info}), nodo afectado y mensaje, se genera como artefacto \fqn{*_shacl_report.ttl} y se consulta desde la pantalla \emph{Artefactos}. En la demostración no presenta violaciones bloqueantes, en línea con la sección~\ref{cap:validacion}.
 
-\figuraMemoria{fig_web_pantalla_shacl.png}{Pantalla \emph{SHACL}: manifiesto de las \emph{shapes} DCAT-AP-ES congeladas (sin descarga en tiempo de ejecución). Elaboración propia.}{fig:demo-shacl}
+\figuraAnexo{fig_web_pantalla_shacl.png}{Pantalla \emph{SHACL}: manifiesto de las \emph{shapes} DCAT-AP-ES congeladas (sin descarga en tiempo de ejecución). Elaboración propia.}{fig:demo-shacl}
 
 \section{Artefactos y descarga del catálogo RDF}\label{sec:demo-artefactos}
 
 La pantalla \emph{Artefactos} expone todos los ficheros generados en \texttt{tmp\_pytest/} con dos acciones por fila: \emph{Ver} (previsualización de texto en la misma página) y \emph{Abrir} (sirve el fichero con su tipo \ac{MIME} real en una pestaña nueva, de modo que el HTML se renderiza como página y el PDF se abre en el visor del navegador). El operario puede abrir o descargar directamente \fqn{dcat_catalog.jsonld}, el artefacto final del recorrido, el informe \ac{SHACL} en Turtle o el informe HTML/PDF de validación.
 
-\figuraMemoria{fig_web_pantalla_artefactos.png}{Pantalla \emph{Artefactos}: listado de evidencias con vista previa (\emph{Ver}) y apertura nativa (\emph{Abrir}) para HTML renderizado y PDF en el visor del navegador. Elaboración propia.}{fig:demo-artefactos}
+\figuraAnexo{fig_web_pantalla_artefactos.png}{Pantalla \emph{Artefactos}: listado de evidencias con vista previa (\emph{Ver}) y apertura nativa (\emph{Abrir}) para HTML renderizado y PDF en el visor del navegador. Elaboración propia.}{fig:demo-artefactos}
 
 \section{Historial de ejecuciones}\label{sec:demo-ejecuciones}
 
 La pantalla \emph{Ejecuciones} lista todos los \emph{jobs} generados por la consola en orden cronológico inverso. Cada entrada muestra el identificador único del \emph{job}, la operación ejecutada, el estado (\texttt{ok} o \texttt{error}), la duración en segundos y el código de salida. El operario puede abrir cualquier \emph{job} para ver el log completo, el resumen del resultado y los artefactos que produjo, lo que permite reconstruir la trazabilidad de cualquier ejecución pasada sin necesidad de volver a ejecutarla.
 
-\figuraMemoria{fig_web_pantalla_ejecuciones.png}{Pantalla \emph{Ejecuciones}: historial de \emph{jobs} con estado, duración, código de salida y acceso al log y artefactos. Elaboración propia.}{fig:demo-ejecuciones}
+\figuraAnexo{fig_web_pantalla_ejecuciones.png}{Pantalla \emph{Ejecuciones}: historial de \emph{jobs} con estado, duración, código de salida y acceso al log y artefactos. Elaboración propia.}{fig:demo-ejecuciones}
 
 \section{Federación del catálogo}\label{sec:demo-federacion}
 

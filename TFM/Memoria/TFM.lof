@@ -28,24 +28,24 @@
 \contentsline {figure}{\numberline {F.4}{\ignorespaces Pantalla \emph {Gobierno}: edición de la hoja {\small \nolinkurl {gold_governance.csv}} con listas controladas para temática y categoría \ac {HVD}. Elaboración propia.}}{70}{figure.caption.36}%
 \contentsline {figure}{\numberline {F.5}{\ignorespaces Pantalla \emph {Workflow}: dry-run y aplicación con resumen de cambios. Elaboración propia.}}{71}{figure.caption.37}%
 \contentsline {figure}{\numberline {F.6}{\ignorespaces Pantalla \emph {DCAT}: exportación del catálogo \ac {JSONLD} y previsualización. Elaboración propia.}}{72}{figure.caption.38}%
-\contentsline {figure}{\numberline {F.7}{\ignorespaces Pantalla \emph {Validación}: ejecución de la suite reproducible y resumen consolidado. Elaboración propia.}}{72}{figure.caption.39}%
+\contentsline {figure}{\numberline {F.7}{\ignorespaces Pantalla \emph {Validación}: ejecución de la suite reproducible y resumen consolidado. Elaboración propia.}}{73}{figure.caption.39}%
 \contentsline {figure}{\numberline {F.8}{\ignorespaces Pantalla \emph {SHACL}: manifiesto de las \emph {shapes} DCAT-AP-ES congeladas (sin descarga en tiempo de ejecución). Elaboración propia.}}{73}{figure.caption.40}%
-\contentsline {figure}{\numberline {F.9}{\ignorespaces Pantalla \emph {Artefactos}: listado de evidencias con vista previa (\emph {Ver}) y apertura nativa (\emph {Abrir}) para HTML renderizado y PDF en el visor del navegador. Elaboración propia.}}{73}{figure.caption.41}%
-\contentsline {figure}{\numberline {F.10}{\ignorespaces Pantalla \emph {Ejecuciones}: historial de \emph {jobs} con estado, duración, código de salida y acceso al log y artefactos. Elaboración propia.}}{74}{figure.caption.42}%
+\contentsline {figure}{\numberline {F.9}{\ignorespaces Pantalla \emph {Artefactos}: listado de evidencias con vista previa (\emph {Ver}) y apertura nativa (\emph {Abrir}) para HTML renderizado y PDF en el visor del navegador. Elaboración propia.}}{74}{figure.caption.41}%
+\contentsline {figure}{\numberline {F.10}{\ignorespaces Pantalla \emph {Ejecuciones}: historial de \emph {jobs} con estado, duración, código de salida y acceso al log y artefactos. Elaboración propia.}}{75}{figure.caption.42}%
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {G.1}{\ignorespaces Árbol canónico del repositorio del TFM. Elaboración propia.}}{78}{figure.caption.44}%
-\contentsline {figure}{\numberline {G.2}{\ignorespaces Diagrama de Gantt del roadmap del TFM, derivado del archivo declarativo {\small \nolinkurl {scripts/planning/github_project_planificacion.json}}. Elaboración propia.}}{78}{figure.caption.45}%
-\contentsline {figure}{\numberline {G.3}{\ignorespaces Despliegue Kubernetes reproducible usado como base del caso de uso de validación. Elaboración propia.}}{79}{figure.caption.46}%
-\contentsline {figure}{\numberline {G.4}{\ignorespaces Contenedores Docker que materializan el clúster Kind y los nodos auxiliares. Elaboración propia.}}{79}{figure.caption.47}%
-\contentsline {figure}{\numberline {G.5}{\ignorespaces Pods desplegados en el clúster Kind: OpenMetadata, MySQL, OpenSearch y PostgreSQL de referencia. Elaboración propia.}}{80}{figure.caption.48}%
-\contentsline {figure}{\numberline {G.6}{\ignorespaces Esquemas \texttt {bronze}, \texttt {silver} y \texttt {gold} del PostgreSQL de referencia, vistos desde la \ac {UI} de \ac {OM}. Elaboración propia.}}{80}{figure.caption.49}%
-\contentsline {figure}{\numberline {G.7}{\ignorespaces Servicios de base de datos ingeridos en OpenMetadata tras la doble ingesta. Elaboración propia.}}{81}{figure.caption.50}%
-\contentsline {figure}{\numberline {G.8}{\ignorespaces Propiedades personalizadas DCAT y etiquetas {\small \nolinkurl {dcat_theme.*}} aplicadas a una tabla \texttt {gold} en OpenMetadata tras ejecutar el workflow. Elaboración propia.}}{81}{figure.caption.51}%
-\contentsline {figure}{\numberline {G.9}{\ignorespaces Estructura interna del paquete {\small \nolinkurl {om_dcat_sync}}. Elaboración propia.}}{82}{figure.caption.52}%
-\contentsline {figure}{\numberline {G.10}{\ignorespaces Pantalla \emph {Gobierno} de la consola web: edición de la hoja {\small \nolinkurl {gold_governance.csv}}. Elaboración propia.}}{83}{figure.caption.53}%
-\contentsline {figure}{\numberline {G.11}{\ignorespaces Pantalla \emph {Workflow}: lanzamiento de \texttt {dry-run} y \texttt {apply} con resumen de cambios. Elaboración propia.}}{83}{figure.caption.54}%
-\contentsline {figure}{\numberline {G.12}{\ignorespaces Pantalla \emph {DCAT}: exportación y previsualización del catálogo \ac {JSONLD}. Elaboración propia.}}{84}{figure.caption.55}%
-\contentsline {figure}{\numberline {G.13}{\ignorespaces Pantalla \emph {Validación}: ejecución de la suite reproducible y resumen de resultados. Elaboración propia.}}{84}{figure.caption.56}%
-\contentsline {figure}{\numberline {G.14}{\ignorespaces Informe de validación HTML renderizado en el navegador desde la consola web. Elaboración propia.}}{85}{figure.caption.57}%
+\contentsline {figure}{\numberline {G.2}{\ignorespaces Diagrama de Gantt del roadmap del TFM, derivado del archivo declarativo {\small \nolinkurl {scripts/planning/github_project_planificacion.json}}. Elaboración propia.}}{79}{figure.caption.45}%
+\contentsline {figure}{\numberline {G.3}{\ignorespaces Despliegue Kubernetes reproducible usado como base del caso de uso de validación. Elaboración propia.}}{80}{figure.caption.46}%
+\contentsline {figure}{\numberline {G.4}{\ignorespaces Contenedores Docker que materializan el clúster Kind y los nodos auxiliares. Elaboración propia.}}{80}{figure.caption.47}%
+\contentsline {figure}{\numberline {G.5}{\ignorespaces Pods desplegados en el clúster Kind: OpenMetadata, MySQL, OpenSearch y PostgreSQL de referencia. Elaboración propia.}}{81}{figure.caption.48}%
+\contentsline {figure}{\numberline {G.6}{\ignorespaces Esquemas \texttt {bronze}, \texttt {silver} y \texttt {gold} del PostgreSQL de referencia, vistos desde la \ac {UI} de \ac {OM}. Elaboración propia.}}{81}{figure.caption.49}%
+\contentsline {figure}{\numberline {G.7}{\ignorespaces Servicios de base de datos ingeridos en OpenMetadata tras la doble ingesta. Elaboración propia.}}{82}{figure.caption.50}%
+\contentsline {figure}{\numberline {G.8}{\ignorespaces Propiedades personalizadas DCAT y etiquetas {\small \nolinkurl {dcat_theme.*}} aplicadas a una tabla \texttt {gold} en OpenMetadata tras ejecutar el workflow. Elaboración propia.}}{82}{figure.caption.51}%
+\contentsline {figure}{\numberline {G.9}{\ignorespaces Estructura interna del paquete {\small \nolinkurl {om_dcat_sync}}. Elaboración propia.}}{84}{figure.caption.52}%
+\contentsline {figure}{\numberline {G.10}{\ignorespaces Pantalla \emph {Gobierno} de la consola web: edición de la hoja {\small \nolinkurl {gold_governance.csv}}. Elaboración propia.}}{85}{figure.caption.53}%
+\contentsline {figure}{\numberline {G.11}{\ignorespaces Pantalla \emph {Workflow}: lanzamiento de \texttt {dry-run} y \texttt {apply} con resumen de cambios. Elaboración propia.}}{86}{figure.caption.54}%
+\contentsline {figure}{\numberline {G.12}{\ignorespaces Pantalla \emph {DCAT}: exportación y previsualización del catálogo \ac {JSONLD}. Elaboración propia.}}{86}{figure.caption.55}%
+\contentsline {figure}{\numberline {G.13}{\ignorespaces Pantalla \emph {Validación}: ejecución de la suite reproducible y resumen de resultados. Elaboración propia.}}{87}{figure.caption.56}%
+\contentsline {figure}{\numberline {G.14}{\ignorespaces Informe de validación HTML renderizado en el navegador desde la consola web. Elaboración propia.}}{87}{figure.caption.57}%
 \addvspace {10\p@ }
 \contentsfinish 

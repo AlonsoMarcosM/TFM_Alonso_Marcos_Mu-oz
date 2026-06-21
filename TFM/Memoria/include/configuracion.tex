@@ -134,13 +134,20 @@
 % invadan el margen. Alternativa partible a \texttt para código en línea.
 % (\code ya está tomado por el entorno flotante de listados.)
 \newcommand{\ident}[1]{{\nolinkurl{#1}}}
-%\hypersetup{
-%    colorlinks,
-%    citecolor=black,
-%    filecolor=black,
-%    linkcolor=black,
-%    urlcolor=black
-%}
+% Recuadros de color alrededor de los enlaces (estilo por defecto de hyperref,
+% fijado de forma explícita para que se vea siempre): rojo en referencias
+% internas (\ref, índice, \autoref), verde en citas (\cite, bibliografía) y
+% azul en URLs y ficheros. Los recuadros se ven en pantalla y en Overleaf, pero
+% no se imprimen (son anotaciones del PDF). Para que el color salga también al
+% imprimir habría que poner colorlinks=true (colorea el texto en vez del borde).
+\hypersetup{
+    colorlinks=false,            % usar recuadros, no texto coloreado
+    pdfborder={0 0 1},           % grosor de borde visible para todos los enlaces
+    linkbordercolor={1 0 0},     % rojo: \ref, \autoref, índice, etiquetas
+    citebordercolor={0 0.7 0},   % verde: \cite y bibliografía
+    urlbordercolor={0 0 1},      % azul: URLs y \href
+    filebordercolor={0 0 1},     % azul: enlaces a ficheros
+}
 
 % -------------------------------
 % Gestión de elementos flotantes
@@ -494,6 +501,30 @@
 \centering
 \IfFileExists{figs/#2}{%
   \includegraphics[width=#1,height=0.45\textheight,keepaspectratio]{figs/#2}%
+}{%
+  \fbox{%
+    \begin{minipage}[c][5cm][c]{0.85\linewidth}
+    \centering
+    \textbf{Captura pendiente}\\[0.4cm]
+    {\ttfamily\detokenize{#2}}
+    \end{minipage}%
+  }%
+}
+\caption{#3}
+\label{#4}
+\end{figure}%
+}
+
+% Variante para ANEXOS: imágenes a anchura completa de la caja de texto y altura
+% holgada (hasta 0.85\textheight). Pensada para que las capturas de los anexos
+% se lean con detalle aunque ocupen más páginas. Conserva la relación de aspecto:
+% en capturas apaisadas manda el ancho (\linewidth) y en capturas verticales
+% el alto evita que se salgan de la página.
+\newcommand{\figuraAnexo}[4][\linewidth]{%
+\begin{figure}[htbp]
+\centering
+\IfFileExists{figs/#2}{%
+  \includegraphics[width=#1,height=0.85\textheight,keepaspectratio]{figs/#2}%
 }{%
   \fbox{%
     \begin{minipage}[c][5cm][c]{0.85\linewidth}

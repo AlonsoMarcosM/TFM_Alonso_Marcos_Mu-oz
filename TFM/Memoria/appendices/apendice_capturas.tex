@@ -36,47 +36,47 @@ El árbol de la figura~\ref{code:arbol-repositorio} detalla la estructura canón
 \label{code:arbol-repositorio}
 \end{figure}
 
-\figuraMemoria{fig_gantt_planificacion.png}{Diagrama de Gantt del roadmap del TFM, derivado del archivo declarativo \fqn{scripts/planning/github_project_planificacion.json}. Elaboración propia.}{fig:gantt-metodologia}
+\figuraAnexo{fig_gantt_planificacion.png}{Diagrama de Gantt del roadmap del TFM, derivado del archivo declarativo \fqn{scripts/planning/github_project_planificacion.json}. Elaboración propia.}{fig:gantt-metodologia}
 
 \section{Infraestructura y despliegue}
 
 Las tres figuras siguientes evidencian el despliegue reproducible de la sección~\ref{sec:implementacion-k8s}: el esquema lógico del clúster, los contenedores Docker que lo materializan y los \emph{pods} resultantes en Kubernetes.
 
-\figuraMemoria{fig_kubernetes_reproducible.png}{Despliegue Kubernetes reproducible usado como base del caso de uso de validación. Elaboración propia.}{fig:kubernetes-reproducible}
+\figuraAnexo{fig_kubernetes_reproducible.png}{Despliegue Kubernetes reproducible usado como base del caso de uso de validación. Elaboración propia.}{fig:kubernetes-reproducible}
 
-\figuraMemoria{fig_docker_containers.png}{Contenedores Docker que materializan el clúster Kind y los nodos auxiliares. Elaboración propia.}{fig:docker-containers}
+\figuraAnexo{fig_docker_containers.png}{Contenedores Docker que materializan el clúster Kind y los nodos auxiliares. Elaboración propia.}{fig:docker-containers}
 
-\figuraMemoria{fig_pods_kubernetes.png}{Pods desplegados en el clúster Kind: OpenMetadata, MySQL, OpenSearch y PostgreSQL de referencia. Elaboración propia.}{fig:pods-kubernetes}
+\figuraAnexo{fig_pods_kubernetes.png}{Pods desplegados en el clúster Kind: OpenMetadata, MySQL, OpenSearch y PostgreSQL de referencia. Elaboración propia.}{fig:pods-kubernetes}
 
 \section{Ingesta y gobierno en OpenMetadata}
 
 Estas capturas evidencian la fuente técnica y el gobierno aplicado. La figura~\ref{fig:postgres-schemas} muestra las capas del PostgreSQL de referencia (sección~\ref{sec:implementacion-postgres}); la figura~\ref{fig:om-services}, los dos servicios registrados tras la doble ingesta (sección~\ref{sec:implementacion-ingesta}); y la figura~\ref{fig:om-tabla-propiedades}, las propiedades DCAT y las etiquetas aplicadas a una tabla \texttt{gold} tras ejecutar el workflow.
 
-\figuraMemoria{fig_postgres_schemas.png}{Esquemas \texttt{bronze}, \texttt{silver} y \texttt{gold} del PostgreSQL de referencia, vistos desde la \ac{UI} de \ac{OM}. Elaboración propia.}{fig:postgres-schemas}
+\figuraAnexo{fig_postgres_schemas.png}{Esquemas \texttt{bronze}, \texttt{silver} y \texttt{gold} del PostgreSQL de referencia, vistos desde la \ac{UI} de \ac{OM}. Elaboración propia.}{fig:postgres-schemas}
 
-\figuraMemoria{fig_om_services.png}{Servicios de base de datos ingeridos en OpenMetadata tras la doble ingesta. Elaboración propia.}{fig:om-services}
+\figuraAnexo{fig_om_services.png}{Servicios de base de datos ingeridos en OpenMetadata tras la doble ingesta. Elaboración propia.}{fig:om-services}
 
-\figuraMemoria{fig_om_tabla_propiedades.png}{Propiedades personalizadas DCAT y etiquetas \fqn{dcat_theme.*} aplicadas a una tabla \texttt{gold} en OpenMetadata tras ejecutar el workflow. Elaboración propia.}{fig:om-tabla-propiedades}
+\figuraAnexo{fig_om_tabla_propiedades.png}{Propiedades personalizadas DCAT y etiquetas \fqn{dcat_theme.*} aplicadas a una tabla \texttt{gold} en OpenMetadata tras ejecutar el workflow. Elaboración propia.}{fig:om-tabla-propiedades}
 
 \section{Núcleo Python y pipeline de metadatos}
 
 La figura~\ref{fig:modulos-python} resume la estructura interna del paquete \fqn{om_dcat_sync} (sección~\ref{sec:implementacion-nucleo}). El flujo operativo paso a paso y la transformación conceptual de los metadatos se ilustran en las figuras~\ref{fig:flujo-operativo} y~\ref{fig:pipeline-metadatos} del capítulo de Resultados (capítulo~\ref{cap:resultados}).
 
-\figuraMemoria{fig_modulos_python.png}{Estructura interna del paquete \fqn{om_dcat_sync}. Elaboración propia.}{fig:modulos-python}
+\figuraAnexo{fig_modulos_python.png}{Estructura interna del paquete \fqn{om_dcat_sync}. Elaboración propia.}{fig:modulos-python}
 
 \section{Consola web operativa}
 
 Las pantallas de la consola web (sección~\ref{sec:implementacion-web}) documentan la operación guiada del flujo: la edición de la hoja de gobierno, el lanzamiento del workflow, la exportación DCAT y la validación, además del informe de validación renderizado en el navegador.
 
-\figuraMemoria{fig_web_pantalla_gobierno.png}{Pantalla \emph{Gobierno} de la consola web: edición de la hoja \fqn{gold_governance.csv}. Elaboración propia.}{fig:web-pantalla-gobierno}
+\figuraAnexo{fig_web_pantalla_gobierno.png}{Pantalla \emph{Gobierno} de la consola web: edición de la hoja \fqn{gold_governance.csv}. Elaboración propia.}{fig:web-pantalla-gobierno}
 
-\figuraMemoria{fig_web_pantalla_workflow.png}{Pantalla \emph{Workflow}: lanzamiento de \texttt{dry-run} y \texttt{apply} con resumen de cambios. Elaboración propia.}{fig:web-pantalla-workflow}
+\figuraAnexo{fig_web_pantalla_workflow.png}{Pantalla \emph{Workflow}: lanzamiento de \texttt{dry-run} y \texttt{apply} con resumen de cambios. Elaboración propia.}{fig:web-pantalla-workflow}
 
-\figuraMemoria{fig_web_pantalla_dcat.png}{Pantalla \emph{DCAT}: exportación y previsualización del catálogo \ac{JSONLD}. Elaboración propia.}{fig:web-pantalla-dcat}
+\figuraAnexo{fig_web_pantalla_dcat.png}{Pantalla \emph{DCAT}: exportación y previsualización del catálogo \ac{JSONLD}. Elaboración propia.}{fig:web-pantalla-dcat}
 
-\figuraMemoria{fig_web_pantalla_validacion.png}{Pantalla \emph{Validación}: ejecución de la suite reproducible y resumen de resultados. Elaboración propia.}{fig:web-pantalla-validacion}
+\figuraAnexo{fig_web_pantalla_validacion.png}{Pantalla \emph{Validación}: ejecución de la suite reproducible y resumen de resultados. Elaboración propia.}{fig:web-pantalla-validacion}
 
-\figuraMemoria{fig_validation_report_html.png}{Informe de validación HTML renderizado en el navegador desde la consola web. Elaboración propia.}{fig:informe-html-renderizado}
+\figuraAnexo{fig_validation_report_html.png}{Informe de validación HTML renderizado en el navegador desde la consola web. Elaboración propia.}{fig:informe-html-renderizado}
 
 \section{Listados de código y configuración}
 
