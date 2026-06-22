@@ -1,0 +1,44 @@
+{
+  "id": "e41c1a53-b64d-4981-9f39-1ececc2882d0",
+  "operationId": "workflow-dry-run",
+  "title": "Dry-run del workflow",
+  "command": "python -m om_dcat_sync workflow run --dry-run --plan-output .\\tmp_pytest\\web_workflow_plan.json",
+  "status": "success",
+  "createdAt": "2026-05-31T20:17:31.699Z",
+  "log": "{\r\n  \"workflow\": {\r\n    \"dry_run\": true,\r\n    \"sheet_refreshed\": true,\r\n    \"sheet_path\": \"F:\\\\repo\\\\INGENIERIA\\\\MASTER\\\\TFM\\\\TFM_Alonso_Marcos_Mu-oz\\\\tfm_ingestor\\\\config\\\\gold_governance.csv\",\r\n    \"profile_case\": \"hvd\",\r\n    \"tables_discovered\": 6,\r\n    \"sheet_rows_loaded\": 2,\r\n    \"sheet_valid\": true,\r\n    \"sheet_validation_error\": null\r\n  },\r\n  \"sync\": {\r\n    \"dry_run\": true,\r\n    \"intents\": 2,\r\n    \"planned\": [\r\n      {\r\n        \"tableFQN\": \"postgres_demo_service.opendata_demo.gold.agenda_cultural_publica\",\r\n        \"tableId\": \"9a9187b5-5ee0-4610-83d4-49c968013118\",\r\n        \"ops\": [\r\n          {\r\n            \"op\": \"replace\",\r\n            \"path\": \"/description\",\r\n            \"value\": \"Relaci�n de eventos culturales p�blicos con fecha, municipio, categor�a y asistencia estimada ingerida desde el servicio operativo PostgreSQL.\"\r\n          },\r\n          {\r\n            \"op\": \"replace\",\r\n            \"path\": \"/displayName\",\r\n            \"value\": \"Agenda cultural p�blica - servicio operativo\"\r\n          },\r\n          {\r\n            \"op\": \"replace\",\r\n            \"path\": \"/extension\",\r\n            \"value\": {\r\n              \"dcat_publisher_name\": \"UCLM\",\r\n              \"dcat_hvd_category\": \"http://data.europa.eu/bna/c_e1da4e07\",\r\n              \"dcat_access_url\": \"https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-demo/gold/agenda-cultural-publica\"\r\n            }\r\n          }\r\n        ]\r\n      },\r\n      {\r\n        \"tableFQN\": \"postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio\",\r\n        \"tableId\": \"c3055eec-bf73-444a-b47e-20220105b129\",\r\n        \"ops\": [\r\n          {\r\n            \"op\": \"replace\",\r\n            \"path\": \"/description\",\r\n            \"value\": \"Resumen diario de viajes agregados por municipio para analizar movilidad urbana desde el servicio operativo PostgreSQL.\"\r\n          },\r\n          {\r\n            \"op\": \"replace\",\r\n            \"path\": \"/displayName\",\r\n            \"value\": \"Resumen de movilidad por municipio - servicio operativo\"\r\n          },\r\n          {\r\n            \"op\": \"replace\",\r\n            \"path\": \"/extension\",\r\n            \"value\": {\r\n              \"dcat_publisher_name\": \"UCLM\",\r\n              \"dcat_hvd_category\": \"http://data.europa.eu/bna/c_b79e35eb\",\r\n              \"dcat_access_url\": \"https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-demo/gold/movilidad-resumen-municipio\"\r\n            }\r\n          }\r\n        ]\r\n      }\r\n    ],\r\n    \"applied\": 0,\r\n    \"plan_output\": \".\\\\tmp_pytest\\\\web_workflow_plan.json\"\r\n  },\r\n  \"export\": null,\r\n  \"validation\": null\r\n}\r\n",
+  "artifacts": [
+    "tmp_pytest/web_workflow_plan.json"
+  ],
+  "startedAt": "2026-05-31T20:17:31.708Z",
+  "exitCode": 0,
+  "finishedAt": "2026-05-31T20:17:32.625Z",
+  "result": {
+    "ok": true,
+    "message": "Dry-run del workflow finalizó correctamente.",
+    "details": [
+      "Workflow: dry-run=sí.",
+      "Workflow: tablas descubiertas 6.",
+      "Workflow: filas de hoja cargadas 2.",
+      "Workflow: hoja funcional válida=sí.",
+      "Sincronización: cambios planificados 2.",
+      "Sincronización: cambios aplicados 0.",
+      "Sincronización: dry-run=sí.",
+      "Artefactos generados: 1/1.",
+      "Duración: 0.9 s.",
+      "Código de salida: 0."
+    ],
+    "durationMs": 917,
+    "artifacts": [
+      {
+        "path": "tmp_pytest/web_workflow_plan.json",
+        "exists": true,
+        "size": 1984,
+        "updatedAt": "2026-05-31T20:17:32.584Z",
+        "viewable": true,
+        "kind": "JSON",
+        "summary": [],
+        "preview": "{\n  \"dry_run\": true,\n  \"intents\": 2,\n  \"planned\": [\n    {\n      \"tableFQN\": \"postgres_demo_service.opendata_demo.gold.agenda_cultural_publica\",\n      \"tableId\": \"9a9187b5-5ee0-4610-83d4-49c968013118\",\n      \"ops\": [\n        {\n          \"op\": \"replace\",\n          \"path\": \"/description\",\n          \"value\": \"Relación de eventos culturales públicos con fecha, municipio, categoría y asistencia estimada ingerida desde el servicio operativo PostgreSQL.\"\n        },\n        {\n          \"op\": \"replace\",\n          \"path\": \"/displayName\",\n          \"value\": \"Agenda cultural pública - servicio operativo\"\n        },\n        {\n          \"op\": \"replace\",\n          \"path\": \"/extension\",\n          \"value\": {\n            \"dcat_publisher_name\": \"UCLM\",\n            \"dcat_hvd_category\": \"http://data.europa.eu/bna/c_e1da4e07\",\n            \"dcat_access_url\": \"https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-demo/gold/agenda-cultural-publica\"\n          }\n        }\n      ]\n    },\n    {\n      \"tableFQN\": \"postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio\",\n      \"tableId\": \"c3055eec-bf73-444a-b47e-20220105b129\",\n      \"ops\": [\n        {\n          \"op\": \"replace\",\n          \"path\": \"/description\",\n          \"value\": \"Resumen diario de viajes agregados por municipio para analizar movilidad urbana desde el servicio operativo PostgreSQL.\"\n        },\n        {\n          \"op\": \"replace\",\n          \"path\": \"/displayName\",\n          \"value\": \"Resumen de movilidad por municipio - servicio operativo\"\n        },\n        {\n          \"op\": \"replace\",\n          \"path\": \"/extension\",\n          \"value\": {\n            \"dcat_publisher_name\": \"UCLM\",\n            \"dcat_hvd_category\": \"http://data.europa.eu/bna/c_b79e35eb\",\n            \"dcat_access_url\": \"https://www.uclm.es/datos/plataf\n..."
+      }
+    ]
+  }
+}

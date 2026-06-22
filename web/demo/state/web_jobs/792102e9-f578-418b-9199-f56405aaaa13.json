@@ -1,0 +1,38 @@
+{
+  "id": "792102e9-f578-418b-9199-f56405aaaa13",
+  "operationId": "backup-openmetadata-state",
+  "title": "Backup estado OpenMetadata",
+  "command": "powershell -ExecutionPolicy Bypass -File .\\scripts\\infra\\backup_openmetadata_state.ps1",
+  "status": "success",
+  "createdAt": "2026-04-20T14:19:41.785Z",
+  "log": "Esperando MySQL (statefulset/mysql) ...\nGenerando snapshot SQL en: F:\\repo\\INGENIERIA\\MASTER\\TFM\\TFM_Alonso_Marcos_Mu-oz\\state\\openmetadata\\mysql\\openmetadata_db.sql\nDefaulted container \"mysql\" out of: mysql, preserve-logs-symlinks (init)\nSnapshot completado. Bytes: 6896761\n",
+  "artifacts": [
+    "state/openmetadata/mysql/openmetadata_db.sql"
+  ],
+  "startedAt": "2026-04-20T14:19:42.121Z",
+  "exitCode": 0,
+  "finishedAt": "2026-04-20T14:19:44.415Z",
+  "result": {
+    "ok": true,
+    "message": "Backup estado OpenMetadata finalizó correctamente.",
+    "details": [
+      "Artefactos generados: 1/1.",
+      "Duración: 2.3 s.",
+      "Código de salida: 0."
+    ],
+    "durationMs": 2294,
+    "artifacts": [
+      {
+        "path": "state/openmetadata/mysql/openmetadata_db.sql",
+        "exists": true,
+        "size": 6896761,
+        "updatedAt": "2026-04-20T14:19:44.356Z",
+        "viewable": false,
+        "kind": "SQL",
+        "summary": [
+          "Snapshot SQL generado. Tamaño: 6896761 bytes."
+        ]
+      }
+    ]
+  }
+}

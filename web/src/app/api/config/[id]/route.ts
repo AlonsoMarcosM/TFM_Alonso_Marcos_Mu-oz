@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { readEditableConfig, writeEditableConfig } from "@/server/configFiles";
+import { isDemoMode } from "@/server/demo";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,12 @@ export async function GET(_request: Request, context: { params: Promise<{ id: st
 
 export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
   const { id } = await context.params;
+  if (isDemoMode()) {
+    return NextResponse.json(
+      { error: "Modo demo (solo lectura): la edicion de configuracion esta deshabilitada." },
+      { status: 403 },
+    );
+  }
   try {
     const body = (await request.json()) as { content?: unknown };
     if (typeof body.content !== "string") {

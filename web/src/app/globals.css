@@ -357,6 +357,29 @@ td textarea {
   color: var(--warn);
 }
 
+.demo-banner {
+  background: #fff4ce;
+  border: 1px solid #e8cf7a;
+  border-radius: 8px;
+  color: var(--warn);
+  line-height: 1.45;
+  margin: 0 0 1.25rem;
+  padding: 0.7rem 0.9rem;
+}
+
+.demo-banner strong {
+  color: #6b4700;
+}
+
+.demo-note {
+  background: #eef1f5;
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  color: var(--muted);
+  margin: 0.5rem 0 0;
+  padding: 0.5rem 0.7rem;
+}
+
 @media (max-width: 780px) {
   .shell {
     grid-template-columns: 1fr;

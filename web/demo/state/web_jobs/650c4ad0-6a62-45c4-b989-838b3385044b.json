@@ -1,0 +1,24 @@
+{
+  "id": "650c4ad0-6a62-45c4-b989-838b3385044b",
+  "operationId": "status-infra",
+  "title": "Estado de infraestructura",
+  "command": "powershell -ExecutionPolicy Bypass -File .\\scripts\\infra\\status_infra.ps1",
+  "status": "success",
+  "createdAt": "2026-04-20T14:26:31.326Z",
+  "log": "Contexto actual:\nkind-tfm-om\n\nReleases Helm:\nNAME                     \tNAMESPACE\tREVISION\tUPDATED                               \tSTATUS         \tCHART                           \tAPP VERSION\nopenmetadata-dependencies\tdefault  \t1       \t2026-04-20 16:26:02.1183903 +0200 CEST\tpending-install\topenmetadata-dependencies-1.12.5\t1.12.5     \n\nPods:\nNAME                             READY   STATUS            RESTARTS   AGE   IP           NODE                   NOMINATED NODE   READINESS GATES\nmysql-0                          0/1     PodInitializing   0          30s   10.244.0.9   tfm-om-control-plane   <none>           <none>\nopensearch-0                     0/1     Init:1/2          0          30s   10.244.0.8   tfm-om-control-plane   <none>           <none>\npostgres-demo-549fd8f8bc-ddnmj   1/1     Running           0          45s   10.244.0.5   tfm-om-control-plane   <none>           <none>\n\nServicios:\nNAME                  TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE\nkubernetes            ClusterIP   10.96.0.1       <none>        443/TCP                      69s\nmysql                 ClusterIP   10.96.212.165   <none>        3306/TCP                     31s\nmysql-headless        ClusterIP   None            <none>        3306/TCP                     31s\nopensearch            ClusterIP   10.96.183.76    <none>        9200/TCP,9300/TCP,9600/TCP   31s\nopensearch-headless   ClusterIP   None            <none>        9200/TCP,9300/TCP,9600/TCP   31s\npostgres-demo         ClusterIP   10.96.196.104   <none>        5432/TCP                     47s\n\nPostgreSQL en Kubernetes:\nNAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE\npostgres-demo   ClusterIP   10.96.196.104   <none>        5432/TCP   47s\nNAME                             READY   STATUS    RESTARTS   AGE\npostgres-demo-549fd8f8bc-ddnmj   1/1     Running   0          46s\n",
+  "artifacts": [],
+  "startedAt": "2026-04-20T14:26:31.926Z",
+  "exitCode": 0,
+  "finishedAt": "2026-04-20T14:26:33.342Z",
+  "result": {
+    "ok": true,
+    "message": "Estado de infraestructura finalizó correctamente.",
+    "details": [
+      "La operación no declara artefactos persistentes; la evidencia principal es el log.",
+      "Duración: 1.4 s.",
+      "Código de salida: 0."
+    ],
+    "durationMs": 1416,
+    "artifacts": []
+  }
+}

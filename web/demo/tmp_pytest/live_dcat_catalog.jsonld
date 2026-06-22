@@ -1,0 +1,348 @@
+{
+  "@context": {
+    "dcat": "http://www.w3.org/ns/dcat#",
+    "dcatap": "http://data.europa.eu/r5r/",
+    "dct": "http://purl.org/dc/terms/",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "vcard": "http://www.w3.org/2006/vcard/ns#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@type": "dcat:Catalog",
+      "@id": "urn:tfm:catalog:Plataforma de Gobierno del Dato (TFM)",
+      "dct:title": {
+        "@value": "Plataforma de Gobierno del Dato (TFM)",
+        "@language": "es"
+      },
+      "dct:description": {
+        "@value": "Catálogo de datos gobernados de la UCLM generado desde activos técnicos en OpenMetadata y exportado conforme a DCAT-AP-ES.",
+        "@language": "es"
+      },
+      "dct:publisher": {
+        "@id": "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001",
+        "@type": "foaf:Organization",
+        "foaf:name": {
+          "@value": "UCLM",
+          "@language": "es"
+        }
+      },
+      "foaf:homepage": {
+        "@id": "https://www.uclm.es"
+      },
+      "dcat:themeTaxonomy": {
+        "@id": "http://datos.gob.es/kos/sector-publico/sector"
+      },
+      "dct:issued": {
+        "@value": "2026-02-05",
+        "@type": "xsd:date"
+      },
+      "dct:modified": {
+        "@value": "2026-02-05",
+        "@type": "xsd:date"
+      },
+      "dct:language": {
+        "@id": "http://publications.europa.eu/resource/authority/language/SPA"
+      },
+      "dct:license": {
+        "@id": "https://www.uclm.es/misiones/lauclm/institucional/transparencia/condicionesusoavisolegal"
+      },
+      "dcat:dataset": [
+        {
+          "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica"
+        },
+        {
+          "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica",
+      "dct:title": {
+        "@value": "Agenda cultural pública - servicio operativo",
+        "@language": "es"
+      },
+      "dct:description": {
+        "@value": "Relación de eventos culturales públicos con fecha, municipio, categoría y asistencia estimada ingerida desde el servicio operativo PostgreSQL.",
+        "@language": "es"
+      },
+      "dct:publisher": {
+        "@id": "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001",
+        "@type": "foaf:Organization",
+        "foaf:name": {
+          "@value": "UCLM",
+          "@language": "es"
+        }
+      },
+      "dcat:theme": [
+        {
+          "@id": "http://datos.gob.es/kos/sector-publico/sector/cultura-ocio"
+        }
+      ],
+      "dcat:distribution": [
+        {
+          "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution"
+        }
+      ],
+      "dcatap:applicableLegislation": [
+        {
+          "@id": "http://data.europa.eu/eli/reg_impl/2023/138/oj"
+        }
+      ],
+      "dcatap:hvdCategory": [
+        {
+          "@id": "http://data.europa.eu/bna/c_e1da4e07"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Distribution",
+      "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution",
+      "dcat:accessURL": [
+        {
+          "@id": "https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-demo/gold/agenda-cultural-publica"
+        }
+      ],
+      "dcatap:applicableLegislation": [
+        {
+          "@id": "http://data.europa.eu/eli/reg_impl/2023/138/oj"
+        }
+      ],
+      "dct:license": {
+        "@id": "http://publications.europa.eu/resource/authority/licence/CC_BY_4_0"
+      },
+      "dcat:accessService": [
+        {
+          "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:DataService",
+      "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service",
+      "dct:title": {
+        "@value": "Servicio de datos HVD de Agenda cultural pública - servicio operativo",
+        "@language": "es"
+      },
+      "dcat:theme": [
+        {
+          "@id": "http://datos.gob.es/kos/sector-publico/sector/cultura-ocio"
+        }
+      ],
+      "dct:publisher": {
+        "@id": "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001",
+        "@type": "foaf:Organization",
+        "foaf:name": {
+          "@value": "UCLM",
+          "@language": "es"
+        }
+      },
+      "dcat:endpointURL": [
+        {
+          "@id": "https://www.uclm.es/datos/plataforma-gobierno-dato/api/gold/agenda-cultural-publica"
+        }
+      ],
+      "dcat:endpointDescription": [
+        {
+          "@id": "https://www.uclm.es/datos/plataforma-gobierno-dato/api-docs/gold/agenda-cultural-publica"
+        }
+      ],
+      "dcat:contactPoint": [
+        {
+          "@type": "vcard:Kind",
+          "vcard:organization-name": {
+            "@value": "UCLM",
+            "@language": "es"
+          },
+          "vcard:fn": {
+            "@value": "Oficina de datos abiertos",
+            "@language": "es"
+          },
+          "vcard:hasUID": {
+            "@id": "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001"
+          },
+          "vcard:hasEmail": {
+            "@id": "mailto:opendata-gobierno-dato@uclm.es"
+          },
+          "vcard:hasURL": {
+            "@id": "https://www.uclm.es/contacto"
+          },
+          "vcard:hasTelephone": {
+            "@id": "tel:+34902000000"
+          }
+        }
+      ],
+      "dcatap:applicableLegislation": [
+        {
+          "@id": "http://data.europa.eu/eli/reg_impl/2023/138/oj"
+        }
+      ],
+      "dcatap:hvdCategory": [
+        {
+          "@id": "http://data.europa.eu/bna/c_e1da4e07"
+        }
+      ],
+      "foaf:page": [
+        {
+          "@id": "https://www.uclm.es/datos/plataforma-gobierno-dato/docs/gold/agenda-cultural-publica"
+        }
+      ],
+      "dcat:servesDataset": [
+        {
+          "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica"
+        }
+      ],
+      "dct:license": {
+        "@id": "http://publications.europa.eu/resource/authority/licence/CC_BY_4_0"
+      },
+      "dct:accessRights": {
+        "@id": "http://publications.europa.eu/resource/authority/access-right/PUBLIC"
+      }
+    },
+    {
+      "@type": "dcat:Dataset",
+      "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio",
+      "dct:title": {
+        "@value": "Resumen de movilidad por municipio - servicio operativo",
+        "@language": "es"
+      },
+      "dct:description": {
+        "@value": "Resumen diario de viajes agregados por municipio para analizar movilidad urbana desde el servicio operativo PostgreSQL.",
+        "@language": "es"
+      },
+      "dct:publisher": {
+        "@id": "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001",
+        "@type": "foaf:Organization",
+        "foaf:name": {
+          "@value": "UCLM",
+          "@language": "es"
+        }
+      },
+      "dcat:theme": [
+        {
+          "@id": "http://datos.gob.es/kos/sector-publico/sector/transporte"
+        }
+      ],
+      "dcat:distribution": [
+        {
+          "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution"
+        }
+      ],
+      "dcatap:applicableLegislation": [
+        {
+          "@id": "http://data.europa.eu/eli/reg_impl/2023/138/oj"
+        }
+      ],
+      "dcatap:hvdCategory": [
+        {
+          "@id": "http://data.europa.eu/bna/c_b79e35eb"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:Distribution",
+      "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution",
+      "dcat:accessURL": [
+        {
+          "@id": "https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-demo/gold/movilidad-resumen-municipio"
+        }
+      ],
+      "dcatap:applicableLegislation": [
+        {
+          "@id": "http://data.europa.eu/eli/reg_impl/2023/138/oj"
+        }
+      ],
+      "dct:license": {
+        "@id": "http://publications.europa.eu/resource/authority/licence/CC_BY_4_0"
+      },
+      "dcat:accessService": [
+        {
+          "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service"
+        }
+      ]
+    },
+    {
+      "@type": "dcat:DataService",
+      "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service",
+      "dct:title": {
+        "@value": "Servicio de datos HVD de Resumen de movilidad por municipio - servicio operativo",
+        "@language": "es"
+      },
+      "dcat:theme": [
+        {
+          "@id": "http://datos.gob.es/kos/sector-publico/sector/transporte"
+        }
+      ],
+      "dct:publisher": {
+        "@id": "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001",
+        "@type": "foaf:Organization",
+        "foaf:name": {
+          "@value": "UCLM",
+          "@language": "es"
+        }
+      },
+      "dcat:endpointURL": [
+        {
+          "@id": "https://www.uclm.es/datos/plataforma-gobierno-dato/api/gold/movilidad-resumen-municipio"
+        }
+      ],
+      "dcat:endpointDescription": [
+        {
+          "@id": "https://www.uclm.es/datos/plataforma-gobierno-dato/api-docs/gold/movilidad-resumen-municipio"
+        }
+      ],
+      "dcat:contactPoint": [
+        {
+          "@type": "vcard:Kind",
+          "vcard:organization-name": {
+            "@value": "UCLM",
+            "@language": "es"
+          },
+          "vcard:fn": {
+            "@value": "Oficina de datos abiertos",
+            "@language": "es"
+          },
+          "vcard:hasUID": {
+            "@id": "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001"
+          },
+          "vcard:hasEmail": {
+            "@id": "mailto:opendata-gobierno-dato@uclm.es"
+          },
+          "vcard:hasURL": {
+            "@id": "https://www.uclm.es/contacto"
+          },
+          "vcard:hasTelephone": {
+            "@id": "tel:+34902000000"
+          }
+        }
+      ],
+      "dcatap:applicableLegislation": [
+        {
+          "@id": "http://data.europa.eu/eli/reg_impl/2023/138/oj"
+        }
+      ],
+      "dcatap:hvdCategory": [
+        {
+          "@id": "http://data.europa.eu/bna/c_b79e35eb"
+        }
+      ],
+      "foaf:page": [
+        {
+          "@id": "https://www.uclm.es/datos/plataforma-gobierno-dato/docs/gold/movilidad-resumen-municipio"
+        }
+      ],
+      "dcat:servesDataset": [
+        {
+          "@id": "urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio"
+        }
+      ],
+      "dct:license": {
+        "@id": "http://publications.europa.eu/resource/authority/licence/CC_BY_4_0"
+      },
+      "dct:accessRights": {
+        "@id": "http://publications.europa.eu/resource/authority/access-right/PUBLIC"
+      }
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "id": "7998d874-35dc-4246-a172-8f74b666dbf8",
+  "operationId": "refresh-governance-sheet",
+  "title": "Refrescar hoja gold desde OpenMetadata",
+  "command": "powershell -ExecutionPolicy Bypass -File .\\scripts\\infra\\refresh_governance_sheet_from_env.ps1 -SkipPipInstall",
+  "status": "success",
+  "createdAt": "2026-04-20T15:17:15.436Z",
+  "log": "OpenMetadata ya responde en http://localhost:8585/api/v1.\n{\r\n  \"output_path\": \".\\\\tfm_ingestor\\\\config\\\\gold_governance.csv\",\r\n  \"rows_written\": 2\r\n}\r\n",
+  "artifacts": [
+    "tfm_ingestor/config/gold_governance.csv"
+  ],
+  "startedAt": "2026-04-20T15:17:15.442Z",
+  "exitCode": 0,
+  "finishedAt": "2026-04-20T15:17:16.613Z",
+  "result": {
+    "ok": true,
+    "message": "Refrescar hoja gold desde OpenMetadata finalizó correctamente.",
+    "details": [
+      "Artefactos generados: 1/1.",
+      "Duración: 1.2 s.",
+      "Código de salida: 0."
+    ],
+    "durationMs": 1171,
+    "artifacts": [
+      {
+        "path": "tfm_ingestor/config/gold_governance.csv",
+        "exists": true,
+        "size": 601,
+        "updatedAt": "2026-04-20T15:17:16.551Z",
+        "viewable": true,
+        "kind": "CSV",
+        "summary": [
+          "CSV: 2 filas de datos.",
+          "Columnas: publicar, schema_name, table_name, table_fqn, titulo_dataset, descripcion_dataset, publicador, tematica_dcat, categoria_hvd, access_url_distribucion."
+        ],
+        "preview": "﻿publicar;schema_name;table_name;table_fqn;titulo_dataset;descripcion_dataset;publicador;tematica_dcat;categoria_hvd;access_url_distribucion\r\nsi;gold;agenda_cultural_publica;postgres_demo_service.opendata_demo.gold.agenda_cultural_publica;agenda_cultural_publica;DAD;UCLM (Demo);cultura_ocio;estadisticas;https://www.uclm.es/datos/poc/gold/agenda-cultural-publica\r\nsi;gold;movilidad_resumen_municipio;postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio;movilidad_resumen_municipio;DAF;UCLM (Demo);transporte;movilidad;https://www.uclm.es/datos/poc/gold/movilidad-resumen-municipio\r\n"
+      }
+    ]
+  }
+}

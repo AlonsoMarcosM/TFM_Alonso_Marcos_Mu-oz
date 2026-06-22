@@ -1,0 +1,57 @@
+{
+  "dry_run": true,
+  "intents": 2,
+  "planned": [
+    {
+      "tableFQN": "postgres_demo_service.opendata_demo.gold.agenda_cultural_publica",
+      "tableId": "9a9187b5-5ee0-4610-83d4-49c968013118",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/description",
+          "value": "Relación de eventos culturales públicos con fecha, municipio, categoría y asistencia estimada ingerida desde el servicio operativo PostgreSQL."
+        },
+        {
+          "op": "replace",
+          "path": "/displayName",
+          "value": "Agenda cultural pública - servicio operativo"
+        },
+        {
+          "op": "replace",
+          "path": "/extension",
+          "value": {
+            "dcat_publisher_name": "UCLM",
+            "dcat_hvd_category": "http://data.europa.eu/bna/c_e1da4e07",
+            "dcat_access_url": "https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-demo/gold/agenda-cultural-publica"
+          }
+        }
+      ]
+    },
+    {
+      "tableFQN": "postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio",
+      "tableId": "c3055eec-bf73-444a-b47e-20220105b129",
+      "ops": [
+        {
+          "op": "replace",
+          "path": "/description",
+          "value": "Resumen diario de viajes agregados por municipio para analizar movilidad urbana desde el servicio operativo PostgreSQL."
+        },
+        {
+          "op": "replace",
+          "path": "/displayName",
+          "value": "Resumen de movilidad por municipio - servicio operativo"
+        },
+        {
+          "op": "replace",
+          "path": "/extension",
+          "value": {
+            "dcat_publisher_name": "UCLM",
+            "dcat_hvd_category": "http://data.europa.eu/bna/c_b79e35eb",
+            "dcat_access_url": "https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-demo/gold/movilidad-resumen-municipio"
+          }
+        }
+      ]
+    }
+  ],
+  "applied": 0
+}

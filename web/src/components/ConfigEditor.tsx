@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { DEMO_MODE } from "@/shared/demoFlag";
+
 type ConfigFile = {
   id: string;
   title: string;
@@ -48,6 +50,10 @@ export function ConfigEditor() {
   }, [selected]);
 
   async function save() {
+    if (DEMO_MODE) {
+      setError("Modo demo (solo lectura): los cambios no se guardan.");
+      return;
+    }
     setSaving(true);
     setError(null);
     setMessage(null);
@@ -86,10 +92,13 @@ export function ConfigEditor() {
         <button onClick={() => void loadConfig()} type="button" disabled={loading}>
           Recargar configuracion
         </button>
-        <button onClick={save} type="button" disabled={saving || loading}>
+        <button onClick={save} type="button" disabled={saving || loading || DEMO_MODE}>
           {saving ? "Guardando" : "Guardar configuracion"}
         </button>
       </div>
+      {DEMO_MODE ? (
+        <p className="demo-note">Solo lectura: en la demo puedes inspeccionar la configuración, pero no guardarla.</p>
+      ) : null}
       {current ? (
         <p className="muted">
           <strong>{current.id}</strong>: {current.description}

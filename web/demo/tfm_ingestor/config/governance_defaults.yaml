@@ -1,0 +1,33 @@
+catalog:
+  title: "Plataforma de Gobierno del Dato (TFM)"
+  description: "Catálogo de datos gobernados de la UCLM generado desde activos técnicos en OpenMetadata y exportado conforme a DCAT-AP-ES."
+  publisher_name: "UCLM"
+  publisher_uri: "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001"
+  homepage: "https://www.uclm.es"
+  theme_taxonomy: "http://datos.gob.es/kos/sector-publico/sector"
+  issued: "2026-02-05"
+  modified: "2026-02-05"
+  language: "http://publications.europa.eu/resource/authority/language/SPA"
+  license_default: "https://www.uclm.es/misiones/lauclm/institucional/transparencia/condicionesusoavisolegal"
+
+dataset_defaults:
+  access_url_base: "https://www.uclm.es/datos/plataforma-gobierno-dato"
+  hvd_category_by_theme_tag:
+    dcat_theme.transporte: "movilidad"
+    dcat_theme.cultura_ocio: "estadisticas"
+
+hvd_defaults:
+  enabled: true
+  applicable_legislation: "http://data.europa.eu/eli/reg_impl/2023/138/oj"
+  distribution_license: "http://publications.europa.eu/resource/authority/licence/CC_BY_4_0"
+  access_rights: "http://publications.europa.eu/resource/authority/access-right/PUBLIC"
+  service_endpoint_url_base: "https://www.uclm.es/datos/plataforma-gobierno-dato/api"
+  service_endpoint_description_base: "https://www.uclm.es/datos/plataforma-gobierno-dato/api-docs"
+  service_documentation_base: "https://www.uclm.es/datos/plataforma-gobierno-dato/docs"
+  contact:
+    organization_name: "UCLM"
+    fn: "Oficina de datos abiertos"
+    has_uid: "http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001"
+    has_email: "mailto:opendata-gobierno-dato@uclm.es"
+    has_url: "https://www.uclm.es/contacto"
+    has_telephone: "tel:+34902000000"

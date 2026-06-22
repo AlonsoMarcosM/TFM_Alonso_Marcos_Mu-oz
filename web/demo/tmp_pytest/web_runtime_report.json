@@ -1,0 +1,331 @@
+{
+  "technical": {
+    "conforms": true,
+    "service_name_expected": "postgres_demo_service,postgres_validation_service",
+    "service_names_expected": [
+      "postgres_demo_service",
+      "postgres_validation_service"
+    ],
+    "service_name_present": true,
+    "service_names_detected": [
+      "postgres_demo_service",
+      "postgres_validation_service"
+    ],
+    "missing_services": [],
+    "database_name_expected": "opendata_demo",
+    "database_name_present": true,
+    "database_names_detected": [
+      "opendata_demo",
+      "opendata_demo"
+    ],
+    "schemas_expected": [
+      "bronze",
+      "gold",
+      "silver"
+    ],
+    "schemas_detected": [
+      "bronze",
+      "bronze",
+      "gold",
+      "gold",
+      "silver",
+      "silver"
+    ],
+    "missing_schemas": [],
+    "tables_expected_count": 6,
+    "tables_detected_count": 12,
+    "missing_tables": [],
+    "unexpected_tables": [],
+    "column_checks": [
+      {
+        "table": "postgres_demo_service.opendata_demo.bronze.bici_uso_raw",
+        "conforms": true,
+        "expected_columns": [
+          "event_id",
+          "ts",
+          "estacion_id",
+          "viajes",
+          "fuente"
+        ],
+        "actual_columns": [
+          "event_id",
+          "ts",
+          "estacion_id",
+          "viajes",
+          "fuente"
+        ]
+      },
+      {
+        "table": "postgres_demo_service.opendata_demo.bronze.eventos_raw",
+        "conforms": true,
+        "expected_columns": [
+          "evento_id",
+          "titulo",
+          "fecha",
+          "municipio",
+          "categoria",
+          "asistentes_est"
+        ],
+        "actual_columns": [
+          "evento_id",
+          "titulo",
+          "fecha",
+          "municipio",
+          "categoria",
+          "asistentes_est"
+        ]
+      },
+      {
+        "table": "postgres_demo_service.opendata_demo.silver.bici_uso_diario",
+        "conforms": true,
+        "expected_columns": [
+          "fecha",
+          "estacion_id",
+          "viajes_totales"
+        ],
+        "actual_columns": [
+          "fecha",
+          "estacion_id",
+          "viajes_totales"
+        ]
+      },
+      {
+        "table": "postgres_demo_service.opendata_demo.silver.eventos_normalizados",
+        "conforms": true,
+        "expected_columns": [
+          "evento_id",
+          "titulo",
+          "fecha",
+          "municipio",
+          "categoria_std",
+          "asistentes_est"
+        ],
+        "actual_columns": [
+          "evento_id",
+          "titulo",
+          "fecha",
+          "municipio",
+          "categoria_std",
+          "asistentes_est"
+        ]
+      },
+      {
+        "table": "postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio",
+        "conforms": true,
+        "expected_columns": [
+          "fecha",
+          "municipio",
+          "viajes_totales"
+        ],
+        "actual_columns": [
+          "fecha",
+          "municipio",
+          "viajes_totales"
+        ]
+      },
+      {
+        "table": "postgres_demo_service.opendata_demo.gold.agenda_cultural_publica",
+        "conforms": true,
+        "expected_columns": [
+          "evento_id",
+          "titulo",
+          "fecha",
+          "municipio",
+          "categoria",
+          "asistentes_est"
+        ],
+        "actual_columns": [
+          "evento_id",
+          "titulo",
+          "fecha",
+          "municipio",
+          "categoria",
+          "asistentes_est"
+        ]
+      },
+      {
+        "table": "postgres_validation_service.opendata_demo.bronze.bici_uso_raw",
+        "conforms": true,
+        "expected_columns": [
+          "event_id",
+          "ts",
+          "estacion_id",
+          "viajes",
+          "fuente"
+        ],
+        "actual_columns": [
+          "event_id",
+          "ts",
+          "estacion_id",
+          "viajes",
+          "fuente"
+        ]
+      },
+      {
+        "table": "postgres_validation_service.opendata_demo.bronze.eventos_raw",
+        "conforms": true,
+        "expected_columns": [
+          "evento_id",
+          "titulo",
+          "fecha",
+          "municipio",
+          "categoria",
+          "asistentes_est"
+        ],
+        "actual_columns": [
+          "evento_id",
+          "titulo",
+          "fecha",
+          "municipio",
+          "categoria",
+          "asistentes_est"
+        ]
+      },
+      {
+        "table": "postgres_validation_service.opendata_demo.silver.bici_uso_diario",
+        "conforms": true,
+        "expected_columns": [
+          "fecha",
+          "estacion_id",
+          "viajes_totales"
+        ],
+        "actual_columns": [
+          "fecha",
+          "estacion_id",
+          "viajes_totales"
+        ]
+      },
+      {
+        "table": "postgres_validation_service.opendata_demo.silver.eventos_normalizados",
+        "conforms": true,
+        "expected_columns": [
+          "evento_id",
+          "titulo",
+          "fecha",
+          "municipio",
+          "categoria_std",
+          "asistentes_est"
+        ],
+        "actual_columns": [
+          "evento_id",
+          "titulo",
+          "fecha",
+          "municipio",
+          "categoria_std",
+          "asistentes_est"
+        ]
+      },
+      {
+        "table": "postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio",
+        "conforms": true,
+        "expected_columns": [
+          "fecha",
+          "municipio",
+          "viajes_totales"
+        ],
+        "actual_columns": [
+          "fecha",
+          "municipio",
+          "viajes_totales"
+        ]
+      },
+      {
+        "table": "postgres_validation_service.opendata_demo.gold.agenda_cultural_publica",
+        "conforms": true,
+        "expected_columns": [
+          "evento_id",
+          "titulo",
+          "fecha",
+          "municipio",
+          "categoria",
+          "asistentes_est"
+        ],
+        "actual_columns": [
+          "evento_id",
+          "titulo",
+          "fecha",
+          "municipio",
+          "categoria",
+          "asistentes_est"
+        ]
+      }
+    ],
+    "issues": []
+  },
+  "governance": {
+    "conforms": true,
+    "published_datasets_expected": 4,
+    "checks": [
+      {
+        "table": "postgres_demo_service.opendata_demo.gold.agenda_cultural_publica",
+        "conforms": true,
+        "issues": [],
+        "actual_display_name": "Agenda cultural pública - servicio operativo",
+        "actual_description": "Relación de eventos culturales públicos con fecha, municipio, categoría y asistencia estimada ingerida desde el servicio operativo PostgreSQL.",
+        "actual_theme_tags": [
+          "dcat_theme.cultura_ocio"
+        ],
+        "actual_custom_properties": {
+          "dcat_publisher_name": "UCLM",
+          "dcat_hvd_category": "http://data.europa.eu/bna/c_e1da4e07",
+          "dcat_access_url": "https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-demo/gold/agenda-cultural-publica"
+        },
+        "actual_domains": [],
+        "legacy_custom_properties_present": []
+      },
+      {
+        "table": "postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio",
+        "conforms": true,
+        "issues": [],
+        "actual_display_name": "Resumen de movilidad por municipio - servicio operativo",
+        "actual_description": "Resumen diario de viajes agregados por municipio para analizar movilidad urbana desde el servicio operativo PostgreSQL.",
+        "actual_theme_tags": [
+          "dcat_theme.transporte"
+        ],
+        "actual_custom_properties": {
+          "dcat_publisher_name": "UCLM",
+          "dcat_hvd_category": "http://data.europa.eu/bna/c_b79e35eb",
+          "dcat_access_url": "https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-demo/gold/movilidad-resumen-municipio"
+        },
+        "actual_domains": [],
+        "legacy_custom_properties_present": []
+      },
+      {
+        "table": "postgres_validation_service.opendata_demo.gold.agenda_cultural_publica",
+        "conforms": true,
+        "issues": [],
+        "actual_display_name": "Agenda cultural pública - servicio de validación",
+        "actual_description": "Relación de eventos culturales públicos con fecha, municipio, categoría y asistencia estimada ingerida desde el servicio PostgreSQL del caso de uso de validación.",
+        "actual_theme_tags": [
+          "dcat_theme.cultura_ocio"
+        ],
+        "actual_custom_properties": {
+          "dcat_publisher_name": "UCLM",
+          "dcat_hvd_category": "http://data.europa.eu/bna/c_e1da4e07",
+          "dcat_access_url": "https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-validation/gold/agenda-cultural-publica"
+        },
+        "actual_domains": [],
+        "legacy_custom_properties_present": []
+      },
+      {
+        "table": "postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio",
+        "conforms": true,
+        "issues": [],
+        "actual_display_name": "Resumen de movilidad por municipio - servicio de validación",
+        "actual_description": "Resumen diario de viajes agregados por municipio para analizar movilidad urbana desde el servicio PostgreSQL del caso de uso de validación.",
+        "actual_theme_tags": [
+          "dcat_theme.transporte"
+        ],
+        "actual_custom_properties": {
+          "dcat_publisher_name": "UCLM",
+          "dcat_hvd_category": "http://data.europa.eu/bna/c_b79e35eb",
+          "dcat_access_url": "https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-validation/gold/movilidad-resumen-municipio"
+        },
+        "actual_domains": [],
+        "legacy_custom_properties_present": []
+      }
+    ],
+    "issues": []
+  },
+  "conforms": true
+}

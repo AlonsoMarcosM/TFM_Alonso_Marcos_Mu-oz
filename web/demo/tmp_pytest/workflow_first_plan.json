@@ -1,0 +1,79 @@
+{
+  "dry_run": false,
+  "intents": 4,
+  "planned": [
+    {
+      "tableFQN": "postgres_validation_service.opendata_demo.gold.agenda_cultural_publica",
+      "tableId": "abd6feab-d4ee-44d4-8693-b45539d67f14",
+      "ops": [
+        {
+          "op": "add",
+          "path": "/description",
+          "value": "Relación de eventos culturales públicos con fecha, municipio, categoría y asistencia estimada ingerida desde el servicio PostgreSQL del caso de uso de validación."
+        },
+        {
+          "op": "add",
+          "path": "/displayName",
+          "value": "Agenda cultural pública - servicio de validación"
+        },
+        {
+          "op": "add",
+          "path": "/tags",
+          "value": [
+            {
+              "tagFQN": "dcat_theme.cultura_ocio",
+              "labelType": "Manual",
+              "state": "Confirmed"
+            }
+          ]
+        },
+        {
+          "op": "add",
+          "path": "/extension",
+          "value": {
+            "dcat_publisher_name": "UCLM",
+            "dcat_hvd_category": "http://data.europa.eu/bna/c_e1da4e07",
+            "dcat_access_url": "https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-validation/gold/agenda-cultural-publica"
+          }
+        }
+      ]
+    },
+    {
+      "tableFQN": "postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio",
+      "tableId": "bdda587d-6514-46ae-a82d-d15ff7c77d08",
+      "ops": [
+        {
+          "op": "add",
+          "path": "/description",
+          "value": "Resumen diario de viajes agregados por municipio para analizar movilidad urbana desde el servicio PostgreSQL del caso de uso de validación."
+        },
+        {
+          "op": "add",
+          "path": "/displayName",
+          "value": "Resumen de movilidad por municipio - servicio de validación"
+        },
+        {
+          "op": "add",
+          "path": "/tags",
+          "value": [
+            {
+              "tagFQN": "dcat_theme.transporte",
+              "labelType": "Manual",
+              "state": "Confirmed"
+            }
+          ]
+        },
+        {
+          "op": "add",
+          "path": "/extension",
+          "value": {
+            "dcat_publisher_name": "UCLM",
+            "dcat_hvd_category": "http://data.europa.eu/bna/c_b79e35eb",
+            "dcat_access_url": "https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-validation/gold/movilidad-resumen-municipio"
+          }
+        }
+      ]
+    }
+  ],
+  "applied": 2
+}

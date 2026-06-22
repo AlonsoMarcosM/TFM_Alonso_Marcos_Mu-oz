@@ -2,6 +2,7 @@ import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 import dotenv from "dotenv";
 
+import { isDemoMode } from "./demo";
 import { repoPath, repoRoot } from "./repoPaths";
 
 let loaded = false;
@@ -18,6 +19,19 @@ export function loadRepoEnv(): void {
 }
 
 export function envStatus() {
+  // En demo no hay `.env` ni infraestructura: se reporta el estado de la
+  // ejecucion real congelada para que la UI no aparente estar incompleta.
+  if (isDemoMode()) {
+    return {
+      path: "(modo demo, datos congelados)",
+      exists: true,
+      demo: true,
+      required: [
+        { name: "OPENMETADATA_BASE_URL", present: true },
+        { name: "OPENMETADATA_JWT_TOKEN u OPENMETADATA_TOKEN", present: true },
+      ],
+    };
+  }
   loadRepoEnv();
   const envPath = repoPath(".env");
   return {
@@ -45,7 +59,7 @@ export function jobEnvironment(options: { ensureOpenMetadataToken?: boolean } = 
   if (!env.OPENMETADATA_JWT_TOKEN && env.OPENMETADATA_TOKEN) {
     env.OPENMETADATA_JWT_TOKEN = env.OPENMETADATA_TOKEN;
   }
-  if (options.ensureOpenMetadataToken && !env.OPENMETADATA_JWT_TOKEN) {
+  if (options.ensureOpenMetadataToken && !env.OPENMETADATA_JWT_TOKEN && !isDemoMode()) {
     const generated = spawnSync("python", [repoPath("scripts", "infra", "generate_om_jwt.py"), "--ttl-hours", "2"], {
       cwd: repoRoot(),
       encoding: "utf8",

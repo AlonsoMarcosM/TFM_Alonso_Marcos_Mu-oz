@@ -1,0 +1,10 @@
+defaults_path: "tfm_ingestor/config/governance_defaults.yaml"
+rules_path: "tfm_ingestor/config/mapping_rules.yaml"
+sheet_path: "tfm_ingestor/config/gold_governance.csv"
+
+workflow:
+  profile_case: "hvd"
+  allow_warnings: false
+  refresh_sheet: true
+  export_output: "dcat_catalog.jsonld"
+  report_output: "tmp_pytest/dcat_validation_report.ttl"

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { isDemoMode } from "@/server/demo";
 import { readGovernanceSheet, validateGovernanceRows, writeGovernanceSheet, type GovernanceRow } from "@/server/governanceCsv";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +15,12 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
+  if (isDemoMode()) {
+    return NextResponse.json(
+      { error: "Modo demo (solo lectura): la edicion de la hoja gold esta deshabilitada." },
+      { status: 403 },
+    );
+  }
   try {
     const body = (await request.json()) as { rows?: GovernanceRow[] };
     if (!Array.isArray(body.rows)) {

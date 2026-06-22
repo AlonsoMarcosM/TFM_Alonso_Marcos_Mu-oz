@@ -1,0 +1,40 @@
+{
+  "id": "1568c706-d8f6-4dc5-a933-f88a61da8823",
+  "operationId": "export-dcat",
+  "title": "Exportar DCAT",
+  "command": "python -m om_dcat_sync export-dcat --output .\\tmp_pytest\\web_catalog.jsonld",
+  "status": "success",
+  "createdAt": "2026-05-31T20:18:24.300Z",
+  "log": "{\r\n  \"tables_total\": 6,\r\n  \"tables_exported\": 2,\r\n  \"output_path\": \".\\\\tmp_pytest\\\\web_catalog.jsonld\",\r\n  \"preview_dataset_count\": 2\r\n}\r\n",
+  "artifacts": [
+    "tmp_pytest/web_catalog.jsonld"
+  ],
+  "startedAt": "2026-05-31T20:18:24.305Z",
+  "exitCode": 0,
+  "finishedAt": "2026-05-31T20:18:24.882Z",
+  "result": {
+    "ok": true,
+    "message": "Exportar DCAT finalizó correctamente.",
+    "details": [
+      "Artefactos generados: 1/1.",
+      "Duración: 0.6 s.",
+      "Código de salida: 0."
+    ],
+    "durationMs": 577,
+    "artifacts": [
+      {
+        "path": "tmp_pytest/web_catalog.jsonld",
+        "exists": true,
+        "size": 11485,
+        "updatedAt": "2026-05-31T20:18:24.853Z",
+        "viewable": true,
+        "kind": "JSONLD",
+        "summary": [
+          "JSON-LD: nodos en @graph 7.",
+          "JSON-LD: datasets 2, distribuciones 2, data services 2."
+        ],
+        "preview": "{\n  \"@context\": {\n    \"dcat\": \"http://www.w3.org/ns/dcat#\",\n    \"dcatap\": \"http://data.europa.eu/r5r/\",\n    \"dct\": \"http://purl.org/dc/terms/\",\n    \"foaf\": \"http://xmlns.com/foaf/0.1/\",\n    \"vcard\": \"http://www.w3.org/2006/vcard/ns#\",\n    \"xsd\": \"http://www.w3.org/2001/XMLSchema#\"\n  },\n  \"@graph\": [\n    {\n      \"@type\": \"dcat:Catalog\",\n      \"@id\": \"urn:tfm:catalog:Plataforma de Gobierno del Dato (TFM)\",\n      \"dct:title\": {\n        \"@value\": \"Plataforma de Gobierno del Dato (TFM)\",\n        \"@language\": \"es\"\n      },\n      \"dct:description\": {\n        \"@value\": \"Catálogo de datos gobernados de la UCLM generado desde activos técnicos en OpenMetadata y exportado conforme a DCAT-AP-ES.\",\n        \"@language\": \"es\"\n      },\n      \"dct:publisher\": {\n        \"@id\": \"http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001\",\n        \"@type\": \"foaf:Organization\",\n        \"foaf:name\": {\n          \"@value\": \"UCLM\",\n          \"@language\": \"es\"\n        }\n      },\n      \"foaf:homepage\": {\n        \"@id\": \"https://www.uclm.es\"\n      },\n      \"dcat:themeTaxonomy\": {\n        \"@id\": \"http://datos.gob.es/kos/sector-publico/sector\"\n      },\n      \"dct:issued\": {\n        \"@value\": \"2026-02-05\",\n        \"@type\": \"xsd:date\"\n      },\n      \"dct:modified\": {\n        \"@value\": \"2026-02-05\",\n        \"@type\": \"xsd:date\"\n      },\n      \"dct:language\": {\n        \"@id\": \"http://publications.europa.eu/resource/authority/language/SPA\"\n      },\n      \"dct:license\": {\n        \"@id\": \"https://www.uclm.es/misiones/lauclm/institucional/transparencia/condicionesusoavisolegal\"\n      },\n      \"dcat:dataset\": [\n        {\n          \"@id\": \"urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica\"\n        },\n        {\n          \"@id\": \"urn:openmetadata:table:postgres_demo_s\n..."
+      }
+    ]
+  }
+}

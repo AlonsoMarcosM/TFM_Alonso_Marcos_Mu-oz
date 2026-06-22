@@ -1,0 +1,26 @@
+{
+  "id": "e360857f-d832-4f9e-97fa-fcca7cf02849",
+  "operationId": "bootstrap-governance",
+  "title": "Preparar tags y custom properties",
+  "command": "powershell -ExecutionPolicy Bypass -File .\\scripts\\infra\\bootstrap_governance_from_env.ps1 -SkipPipInstall",
+  "status": "success",
+  "createdAt": "2026-04-20T15:15:57.322Z",
+  "log": "Defaulted container \"openmetadata\" out of: openmetadata, run-db-migrations (init)\n{\r\n  \"classifications_created\": [],\r\n  \"classifications_existing\": [\r\n    \"dcat_theme\"\r\n  ],\r\n  \"tags_created\": [],\r\n  \"tags_existing\": [\r\n    \"dcat_theme.ciencia_tecnologia\",\r\n    \"dcat_theme.comercio\",\r\n    \"dcat_theme.cultura_ocio\",\r\n    \"dcat_theme.demografia\",\r\n    \"dcat_theme.deporte\",\r\n    \"dcat_theme.economia\",\r\n    \"dcat_theme.educacion\",\r\n    \"dcat_theme.empleo\",\r\n    \"dcat_theme.energia\",\r\n    \"dcat_theme.hacienda\",\r\n    \"dcat_theme.industria\",\r\n    \"dcat_theme.legislacion_justicia\",\r\n    \"dcat_theme.medio_ambiente\",\r\n    \"dcat_theme.medio_rural_pesca\",\r\n    \"dcat_theme.salud\",\r\n    \"dcat_theme.sector_publico\",\r\n    \"dcat_theme.seguridad\",\r\n    \"dcat_theme.sociedad_bienestar\",\r\n    \"dcat_theme.transporte\",\r\n    \"dcat_theme.turismo\",\r\n    \"dcat_theme.urbanismo_infraestructuras\",\r\n    \"dcat_theme.vivienda\"\r\n  ],\r\n  \"custom_properties_created\": [],\r\n  \"custom_properties_existing\": [\r\n    \"dcat_publisher_name\",\r\n    \"dcat_hvd_category\",\r\n    \"dcat_access_url\"\r\n  ]\r\n}\r\n",
+  "artifacts": [],
+  "startedAt": "2026-04-20T15:15:57.328Z",
+  "exitCode": 0,
+  "finishedAt": "2026-04-20T15:15:58.648Z",
+  "result": {
+    "ok": true,
+    "message": "Preparar tags y custom properties finalizó correctamente.",
+    "details": [
+      "Gobierno OpenMetadata: tags creados 0, existentes 22.",
+      "Gobierno OpenMetadata: custom properties creadas 0, existentes 3.",
+      "La operación no declara artefactos persistentes; la evidencia principal es el log.",
+      "Duración: 1.3 s.",
+      "Código de salida: 0."
+    ],
+    "durationMs": 1320,
+    "artifacts": []
+  }
+}

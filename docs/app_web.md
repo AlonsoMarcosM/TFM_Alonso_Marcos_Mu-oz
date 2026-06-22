@@ -182,6 +182,39 @@ powershell -ExecutionPolicy Bypass -File .\scripts\infra\validate_live_dcat.ps1
 
 La ruta recomendada para el caso de uso de validación es local con `pnpm dev`. Se incluye `web/Dockerfile` como base para VPS o contenedor controlador, asumiendo que el repositorio completo se monta o copia en `/workspace` y que la infraestructura ya está disponible.
 
+## Modo demo de solo lectura (despliegue en Vercel, sin infraestructura)
+
+Para mostrar la consola en un portfolio sin desplegar Kubernetes ni OpenMetadata existe un **modo demo** que sirve artefactos congelados de una ejecución real previa. Se activa con la variable de entorno `TFM_DEMO=1` (servidor) y `NEXT_PUBLIC_TFM_DEMO=1` (cliente).
+
+Qué cambia con el modo demo activo:
+
+- `repoRoot()` se redirige a `web/demo/`, que reproduce la estructura del repositorio. Todas las lecturas (`/api/status`, `/api/artifacts`, `/api/governance`, `/api/config`, `/api/jobs`) sirven los fixtures versionados de esa carpeta.
+- La ejecución real se neutraliza: `POST /api/jobs` no lanza ningún proceso; devuelve un job ya finalizado con estado `success` que resume los artefactos congelados. No se escribe nada en disco (el sistema de archivos de Vercel es de solo lectura).
+- Las escrituras se bloquean: `PUT /api/governance` y `PUT /api/config/[id]` responden `403`. Los editores de la UI deshabilitan el botón de guardar y muestran un aviso.
+- Un banner permanente avisa de que los datos son congelados y la ejecución está deshabilitada.
+
+Con el flag apagado (por defecto) la app se comporta exactamente como la consola operativa local; el modo demo es puramente aditivo.
+
+### Configuración del proyecto en Vercel
+
+- **Root Directory**: `web`.
+- **Framework Preset**: Next.js (build `next build`, sin override).
+- **Environment Variables**: `TFM_DEMO=1` y `NEXT_PUBLIC_TFM_DEMO=1`.
+- Los fixtures de `web/demo/` están versionados (el `.gitignore` raíz los re-incluye con negaciones pese a ignorar `tmp_pytest/` y `state/`), de modo que Vercel los recibe en el despliegue.
+
+### Probar el modo demo en local
+
+```powershell
+cd .\web
+$env:TFM_DEMO = "1"; $env:NEXT_PUBLIC_TFM_DEMO = "1"
+pnpm build
+pnpm start    # http://localhost:3000 sirviendo los fixtures congelados
+```
+
+### Refrescar los fixtures congelados
+
+Los fixtures de `web/demo/` son copias de los artefactos reales (`tmp_pytest/`, `tfm_ingestor/config/`) y de un historial curado de `state/web_jobs/` (un job de éxito por operación, con rutas locales saneadas). Para regenerarlos tras una ejecución real, copiar los artefactos actualizados a `web/demo/` conservando la misma estructura de rutas.
+
 ## Trabajo futuro
 
 - Ejecutar el workflow con Airflow u otro planificador para exportar periódicamente el catálogo y subirlo a un CKAN externo cuando exista un portal de publicación real.

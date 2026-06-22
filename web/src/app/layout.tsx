@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { isDemoMode } from "@/server/demo";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -62,7 +64,16 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               ))}
             </nav>
           </aside>
-          <main className="content">{children}</main>
+          <main className="content">
+            {isDemoMode() ? (
+              <div className="demo-banner" role="status">
+                <strong>Demo en solo lectura.</strong> Datos congelados de una ejecución real del
+                caso de uso. La ejecución contra OpenMetadata y Kubernetes está deshabilitada; los
+                botones muestran los artefactos reproducidos, no lanzan procesos.
+              </div>
+            ) : null}
+            {children}
+          </main>
         </div>
       </body>
     </html>

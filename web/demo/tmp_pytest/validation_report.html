@@ -1,0 +1,1368 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Informe de validación — Plataforma de Gobierno del Dato</title>
+<style>
+  :root { --tema: #2b6cb0; --ok: #2f855a; --ko: #c53030; --bg: #f6f6f8; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: #1a202c; margin: 0; padding: 2rem; background: #fff; }
+  header { border-bottom: 3px solid var(--tema); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+  h1 { color: var(--tema); font-size: 1.5rem; margin: 0 0 .3rem; }
+  .meta { color: #4a5568; font-size: .85rem; }
+  h2 { color: var(--tema); font-size: 1.1rem; margin-top: 2rem; border-bottom: 1px solid #e2e8f0; padding-bottom: .3rem; }
+  .badges { display: flex; flex-wrap: wrap; gap: .6rem; margin: 1rem 0; }
+  .badge { border-radius: 6px; padding: .4rem .7rem; font-size: .85rem; font-weight: 600; color: #fff; }
+  .badge .k { font-weight: 400; opacity: .9; display: block; font-size: .72rem; }
+  .ok { background: var(--ok); }
+  .ko { background: var(--ko); }
+  table { border-collapse: collapse; width: 100%; font-size: .82rem; }
+  th, td { text-align: left; padding: .4rem .6rem; border-bottom: 1px solid #e2e8f0; vertical-align: top; }
+  th { background: var(--bg); width: 45%; font-family: Consolas, monospace; font-weight: 600; color: #2d3748; }
+  td { word-break: break-word; }
+  footer { margin-top: 2.5rem; color: #718096; font-size: .75rem; border-top: 1px solid #e2e8f0; padding-top: .8rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Informe de validación — Plataforma de Gobierno del Dato</h1>
+  <div class="meta">Fuente: <code>tmp_pytest\validation_suite_summary.json</code><br>Generado: 2026-05-31 23:02:27</div>
+</header>
+<h2>Resumen de conformidad</h2>
+<div class="badges"><div class="badge ok"><span class="k">runtime_validation.technical.conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.technical.column_checks[0].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.technical.column_checks[1].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.technical.column_checks[2].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.technical.column_checks[3].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.technical.column_checks[4].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.technical.column_checks[5].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.technical.column_checks[6].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.technical.column_checks[7].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.technical.column_checks[8].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.technical.column_checks[9].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.technical.column_checks[10].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.technical.column_checks[11].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.governance.conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.governance.checks[0].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.governance.checks[1].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.governance.checks[2].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.governance.checks[3].conforms</span>CONFORME</div><div class="badge ok"><span class="k">runtime_validation.conforms</span>CONFORME</div><div class="badge ok"><span class="k">idempotence.conforms</span>CONFORME</div><div class="badge ok"><span class="k">first_workflow.validation.conforms</span>CONFORME</div><div class="badge ok"><span class="k">second_workflow.validation.conforms</span>CONFORME</div></div>
+<h2>Detalle</h2>
+<table>
+<tbody>
+<tr><th>runtime_validation.technical.conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.service_name_expected</th><td>postgres_demo_service,postgres_validation_service</td></tr>
+<tr><th>runtime_validation.technical.service_names_expected</th><td>postgres_demo_service, postgres_validation_service</td></tr>
+<tr><th>runtime_validation.technical.service_name_present</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.service_names_detected</th><td>postgres_demo_service, postgres_validation_service</td></tr>
+<tr><th>runtime_validation.technical.missing_services</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.technical.database_name_expected</th><td>opendata_demo</td></tr>
+<tr><th>runtime_validation.technical.database_name_present</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.database_names_detected</th><td>opendata_demo, opendata_demo</td></tr>
+<tr><th>runtime_validation.technical.schemas_expected</th><td>bronze, gold, silver</td></tr>
+<tr><th>runtime_validation.technical.schemas_detected</th><td>bronze, bronze, gold, gold, silver, silver</td></tr>
+<tr><th>runtime_validation.technical.missing_schemas</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.technical.tables_expected_count</th><td>6</td></tr>
+<tr><th>runtime_validation.technical.tables_detected_count</th><td>12</td></tr>
+<tr><th>runtime_validation.technical.missing_tables</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.technical.unexpected_tables</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.technical.column_checks[0].table</th><td>postgres_demo_service.opendata_demo.bronze.bici_uso_raw</td></tr>
+<tr><th>runtime_validation.technical.column_checks[0].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.column_checks[0].expected_columns</th><td>event_id, ts, estacion_id, viajes, fuente</td></tr>
+<tr><th>runtime_validation.technical.column_checks[0].actual_columns</th><td>event_id, ts, estacion_id, viajes, fuente</td></tr>
+<tr><th>runtime_validation.technical.column_checks[1].table</th><td>postgres_demo_service.opendata_demo.bronze.eventos_raw</td></tr>
+<tr><th>runtime_validation.technical.column_checks[1].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.column_checks[1].expected_columns</th><td>evento_id, titulo, fecha, municipio, categoria, asistentes_est</td></tr>
+<tr><th>runtime_validation.technical.column_checks[1].actual_columns</th><td>evento_id, titulo, fecha, municipio, categoria, asistentes_est</td></tr>
+<tr><th>runtime_validation.technical.column_checks[2].table</th><td>postgres_demo_service.opendata_demo.silver.bici_uso_diario</td></tr>
+<tr><th>runtime_validation.technical.column_checks[2].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.column_checks[2].expected_columns</th><td>fecha, estacion_id, viajes_totales</td></tr>
+<tr><th>runtime_validation.technical.column_checks[2].actual_columns</th><td>fecha, estacion_id, viajes_totales</td></tr>
+<tr><th>runtime_validation.technical.column_checks[3].table</th><td>postgres_demo_service.opendata_demo.silver.eventos_normalizados</td></tr>
+<tr><th>runtime_validation.technical.column_checks[3].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.column_checks[3].expected_columns</th><td>evento_id, titulo, fecha, municipio, categoria_std, asistentes_est</td></tr>
+<tr><th>runtime_validation.technical.column_checks[3].actual_columns</th><td>evento_id, titulo, fecha, municipio, categoria_std, asistentes_est</td></tr>
+<tr><th>runtime_validation.technical.column_checks[4].table</th><td>postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>runtime_validation.technical.column_checks[4].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.column_checks[4].expected_columns</th><td>fecha, municipio, viajes_totales</td></tr>
+<tr><th>runtime_validation.technical.column_checks[4].actual_columns</th><td>fecha, municipio, viajes_totales</td></tr>
+<tr><th>runtime_validation.technical.column_checks[5].table</th><td>postgres_demo_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>runtime_validation.technical.column_checks[5].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.column_checks[5].expected_columns</th><td>evento_id, titulo, fecha, municipio, categoria, asistentes_est</td></tr>
+<tr><th>runtime_validation.technical.column_checks[5].actual_columns</th><td>evento_id, titulo, fecha, municipio, categoria, asistentes_est</td></tr>
+<tr><th>runtime_validation.technical.column_checks[6].table</th><td>postgres_validation_service.opendata_demo.bronze.bici_uso_raw</td></tr>
+<tr><th>runtime_validation.technical.column_checks[6].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.column_checks[6].expected_columns</th><td>event_id, ts, estacion_id, viajes, fuente</td></tr>
+<tr><th>runtime_validation.technical.column_checks[6].actual_columns</th><td>event_id, ts, estacion_id, viajes, fuente</td></tr>
+<tr><th>runtime_validation.technical.column_checks[7].table</th><td>postgres_validation_service.opendata_demo.bronze.eventos_raw</td></tr>
+<tr><th>runtime_validation.technical.column_checks[7].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.column_checks[7].expected_columns</th><td>evento_id, titulo, fecha, municipio, categoria, asistentes_est</td></tr>
+<tr><th>runtime_validation.technical.column_checks[7].actual_columns</th><td>evento_id, titulo, fecha, municipio, categoria, asistentes_est</td></tr>
+<tr><th>runtime_validation.technical.column_checks[8].table</th><td>postgres_validation_service.opendata_demo.silver.bici_uso_diario</td></tr>
+<tr><th>runtime_validation.technical.column_checks[8].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.column_checks[8].expected_columns</th><td>fecha, estacion_id, viajes_totales</td></tr>
+<tr><th>runtime_validation.technical.column_checks[8].actual_columns</th><td>fecha, estacion_id, viajes_totales</td></tr>
+<tr><th>runtime_validation.technical.column_checks[9].table</th><td>postgres_validation_service.opendata_demo.silver.eventos_normalizados</td></tr>
+<tr><th>runtime_validation.technical.column_checks[9].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.column_checks[9].expected_columns</th><td>evento_id, titulo, fecha, municipio, categoria_std, asistentes_est</td></tr>
+<tr><th>runtime_validation.technical.column_checks[9].actual_columns</th><td>evento_id, titulo, fecha, municipio, categoria_std, asistentes_est</td></tr>
+<tr><th>runtime_validation.technical.column_checks[10].table</th><td>postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>runtime_validation.technical.column_checks[10].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.column_checks[10].expected_columns</th><td>fecha, municipio, viajes_totales</td></tr>
+<tr><th>runtime_validation.technical.column_checks[10].actual_columns</th><td>fecha, municipio, viajes_totales</td></tr>
+<tr><th>runtime_validation.technical.column_checks[11].table</th><td>postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>runtime_validation.technical.column_checks[11].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.technical.column_checks[11].expected_columns</th><td>evento_id, titulo, fecha, municipio, categoria, asistentes_est</td></tr>
+<tr><th>runtime_validation.technical.column_checks[11].actual_columns</th><td>evento_id, titulo, fecha, municipio, categoria, asistentes_est</td></tr>
+<tr><th>runtime_validation.technical.issues</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.governance.published_datasets_expected</th><td>4</td></tr>
+<tr><th>runtime_validation.governance.checks[0].table</th><td>postgres_demo_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>runtime_validation.governance.checks[0].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.governance.checks[0].issues</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.checks[0].actual_display_name</th><td>Agenda cultural p�blica - servicio operativo</td></tr>
+<tr><th>runtime_validation.governance.checks[0].actual_description</th><td>Relaci�n de eventos culturales p�blicos con fecha, municipio, categor�a y asistencia estimada ingerida desde el servicio operativo PostgreSQL.</td></tr>
+<tr><th>runtime_validation.governance.checks[0].actual_theme_tags</th><td>dcat_theme.cultura_ocio</td></tr>
+<tr><th>runtime_validation.governance.checks[0].actual_custom_properties.dcat_publisher_name</th><td>UCLM</td></tr>
+<tr><th>runtime_validation.governance.checks[0].actual_custom_properties.dcat_hvd_category</th><td>http://data.europa.eu/bna/c_e1da4e07</td></tr>
+<tr><th>runtime_validation.governance.checks[0].actual_custom_properties.dcat_access_url</th><td>https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-demo/gold/agenda-cultural-publica</td></tr>
+<tr><th>runtime_validation.governance.checks[0].actual_domains</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.checks[0].legacy_custom_properties_present</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.checks[1].table</th><td>postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>runtime_validation.governance.checks[1].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.governance.checks[1].issues</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.checks[1].actual_display_name</th><td>Resumen de movilidad por municipio - servicio operativo</td></tr>
+<tr><th>runtime_validation.governance.checks[1].actual_description</th><td>Resumen diario de viajes agregados por municipio para analizar movilidad urbana desde el servicio operativo PostgreSQL.</td></tr>
+<tr><th>runtime_validation.governance.checks[1].actual_theme_tags</th><td>dcat_theme.transporte</td></tr>
+<tr><th>runtime_validation.governance.checks[1].actual_custom_properties.dcat_publisher_name</th><td>UCLM</td></tr>
+<tr><th>runtime_validation.governance.checks[1].actual_custom_properties.dcat_hvd_category</th><td>http://data.europa.eu/bna/c_b79e35eb</td></tr>
+<tr><th>runtime_validation.governance.checks[1].actual_custom_properties.dcat_access_url</th><td>https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-demo/gold/movilidad-resumen-municipio</td></tr>
+<tr><th>runtime_validation.governance.checks[1].actual_domains</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.checks[1].legacy_custom_properties_present</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.checks[2].table</th><td>postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>runtime_validation.governance.checks[2].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.governance.checks[2].issues</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.checks[2].actual_display_name</th><td>Agenda cultural p�blica - servicio de validaci�n</td></tr>
+<tr><th>runtime_validation.governance.checks[2].actual_description</th><td>Relaci�n de eventos culturales p�blicos con fecha, municipio, categor�a y asistencia estimada ingerida desde el servicio PostgreSQL del caso de uso de validaci�n.</td></tr>
+<tr><th>runtime_validation.governance.checks[2].actual_theme_tags</th><td>dcat_theme.cultura_ocio</td></tr>
+<tr><th>runtime_validation.governance.checks[2].actual_custom_properties.dcat_publisher_name</th><td>UCLM</td></tr>
+<tr><th>runtime_validation.governance.checks[2].actual_custom_properties.dcat_hvd_category</th><td>http://data.europa.eu/bna/c_e1da4e07</td></tr>
+<tr><th>runtime_validation.governance.checks[2].actual_custom_properties.dcat_access_url</th><td>https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-validation/gold/agenda-cultural-publica</td></tr>
+<tr><th>runtime_validation.governance.checks[2].actual_domains</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.checks[2].legacy_custom_properties_present</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.checks[3].table</th><td>postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>runtime_validation.governance.checks[3].conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.governance.checks[3].issues</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.checks[3].actual_display_name</th><td>Resumen de movilidad por municipio - servicio de validaci�n</td></tr>
+<tr><th>runtime_validation.governance.checks[3].actual_description</th><td>Resumen diario de viajes agregados por municipio para analizar movilidad urbana desde el servicio PostgreSQL del caso de uso de validaci�n.</td></tr>
+<tr><th>runtime_validation.governance.checks[3].actual_theme_tags</th><td>dcat_theme.transporte</td></tr>
+<tr><th>runtime_validation.governance.checks[3].actual_custom_properties.dcat_publisher_name</th><td>UCLM</td></tr>
+<tr><th>runtime_validation.governance.checks[3].actual_custom_properties.dcat_hvd_category</th><td>http://data.europa.eu/bna/c_b79e35eb</td></tr>
+<tr><th>runtime_validation.governance.checks[3].actual_custom_properties.dcat_access_url</th><td>https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-validation/gold/movilidad-resumen-municipio</td></tr>
+<tr><th>runtime_validation.governance.checks[3].actual_domains</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.checks[3].legacy_custom_properties_present</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.governance.issues</th><td>(vacío)</td></tr>
+<tr><th>runtime_validation.conforms</th><td>sí</td></tr>
+<tr><th>runtime_validation.output</th><td>.\\tmp_pytest\\runtime_validation_report.json</td></tr>
+<tr><th>pre_push_checks.pytest.command</th><td>$env:PYTEST_DISABLE_PLUGIN_AUTOLOAD=&quot;1&quot;; python -m pytest</td></tr>
+<tr><th>pre_push_checks.pytest.executed</th><td>sí</td></tr>
+<tr><th>pre_push_checks.git.diff_check_ok</th><td>sí</td></tr>
+<tr><th>pre_push_checks.git.diff_check_output</th><td>warning: in the working copy of &#x27;tfm_ingestor/config/gold_governance.csv&#x27;, CRLF will be replaced by LF the next time Git touches it</td></tr>
+<tr><th>pre_push_checks.git.status_ignored_short</th><td>M scripts/infra/ingest_postgres_double.ps1
+ M tfm_ingestor/config/gold_governance.csv
+?? TFM/Memoria/figs/fig_web_pantalla_ejecuciones.png
+!! .env
+!! .pytest_cache/
+!! .tools/
+!! AGENTS.md
+!! CLAUDE.md
+!! TFM/Memoria/TFM.log
+!! TFM/Memoria_plantilla/
+!! &quot;TFM/TFG_AlonsoMarcosMu\303\261oz/&quot;
+!! TFM/redaccion_tfm_instrucciones.local.md
+!! data_local/
+!! scripts/infra/__pycache__/
+!! scripts/planning/__pycache__/
+!! state/
+!! tfm_ingestor/.pytest_cache/
+!! tfm_ingestor/src/om_dcat_sync/__pycache__/
+!! tfm_ingestor/src/tfm_ingestor.egg-info/
+!! tfm_ingestor/src/tfm_ingestor/__pycache__/
+!! tfm_ingestor/tests/__pycache__/
+!! tfm_ingestor/tmp_pytest/
+!! tmp_pytest/
+!! web/.next/
+!! web/node_modules/
+!! web/tsconfig.tsbuildinfo</td></tr>
+<tr><th>pre_push_checks.git.status_short</th><td>M scripts/infra/ingest_postgres_double.ps1
+ M tfm_ingestor/config/gold_governance.csv
+?? TFM/Memoria/figs/fig_web_pantalla_ejecuciones.png</td></tr>
+<tr><th>idempotence.conforms</th><td>sí</td></tr>
+<tr><th>idempotence.second_applied</th><td>0</td></tr>
+<tr><th>idempotence.second_planned</th><td>0</td></tr>
+<tr><th>first_workflow.workflow.dry_run</th><td>no</td></tr>
+<tr><th>first_workflow.workflow.sheet_refreshed</th><td>sí</td></tr>
+<tr><th>first_workflow.workflow.sheet_path</th><td>C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\config\gold_governance.csv</td></tr>
+<tr><th>first_workflow.workflow.profile_case</th><td>hvd</td></tr>
+<tr><th>first_workflow.workflow.tables_discovered</th><td>12</td></tr>
+<tr><th>first_workflow.workflow.sheet_rows_loaded</th><td>4</td></tr>
+<tr><th>first_workflow.workflow.sheet_valid</th><td>sí</td></tr>
+<tr><th>first_workflow.workflow.sheet_validation_error</th><td>(sin valor)</td></tr>
+<tr><th>first_workflow.sync.dry_run</th><td>no</td></tr>
+<tr><th>first_workflow.sync.intents</th><td>4</td></tr>
+<tr><th>first_workflow.sync.planned[0].tableFQN</th><td>postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>first_workflow.sync.planned[0].tableId</th><td>abd6feab-d4ee-44d4-8693-b45539d67f14</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[0].op</th><td>add</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[0].path</th><td>/description</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[0].value</th><td>Relaci�n de eventos culturales p�blicos con fecha, municipio, categor�a y asistencia estimada ingerida desde el servicio PostgreSQL del caso de uso de validaci�n.</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[1].op</th><td>add</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[1].path</th><td>/displayName</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[1].value</th><td>Agenda cultural p�blica - servicio de validaci�n</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[2].op</th><td>add</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[2].path</th><td>/tags</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[2].value[0].tagFQN</th><td>dcat_theme.cultura_ocio</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[2].value[0].labelType</th><td>Manual</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[2].value[0].state</th><td>Confirmed</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[3].op</th><td>add</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[3].path</th><td>/extension</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[3].value.dcat_publisher_name</th><td>UCLM</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[3].value.dcat_hvd_category</th><td>http://data.europa.eu/bna/c_e1da4e07</td></tr>
+<tr><th>first_workflow.sync.planned[0].ops[3].value.dcat_access_url</th><td>https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-validation/gold/agenda-cultural-publica</td></tr>
+<tr><th>first_workflow.sync.planned[1].tableFQN</th><td>postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>first_workflow.sync.planned[1].tableId</th><td>bdda587d-6514-46ae-a82d-d15ff7c77d08</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[0].op</th><td>add</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[0].path</th><td>/description</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[0].value</th><td>Resumen diario de viajes agregados por municipio para analizar movilidad urbana desde el servicio PostgreSQL del caso de uso de validaci�n.</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[1].op</th><td>add</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[1].path</th><td>/displayName</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[1].value</th><td>Resumen de movilidad por municipio - servicio de validaci�n</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[2].op</th><td>add</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[2].path</th><td>/tags</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[2].value[0].tagFQN</th><td>dcat_theme.transporte</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[2].value[0].labelType</th><td>Manual</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[2].value[0].state</th><td>Confirmed</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[3].op</th><td>add</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[3].path</th><td>/extension</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[3].value.dcat_publisher_name</th><td>UCLM</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[3].value.dcat_hvd_category</th><td>http://data.europa.eu/bna/c_b79e35eb</td></tr>
+<tr><th>first_workflow.sync.planned[1].ops[3].value.dcat_access_url</th><td>https://www.uclm.es/datos/plataforma-gobierno-dato/postgres-validation/gold/movilidad-resumen-municipio</td></tr>
+<tr><th>first_workflow.sync.applied</th><td>2</td></tr>
+<tr><th>first_workflow.sync.plan_output</th><td>.\\tmp_pytest\\workflow_first_plan.json</td></tr>
+<tr><th>first_workflow.export</th><td>(sin valor)</td></tr>
+<tr><th>first_workflow.validation.tables_total</th><td>12</td></tr>
+<tr><th>first_workflow.validation.tables_exported</th><td>4</td></tr>
+<tr><th>first_workflow.validation.output_path</th><td>tmp_pytest\validation_suite_catalog.jsonld</td></tr>
+<tr><th>first_workflow.validation.preview_dataset_count</th><td>4</td></tr>
+<tr><th>first_workflow.validation.input_path</th><td>tmp_pytest\validation_suite_catalog.jsonld</td></tr>
+<tr><th>first_workflow.validation.profile_case</th><td>hvd</td></tr>
+<tr><th>first_workflow.validation.shapes_path</th><td>(sin valor)</td></tr>
+<tr><th>first_workflow.validation.shapes_paths</th><td>C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_imports.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_mdr_imports.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_common_shapes.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_mdr-vocabularies.shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_catalog_shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_dataset_shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_distribution_shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_dataservice_shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\hvd\shacl_common_hvd_shapes.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\hvd\shacl_dataset_hvd_shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\hvd\shacl_distribution_hvd_shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\hvd\shacl_dataservice_hvd_shape.ttl</td></tr>
+<tr><th>first_workflow.validation.shacl_bundle.source_commit</th><td>f2c8a88868b89239c9f54bffdf621cded2401b9f</td></tr>
+<tr><th>first_workflow.validation.shacl_bundle.source_path</th><td>shacl/1.0.0</td></tr>
+<tr><th>first_workflow.validation.shacl_bundle.frozen_date</th><td>2026-04-13</td></tr>
+<tr><th>first_workflow.validation.shacl_bundle.files</th><td>12</td></tr>
+<tr><th>first_workflow.validation.allow_warnings</th><td>sí</td></tr>
+<tr><th>first_workflow.validation.conforms</th><td>sí</td></tr>
+<tr><th>first_workflow.validation.violations</th><td>0</td></tr>
+<tr><th>first_workflow.validation.warnings</th><td>44</td></tr>
+<tr><th>first_workflow.validation.infos</th><td>0</td></tr>
+<tr><th>first_workflow.validation.results[0].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[0].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>first_workflow.validation.results[0].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>first_workflow.validation.results[0].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b17</td></tr>
+<tr><th>first_workflow.validation.results[0].message</th><td>El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.</td></tr>
+<tr><th>first_workflow.validation.results[1].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[1].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>first_workflow.validation.results[1].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>first_workflow.validation.results[1].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b17</td></tr>
+<tr><th>first_workflow.validation.results[1].message</th><td>El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.</td></tr>
+<tr><th>first_workflow.validation.results[2].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[2].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>first_workflow.validation.results[2].result_path</th><td>http://www.w3.org/ns/dcat#contactPoint</td></tr>
+<tr><th>first_workflow.validation.results[2].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b41</td></tr>
+<tr><th>first_workflow.validation.results[2].message</th><td>The dataset should contain at least one dcat:contactPoint.</td></tr>
+<tr><th>first_workflow.validation.results[3].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[3].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>first_workflow.validation.results[3].result_path</th><td>http://purl.org/dc/terms/title</td></tr>
+<tr><th>first_workflow.validation.results[3].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b33</td></tr>
+<tr><th>first_workflow.validation.results[3].message</th><td>The distribution should contain at least one dct:title.</td></tr>
+<tr><th>first_workflow.validation.results[4].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[4].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>first_workflow.validation.results[4].result_path</th><td>http://purl.org/dc/terms/temporal</td></tr>
+<tr><th>first_workflow.validation.results[4].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b42</td></tr>
+<tr><th>first_workflow.validation.results[4].message</th><td>El conjunto de datos deber�a contener al menos un dct:temporal.</td></tr>
+<tr><th>first_workflow.validation.results[5].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[5].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>first_workflow.validation.results[5].result_path</th><td>http://data.europa.eu/r5r/availability</td></tr>
+<tr><th>first_workflow.validation.results[5].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b13</td></tr>
+<tr><th>first_workflow.validation.results[5].message</th><td>La distribuci�n deber�a contener al menos un dcatap:availability.</td></tr>
+<tr><th>first_workflow.validation.results[6].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[6].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>first_workflow.validation.results[6].result_path</th><td>http://purl.org/dc/terms/title</td></tr>
+<tr><th>first_workflow.validation.results[6].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b33</td></tr>
+<tr><th>first_workflow.validation.results[6].message</th><td>The distribution should contain at least one dct:title.</td></tr>
+<tr><th>first_workflow.validation.results[7].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[7].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>first_workflow.validation.results[7].result_path</th><td>http://purl.org/dc/terms/spatial</td></tr>
+<tr><th>first_workflow.validation.results[7].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b44</td></tr>
+<tr><th>first_workflow.validation.results[7].message</th><td>El conjunto de datos debe contener al menos un valor para dct:spatial.</td></tr>
+<tr><th>first_workflow.validation.results[8].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[8].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>first_workflow.validation.results[8].result_path</th><td>http://www.w3.org/ns/dcat#contactPoint</td></tr>
+<tr><th>first_workflow.validation.results[8].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b41</td></tr>
+<tr><th>first_workflow.validation.results[8].message</th><td>The dataset should contain at least one dcat:contactPoint.</td></tr>
+<tr><th>first_workflow.validation.results[9].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[9].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>first_workflow.validation.results[9].result_path</th><td>http://purl.org/dc/terms/title</td></tr>
+<tr><th>first_workflow.validation.results[9].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b33</td></tr>
+<tr><th>first_workflow.validation.results[9].message</th><td>The distribution should contain at least one dct:title.</td></tr>
+<tr><th>first_workflow.validation.results[10].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[10].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>first_workflow.validation.results[10].result_path</th><td>http://purl.org/dc/terms/description</td></tr>
+<tr><th>first_workflow.validation.results[10].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b7</td></tr>
+<tr><th>first_workflow.validation.results[10].message</th><td>The distribution should contain at least one dct:description.</td></tr>
+<tr><th>first_workflow.validation.results[11].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[11].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>first_workflow.validation.results[11].result_path</th><td>http://purl.org/dc/terms/description</td></tr>
+<tr><th>first_workflow.validation.results[11].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b7</td></tr>
+<tr><th>first_workflow.validation.results[11].message</th><td>The distribution should contain at least one dct:description.</td></tr>
+<tr><th>first_workflow.validation.results[12].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[12].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:service</td></tr>
+<tr><th>first_workflow.validation.results[12].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>first_workflow.validation.results[12].source_shape</th><td>nd0515d4152ce4be19d0c7102a9348f61b57</td></tr>
+<tr><th>first_workflow.validation.results[12].message</th><td>Less than 1 values on &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;-&gt;dcat:keyword</td></tr>
+<tr><th>first_workflow.validation.results[13].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[13].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>first_workflow.validation.results[13].result_path</th><td>http://purl.org/dc/terms/format</td></tr>
+<tr><th>first_workflow.validation.results[13].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b16</td></tr>
+<tr><th>first_workflow.validation.results[13].message</th><td>La distribuci�n deber�a contener al menos un dct:format.</td></tr>
+<tr><th>first_workflow.validation.results[14].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[14].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>first_workflow.validation.results[14].result_path</th><td>http://purl.org/dc/terms/description</td></tr>
+<tr><th>first_workflow.validation.results[14].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b7</td></tr>
+<tr><th>first_workflow.validation.results[14].message</th><td>The distribution should contain at least one dct:description.</td></tr>
+<tr><th>first_workflow.validation.results[15].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[15].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service</td></tr>
+<tr><th>first_workflow.validation.results[15].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>first_workflow.validation.results[15].source_shape</th><td>nd0515d4152ce4be19d0c7102a9348f61b18</td></tr>
+<tr><th>first_workflow.validation.results[15].message</th><td>El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.</td></tr>
+<tr><th>first_workflow.validation.results[16].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[16].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>first_workflow.validation.results[16].result_path</th><td>http://purl.org/dc/terms/temporal</td></tr>
+<tr><th>first_workflow.validation.results[16].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b42</td></tr>
+<tr><th>first_workflow.validation.results[16].message</th><td>El conjunto de datos deber�a contener al menos un dct:temporal.</td></tr>
+<tr><th>first_workflow.validation.results[17].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[17].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>first_workflow.validation.results[17].result_path</th><td>http://data.europa.eu/r5r/availability</td></tr>
+<tr><th>first_workflow.validation.results[17].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b13</td></tr>
+<tr><th>first_workflow.validation.results[17].message</th><td>La distribuci�n deber�a contener al menos un dcatap:availability.</td></tr>
+<tr><th>first_workflow.validation.results[18].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[18].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>first_workflow.validation.results[18].result_path</th><td>http://data.europa.eu/r5r/availability</td></tr>
+<tr><th>first_workflow.validation.results[18].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b13</td></tr>
+<tr><th>first_workflow.validation.results[18].message</th><td>La distribuci�n deber�a contener al menos un dcatap:availability.</td></tr>
+<tr><th>first_workflow.validation.results[19].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[19].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>first_workflow.validation.results[19].result_path</th><td>http://purl.org/dc/terms/temporal</td></tr>
+<tr><th>first_workflow.validation.results[19].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b42</td></tr>
+<tr><th>first_workflow.validation.results[19].message</th><td>El conjunto de datos deber�a contener al menos un dct:temporal.</td></tr>
+<tr><th>first_workflow.validation.results[20].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[20].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>first_workflow.validation.results[20].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>first_workflow.validation.results[20].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b17</td></tr>
+<tr><th>first_workflow.validation.results[20].message</th><td>El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.</td></tr>
+<tr><th>first_workflow.validation.results[21].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[21].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>first_workflow.validation.results[21].result_path</th><td>http://data.europa.eu/r5r/availability</td></tr>
+<tr><th>first_workflow.validation.results[21].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b13</td></tr>
+<tr><th>first_workflow.validation.results[21].message</th><td>La distribuci�n deber�a contener al menos un dcatap:availability.</td></tr>
+<tr><th>first_workflow.validation.results[22].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[22].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:service</td></tr>
+<tr><th>first_workflow.validation.results[22].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>first_workflow.validation.results[22].source_shape</th><td>nd0515d4152ce4be19d0c7102a9348f61b18</td></tr>
+<tr><th>first_workflow.validation.results[22].message</th><td>El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.</td></tr>
+<tr><th>first_workflow.validation.results[23].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[23].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>first_workflow.validation.results[23].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>first_workflow.validation.results[23].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b35</td></tr>
+<tr><th>first_workflow.validation.results[23].message</th><td>All dcat:Dataset resources must contain at least one instance of dcat:keyword.</td></tr>
+<tr><th>first_workflow.validation.results[24].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[24].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>first_workflow.validation.results[24].result_path</th><td>http://purl.org/dc/terms/spatial</td></tr>
+<tr><th>first_workflow.validation.results[24].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b44</td></tr>
+<tr><th>first_workflow.validation.results[24].message</th><td>El conjunto de datos debe contener al menos un valor para dct:spatial.</td></tr>
+<tr><th>first_workflow.validation.results[25].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[25].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>first_workflow.validation.results[25].result_path</th><td>http://purl.org/dc/terms/format</td></tr>
+<tr><th>first_workflow.validation.results[25].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b16</td></tr>
+<tr><th>first_workflow.validation.results[25].message</th><td>La distribuci�n deber�a contener al menos un dct:format.</td></tr>
+<tr><th>first_workflow.validation.results[26].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[26].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:service</td></tr>
+<tr><th>first_workflow.validation.results[26].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>first_workflow.validation.results[26].source_shape</th><td>nd0515d4152ce4be19d0c7102a9348f61b57</td></tr>
+<tr><th>first_workflow.validation.results[26].message</th><td>Less than 1 values on &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:service&gt;-&gt;dcat:keyword</td></tr>
+<tr><th>first_workflow.validation.results[27].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[27].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>first_workflow.validation.results[27].result_path</th><td>http://purl.org/dc/terms/format</td></tr>
+<tr><th>first_workflow.validation.results[27].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b16</td></tr>
+<tr><th>first_workflow.validation.results[27].message</th><td>La distribuci�n deber�a contener al menos un dct:format.</td></tr>
+<tr><th>first_workflow.validation.results[28].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[28].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>first_workflow.validation.results[28].result_path</th><td>http://purl.org/dc/terms/title</td></tr>
+<tr><th>first_workflow.validation.results[28].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b33</td></tr>
+<tr><th>first_workflow.validation.results[28].message</th><td>The distribution should contain at least one dct:title.</td></tr>
+<tr><th>first_workflow.validation.results[29].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[29].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service</td></tr>
+<tr><th>first_workflow.validation.results[29].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>first_workflow.validation.results[29].source_shape</th><td>nd0515d4152ce4be19d0c7102a9348f61b57</td></tr>
+<tr><th>first_workflow.validation.results[29].message</th><td>Less than 1 values on &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service&gt;-&gt;dcat:keyword</td></tr>
+<tr><th>first_workflow.validation.results[30].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[30].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>first_workflow.validation.results[30].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>first_workflow.validation.results[30].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b35</td></tr>
+<tr><th>first_workflow.validation.results[30].message</th><td>All dcat:Dataset resources must contain at least one instance of dcat:keyword.</td></tr>
+<tr><th>first_workflow.validation.results[31].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[31].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:service</td></tr>
+<tr><th>first_workflow.validation.results[31].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>first_workflow.validation.results[31].source_shape</th><td>nd0515d4152ce4be19d0c7102a9348f61b18</td></tr>
+<tr><th>first_workflow.validation.results[31].message</th><td>El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.</td></tr>
+<tr><th>first_workflow.validation.results[32].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[32].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>first_workflow.validation.results[32].result_path</th><td>http://purl.org/dc/terms/temporal</td></tr>
+<tr><th>first_workflow.validation.results[32].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b42</td></tr>
+<tr><th>first_workflow.validation.results[32].message</th><td>El conjunto de datos deber�a contener al menos un dct:temporal.</td></tr>
+<tr><th>first_workflow.validation.results[33].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[33].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>first_workflow.validation.results[33].result_path</th><td>http://www.w3.org/ns/dcat#contactPoint</td></tr>
+<tr><th>first_workflow.validation.results[33].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b41</td></tr>
+<tr><th>first_workflow.validation.results[33].message</th><td>The dataset should contain at least one dcat:contactPoint.</td></tr>
+<tr><th>first_workflow.validation.results[34].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[34].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service</td></tr>
+<tr><th>first_workflow.validation.results[34].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>first_workflow.validation.results[34].source_shape</th><td>nd0515d4152ce4be19d0c7102a9348f61b18</td></tr>
+<tr><th>first_workflow.validation.results[34].message</th><td>El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.</td></tr>
+<tr><th>first_workflow.validation.results[35].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[35].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service</td></tr>
+<tr><th>first_workflow.validation.results[35].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>first_workflow.validation.results[35].source_shape</th><td>nd0515d4152ce4be19d0c7102a9348f61b57</td></tr>
+<tr><th>first_workflow.validation.results[35].message</th><td>Less than 1 values on &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;-&gt;dcat:keyword</td></tr>
+<tr><th>first_workflow.validation.results[36].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[36].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>first_workflow.validation.results[36].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>first_workflow.validation.results[36].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b35</td></tr>
+<tr><th>first_workflow.validation.results[36].message</th><td>All dcat:Dataset resources must contain at least one instance of dcat:keyword.</td></tr>
+<tr><th>first_workflow.validation.results[37].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[37].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>first_workflow.validation.results[37].result_path</th><td>http://purl.org/dc/terms/spatial</td></tr>
+<tr><th>first_workflow.validation.results[37].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b44</td></tr>
+<tr><th>first_workflow.validation.results[37].message</th><td>El conjunto de datos debe contener al menos un valor para dct:spatial.</td></tr>
+<tr><th>first_workflow.validation.results[38].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[38].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>first_workflow.validation.results[38].result_path</th><td>http://purl.org/dc/terms/format</td></tr>
+<tr><th>first_workflow.validation.results[38].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b16</td></tr>
+<tr><th>first_workflow.validation.results[38].message</th><td>La distribuci�n deber�a contener al menos un dct:format.</td></tr>
+<tr><th>first_workflow.validation.results[39].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[39].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>first_workflow.validation.results[39].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>first_workflow.validation.results[39].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b17</td></tr>
+<tr><th>first_workflow.validation.results[39].message</th><td>El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.</td></tr>
+<tr><th>first_workflow.validation.results[40].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[40].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>first_workflow.validation.results[40].result_path</th><td>http://www.w3.org/ns/dcat#contactPoint</td></tr>
+<tr><th>first_workflow.validation.results[40].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b41</td></tr>
+<tr><th>first_workflow.validation.results[40].message</th><td>The dataset should contain at least one dcat:contactPoint.</td></tr>
+<tr><th>first_workflow.validation.results[41].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[41].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>first_workflow.validation.results[41].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>first_workflow.validation.results[41].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b35</td></tr>
+<tr><th>first_workflow.validation.results[41].message</th><td>All dcat:Dataset resources must contain at least one instance of dcat:keyword.</td></tr>
+<tr><th>first_workflow.validation.results[42].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[42].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>first_workflow.validation.results[42].result_path</th><td>http://purl.org/dc/terms/description</td></tr>
+<tr><th>first_workflow.validation.results[42].source_shape</th><td>n63b2e142b65c47fe8301cc5562028b63b7</td></tr>
+<tr><th>first_workflow.validation.results[42].message</th><td>The distribution should contain at least one dct:description.</td></tr>
+<tr><th>first_workflow.validation.results[43].severity</th><td>Warning</td></tr>
+<tr><th>first_workflow.validation.results[43].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>first_workflow.validation.results[43].result_path</th><td>http://purl.org/dc/terms/spatial</td></tr>
+<tr><th>first_workflow.validation.results[43].source_shape</th><td>n12b3cb70fa2f4fa396ba27886f119930b44</td></tr>
+<tr><th>first_workflow.validation.results[43].message</th><td>El conjunto de datos debe contener al menos un valor para dct:spatial.</td></tr>
+<tr><th>first_workflow.validation.report_text</th><td>Validation Report
+Conforms: True
+Results (44):
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.contactpoint ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dcat:contactPoint.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dcat:contactPoint.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:contactPoint ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dcat:contactPoint
+	Message: El conjunto de datos deber�a contener al menos un dcat:contactPoint.
+	Message: The dataset should contain at least one dcat:contactPoint.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.contactpoint ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dcat:contactPoint.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dcat:contactPoint.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:contactPoint ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dcat:contactPoint
+	Message: El conjunto de datos deber�a contener al menos un dcat:contactPoint.
+	Message: The dataset should contain at least one dcat:contactPoint.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.contactpoint ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dcat:contactPoint.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dcat:contactPoint.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:contactPoint ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dcat:contactPoint
+	Message: El conjunto de datos deber�a contener al menos un dcat:contactPoint.
+	Message: The dataset should contain at least one dcat:contactPoint.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.contactpoint ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dcat:contactPoint.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dcat:contactPoint.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:contactPoint ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dcat:contactPoint
+	Message: El conjunto de datos deber�a contener al menos un dcat:contactPoint.
+	Message: The dataset should contain at least one dcat:contactPoint.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.keyword ; sh:message Literal(&quot;All dcat:Dataset resources must contain at least one instance of dcat:keyword.&quot;, lang=en), Literal(&quot;Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.&quot;, lang=es) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dcat:keyword
+	Message: All dcat:Dataset resources must contain at least one instance of dcat:keyword.
+	Message: Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.keyword ; sh:message Literal(&quot;All dcat:Dataset resources must contain at least one instance of dcat:keyword.&quot;, lang=en), Literal(&quot;Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.&quot;, lang=es) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dcat:keyword
+	Message: All dcat:Dataset resources must contain at least one instance of dcat:keyword.
+	Message: Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.keyword ; sh:message Literal(&quot;All dcat:Dataset resources must contain at least one instance of dcat:keyword.&quot;, lang=en), Literal(&quot;Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.&quot;, lang=es) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dcat:keyword
+	Message: All dcat:Dataset resources must contain at least one instance of dcat:keyword.
+	Message: Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.keyword ; sh:message Literal(&quot;All dcat:Dataset resources must contain at least one instance of dcat:keyword.&quot;, lang=en), Literal(&quot;Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.&quot;, lang=es) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dcat:keyword
+	Message: All dcat:Dataset resources must contain at least one instance of dcat:keyword.
+	Message: Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.spatial ; sh:message Literal(&quot;El conjunto de datos debe contener al menos un valor para dct:spatial.&quot;, lang=es), Literal(&quot;The dataset must contain at least one value for dct:spatial.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:spatial ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dct:spatial
+	Message: El conjunto de datos debe contener al menos un valor para dct:spatial.
+	Message: The dataset must contain at least one value for dct:spatial.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.spatial ; sh:message Literal(&quot;El conjunto de datos debe contener al menos un valor para dct:spatial.&quot;, lang=es), Literal(&quot;The dataset must contain at least one value for dct:spatial.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:spatial ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dct:spatial
+	Message: El conjunto de datos debe contener al menos un valor para dct:spatial.
+	Message: The dataset must contain at least one value for dct:spatial.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.spatial ; sh:message Literal(&quot;El conjunto de datos debe contener al menos un valor para dct:spatial.&quot;, lang=es), Literal(&quot;The dataset must contain at least one value for dct:spatial.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:spatial ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dct:spatial
+	Message: El conjunto de datos debe contener al menos un valor para dct:spatial.
+	Message: The dataset must contain at least one value for dct:spatial.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.spatial ; sh:message Literal(&quot;El conjunto de datos debe contener al menos un valor para dct:spatial.&quot;, lang=es), Literal(&quot;The dataset must contain at least one value for dct:spatial.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:spatial ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dct:spatial
+	Message: El conjunto de datos debe contener al menos un valor para dct:spatial.
+	Message: The dataset must contain at least one value for dct:spatial.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.temporal ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dct:temporal.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dct:temporal.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:temporal ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dct:temporal
+	Message: El conjunto de datos deber�a contener al menos un dct:temporal.
+	Message: The dataset should contain at least one dct:temporal.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.temporal ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dct:temporal.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dct:temporal.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:temporal ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dct:temporal
+	Message: El conjunto de datos deber�a contener al menos un dct:temporal.
+	Message: The dataset should contain at least one dct:temporal.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.temporal ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dct:temporal.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dct:temporal.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:temporal ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dct:temporal
+	Message: El conjunto de datos deber�a contener al menos un dct:temporal.
+	Message: The dataset should contain at least one dct:temporal.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.temporal ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dct:temporal.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dct:temporal.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:temporal ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dct:temporal
+	Message: El conjunto de datos deber�a contener al menos un dct:temporal.
+	Message: The dataset should contain at least one dct:temporal.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.availability ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dcatap:availability.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dcatap:availability.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcatap:availability ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dcatap:availability
+	Message: La distribuci�n deber�a contener al menos un dcatap:availability.
+	Message: The distribution should contain at least one dcatap:availability.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.availability ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dcatap:availability.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dcatap:availability.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcatap:availability ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dcatap:availability
+	Message: La distribuci�n deber�a contener al menos un dcatap:availability.
+	Message: The distribution should contain at least one dcatap:availability.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.availability ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dcatap:availability.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dcatap:availability.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcatap:availability ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dcatap:availability
+	Message: La distribuci�n deber�a contener al menos un dcatap:availability.
+	Message: The distribution should contain at least one dcatap:availability.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.availability ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dcatap:availability.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dcatap:availability.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcatap:availability ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dcatap:availability
+	Message: La distribuci�n deber�a contener al menos un dcatap:availability.
+	Message: The distribution should contain at least one dcatap:availability.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.description ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:description.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:description.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:description ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dct:description
+	Message: La distribuci�n deber�a contener al menos un dct:description.
+	Message: The distribution should contain at least one dct:description.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.description ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:description.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:description.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:description ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dct:description
+	Message: La distribuci�n deber�a contener al menos un dct:description.
+	Message: The distribution should contain at least one dct:description.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.description ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:description.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:description.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:description ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dct:description
+	Message: La distribuci�n deber�a contener al menos un dct:description.
+	Message: The distribution should contain at least one dct:description.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.description ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:description.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:description.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:description ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dct:description
+	Message: La distribuci�n deber�a contener al menos un dct:description.
+	Message: The distribution should contain at least one dct:description.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.format ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:format.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:format.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:format ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dct:format
+	Message: La distribuci�n deber�a contener al menos un dct:format.
+	Message: The distribution should contain at least one dct:format.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.format ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:format.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:format.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:format ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dct:format
+	Message: La distribuci�n deber�a contener al menos un dct:format.
+	Message: The distribution should contain at least one dct:format.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.format ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:format.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:format.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:format ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dct:format
+	Message: La distribuci�n deber�a contener al menos un dct:format.
+	Message: The distribution should contain at least one dct:format.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.format ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:format.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:format.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:format ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dct:format
+	Message: La distribuci�n deber�a contener al menos un dct:format.
+	Message: The distribution should contain at least one dct:format.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.title ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:title.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:title.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:title ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dct:title
+	Message: La distribuci�n deber�a contener al menos un dct:title.
+	Message: The distribution should contain at least one dct:title.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.title ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:title.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:title.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:title ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dct:title
+	Message: La distribuci�n deber�a contener al menos un dct:title.
+	Message: The distribution should contain at least one dct:title.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.title ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:title.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:title.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:title ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dct:title
+	Message: La distribuci�n deber�a contener al menos un dct:title.
+	Message: The distribution should contain at least one dct:title.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.title ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:title.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:title.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:title ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dct:title
+	Message: La distribuci�n deber�a contener al menos un dct:title.
+	Message: The distribution should contain at least one dct:title.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service&gt;
+	Result Path: dcat:keyword
+	Message: Less than 1 values on &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service&gt;-&gt;dcat:keyword
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;
+	Result Path: dcat:keyword
+	Message: Less than 1 values on &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;-&gt;dcat:keyword
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:service&gt;
+	Result Path: dcat:keyword
+	Message: Less than 1 values on &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:service&gt;-&gt;dcat:keyword
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;
+	Result Path: dcat:keyword
+	Message: Less than 1 values on &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;-&gt;dcat:keyword
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:DataService.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:DataService.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:DataService.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:service&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:DataService.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+</td></tr>
+<tr><th>first_workflow.validation.report_output</th><td>.\\tmp_pytest\\validation_suite_shacl_report.ttl</td></tr>
+<tr><th>first_workflow.validation.exported_for_validation</th><td>sí</td></tr>
+<tr><th>first_workflow.validation.export_output</th><td>tmp_pytest\validation_suite_catalog.jsonld</td></tr>
+<tr><th>first_workflow.validation.temporary_export</th><td>no</td></tr>
+<tr><th>second_workflow.workflow.dry_run</th><td>no</td></tr>
+<tr><th>second_workflow.workflow.sheet_refreshed</th><td>sí</td></tr>
+<tr><th>second_workflow.workflow.sheet_path</th><td>C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\config\gold_governance.csv</td></tr>
+<tr><th>second_workflow.workflow.profile_case</th><td>hvd</td></tr>
+<tr><th>second_workflow.workflow.tables_discovered</th><td>12</td></tr>
+<tr><th>second_workflow.workflow.sheet_rows_loaded</th><td>4</td></tr>
+<tr><th>second_workflow.workflow.sheet_valid</th><td>sí</td></tr>
+<tr><th>second_workflow.workflow.sheet_validation_error</th><td>(sin valor)</td></tr>
+<tr><th>second_workflow.sync.dry_run</th><td>no</td></tr>
+<tr><th>second_workflow.sync.intents</th><td>4</td></tr>
+<tr><th>second_workflow.sync.planned</th><td>(vacío)</td></tr>
+<tr><th>second_workflow.sync.applied</th><td>0</td></tr>
+<tr><th>second_workflow.sync.plan_output</th><td>.\\tmp_pytest\\workflow_second_plan.json</td></tr>
+<tr><th>second_workflow.export</th><td>(sin valor)</td></tr>
+<tr><th>second_workflow.validation.tables_total</th><td>12</td></tr>
+<tr><th>second_workflow.validation.tables_exported</th><td>4</td></tr>
+<tr><th>second_workflow.validation.output_path</th><td>tmp_pytest\validation_suite_catalog.jsonld</td></tr>
+<tr><th>second_workflow.validation.preview_dataset_count</th><td>4</td></tr>
+<tr><th>second_workflow.validation.input_path</th><td>tmp_pytest\validation_suite_catalog.jsonld</td></tr>
+<tr><th>second_workflow.validation.profile_case</th><td>hvd</td></tr>
+<tr><th>second_workflow.validation.shapes_path</th><td>(sin valor)</td></tr>
+<tr><th>second_workflow.validation.shapes_paths</th><td>C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_imports.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_mdr_imports.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_common_shapes.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_mdr-vocabularies.shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_catalog_shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_dataset_shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_distribution_shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\shacl_dataservice_shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\hvd\shacl_common_hvd_shapes.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\hvd\shacl_dataset_hvd_shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\hvd\shacl_distribution_hvd_shape.ttl, C:\portfolio\TFM_Alonso_Marcos_Mu-oz\tfm_ingestor\src\tfm_ingestor\resources\shacl\hvd\shacl_dataservice_hvd_shape.ttl</td></tr>
+<tr><th>second_workflow.validation.shacl_bundle.source_commit</th><td>f2c8a88868b89239c9f54bffdf621cded2401b9f</td></tr>
+<tr><th>second_workflow.validation.shacl_bundle.source_path</th><td>shacl/1.0.0</td></tr>
+<tr><th>second_workflow.validation.shacl_bundle.frozen_date</th><td>2026-04-13</td></tr>
+<tr><th>second_workflow.validation.shacl_bundle.files</th><td>12</td></tr>
+<tr><th>second_workflow.validation.allow_warnings</th><td>sí</td></tr>
+<tr><th>second_workflow.validation.conforms</th><td>sí</td></tr>
+<tr><th>second_workflow.validation.violations</th><td>0</td></tr>
+<tr><th>second_workflow.validation.warnings</th><td>44</td></tr>
+<tr><th>second_workflow.validation.infos</th><td>0</td></tr>
+<tr><th>second_workflow.validation.results[0].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[0].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>second_workflow.validation.results[0].result_path</th><td>http://data.europa.eu/r5r/availability</td></tr>
+<tr><th>second_workflow.validation.results[0].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b13</td></tr>
+<tr><th>second_workflow.validation.results[0].message</th><td>La distribuci�n deber�a contener al menos un dcatap:availability.</td></tr>
+<tr><th>second_workflow.validation.results[1].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[1].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>second_workflow.validation.results[1].result_path</th><td>http://purl.org/dc/terms/title</td></tr>
+<tr><th>second_workflow.validation.results[1].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b33</td></tr>
+<tr><th>second_workflow.validation.results[1].message</th><td>La distribuci�n deber�a contener al menos un dct:title.</td></tr>
+<tr><th>second_workflow.validation.results[2].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[2].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>second_workflow.validation.results[2].result_path</th><td>http://www.w3.org/ns/dcat#contactPoint</td></tr>
+<tr><th>second_workflow.validation.results[2].source_shape</th><td>n27d28923836649148381635edf30d8b6b41</td></tr>
+<tr><th>second_workflow.validation.results[2].message</th><td>El conjunto de datos deber�a contener al menos un dcat:contactPoint.</td></tr>
+<tr><th>second_workflow.validation.results[3].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[3].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service</td></tr>
+<tr><th>second_workflow.validation.results[3].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>second_workflow.validation.results[3].source_shape</th><td>n707d54781ee34eccb99745b7b7984760b57</td></tr>
+<tr><th>second_workflow.validation.results[3].message</th><td>Less than 1 values on &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service&gt;-&gt;dcat:keyword</td></tr>
+<tr><th>second_workflow.validation.results[4].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[4].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>second_workflow.validation.results[4].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>second_workflow.validation.results[4].source_shape</th><td>n27d28923836649148381635edf30d8b6b35</td></tr>
+<tr><th>second_workflow.validation.results[4].message</th><td>Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.</td></tr>
+<tr><th>second_workflow.validation.results[5].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[5].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>second_workflow.validation.results[5].result_path</th><td>http://purl.org/dc/terms/temporal</td></tr>
+<tr><th>second_workflow.validation.results[5].source_shape</th><td>n27d28923836649148381635edf30d8b6b42</td></tr>
+<tr><th>second_workflow.validation.results[5].message</th><td>El conjunto de datos deber�a contener al menos un dct:temporal.</td></tr>
+<tr><th>second_workflow.validation.results[6].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[6].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>second_workflow.validation.results[6].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>second_workflow.validation.results[6].source_shape</th><td>n27d28923836649148381635edf30d8b6b17</td></tr>
+<tr><th>second_workflow.validation.results[6].message</th><td>The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.</td></tr>
+<tr><th>second_workflow.validation.results[7].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[7].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>second_workflow.validation.results[7].result_path</th><td>http://purl.org/dc/terms/temporal</td></tr>
+<tr><th>second_workflow.validation.results[7].source_shape</th><td>n27d28923836649148381635edf30d8b6b42</td></tr>
+<tr><th>second_workflow.validation.results[7].message</th><td>El conjunto de datos deber�a contener al menos un dct:temporal.</td></tr>
+<tr><th>second_workflow.validation.results[8].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[8].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>second_workflow.validation.results[8].result_path</th><td>http://purl.org/dc/terms/description</td></tr>
+<tr><th>second_workflow.validation.results[8].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b7</td></tr>
+<tr><th>second_workflow.validation.results[8].message</th><td>The distribution should contain at least one dct:description.</td></tr>
+<tr><th>second_workflow.validation.results[9].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[9].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>second_workflow.validation.results[9].result_path</th><td>http://purl.org/dc/terms/format</td></tr>
+<tr><th>second_workflow.validation.results[9].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b16</td></tr>
+<tr><th>second_workflow.validation.results[9].message</th><td>La distribuci�n deber�a contener al menos un dct:format.</td></tr>
+<tr><th>second_workflow.validation.results[10].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[10].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>second_workflow.validation.results[10].result_path</th><td>http://purl.org/dc/terms/spatial</td></tr>
+<tr><th>second_workflow.validation.results[10].source_shape</th><td>n27d28923836649148381635edf30d8b6b44</td></tr>
+<tr><th>second_workflow.validation.results[10].message</th><td>The dataset must contain at least one value for dct:spatial.</td></tr>
+<tr><th>second_workflow.validation.results[11].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[11].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>second_workflow.validation.results[11].result_path</th><td>http://www.w3.org/ns/dcat#contactPoint</td></tr>
+<tr><th>second_workflow.validation.results[11].source_shape</th><td>n27d28923836649148381635edf30d8b6b41</td></tr>
+<tr><th>second_workflow.validation.results[11].message</th><td>El conjunto de datos deber�a contener al menos un dcat:contactPoint.</td></tr>
+<tr><th>second_workflow.validation.results[12].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[12].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service</td></tr>
+<tr><th>second_workflow.validation.results[12].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>second_workflow.validation.results[12].source_shape</th><td>n707d54781ee34eccb99745b7b7984760b18</td></tr>
+<tr><th>second_workflow.validation.results[12].message</th><td>The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.</td></tr>
+<tr><th>second_workflow.validation.results[13].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[13].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>second_workflow.validation.results[13].result_path</th><td>http://purl.org/dc/terms/description</td></tr>
+<tr><th>second_workflow.validation.results[13].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b7</td></tr>
+<tr><th>second_workflow.validation.results[13].message</th><td>The distribution should contain at least one dct:description.</td></tr>
+<tr><th>second_workflow.validation.results[14].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[14].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>second_workflow.validation.results[14].result_path</th><td>http://data.europa.eu/r5r/availability</td></tr>
+<tr><th>second_workflow.validation.results[14].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b13</td></tr>
+<tr><th>second_workflow.validation.results[14].message</th><td>La distribuci�n deber�a contener al menos un dcatap:availability.</td></tr>
+<tr><th>second_workflow.validation.results[15].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[15].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>second_workflow.validation.results[15].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>second_workflow.validation.results[15].source_shape</th><td>n27d28923836649148381635edf30d8b6b35</td></tr>
+<tr><th>second_workflow.validation.results[15].message</th><td>Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.</td></tr>
+<tr><th>second_workflow.validation.results[16].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[16].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>second_workflow.validation.results[16].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>second_workflow.validation.results[16].source_shape</th><td>n27d28923836649148381635edf30d8b6b17</td></tr>
+<tr><th>second_workflow.validation.results[16].message</th><td>The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.</td></tr>
+<tr><th>second_workflow.validation.results[17].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[17].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service</td></tr>
+<tr><th>second_workflow.validation.results[17].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>second_workflow.validation.results[17].source_shape</th><td>n707d54781ee34eccb99745b7b7984760b57</td></tr>
+<tr><th>second_workflow.validation.results[17].message</th><td>Less than 1 values on &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;-&gt;dcat:keyword</td></tr>
+<tr><th>second_workflow.validation.results[18].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[18].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service</td></tr>
+<tr><th>second_workflow.validation.results[18].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>second_workflow.validation.results[18].source_shape</th><td>n707d54781ee34eccb99745b7b7984760b18</td></tr>
+<tr><th>second_workflow.validation.results[18].message</th><td>The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.</td></tr>
+<tr><th>second_workflow.validation.results[19].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[19].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>second_workflow.validation.results[19].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>second_workflow.validation.results[19].source_shape</th><td>n27d28923836649148381635edf30d8b6b17</td></tr>
+<tr><th>second_workflow.validation.results[19].message</th><td>The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.</td></tr>
+<tr><th>second_workflow.validation.results[20].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[20].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:service</td></tr>
+<tr><th>second_workflow.validation.results[20].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>second_workflow.validation.results[20].source_shape</th><td>n707d54781ee34eccb99745b7b7984760b57</td></tr>
+<tr><th>second_workflow.validation.results[20].message</th><td>Less than 1 values on &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:service&gt;-&gt;dcat:keyword</td></tr>
+<tr><th>second_workflow.validation.results[21].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[21].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:service</td></tr>
+<tr><th>second_workflow.validation.results[21].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>second_workflow.validation.results[21].source_shape</th><td>n707d54781ee34eccb99745b7b7984760b57</td></tr>
+<tr><th>second_workflow.validation.results[21].message</th><td>Less than 1 values on &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;-&gt;dcat:keyword</td></tr>
+<tr><th>second_workflow.validation.results[22].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[22].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>second_workflow.validation.results[22].result_path</th><td>http://purl.org/dc/terms/title</td></tr>
+<tr><th>second_workflow.validation.results[22].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b33</td></tr>
+<tr><th>second_workflow.validation.results[22].message</th><td>La distribuci�n deber�a contener al menos un dct:title.</td></tr>
+<tr><th>second_workflow.validation.results[23].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[23].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>second_workflow.validation.results[23].result_path</th><td>http://purl.org/dc/terms/title</td></tr>
+<tr><th>second_workflow.validation.results[23].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b33</td></tr>
+<tr><th>second_workflow.validation.results[23].message</th><td>La distribuci�n deber�a contener al menos un dct:title.</td></tr>
+<tr><th>second_workflow.validation.results[24].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[24].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:service</td></tr>
+<tr><th>second_workflow.validation.results[24].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>second_workflow.validation.results[24].source_shape</th><td>n707d54781ee34eccb99745b7b7984760b18</td></tr>
+<tr><th>second_workflow.validation.results[24].message</th><td>The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.</td></tr>
+<tr><th>second_workflow.validation.results[25].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[25].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>second_workflow.validation.results[25].result_path</th><td>http://purl.org/dc/terms/format</td></tr>
+<tr><th>second_workflow.validation.results[25].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b16</td></tr>
+<tr><th>second_workflow.validation.results[25].message</th><td>La distribuci�n deber�a contener al menos un dct:format.</td></tr>
+<tr><th>second_workflow.validation.results[26].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[26].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>second_workflow.validation.results[26].result_path</th><td>http://purl.org/dc/terms/format</td></tr>
+<tr><th>second_workflow.validation.results[26].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b16</td></tr>
+<tr><th>second_workflow.validation.results[26].message</th><td>La distribuci�n deber�a contener al menos un dct:format.</td></tr>
+<tr><th>second_workflow.validation.results[27].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[27].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>second_workflow.validation.results[27].result_path</th><td>http://www.w3.org/ns/dcat#contactPoint</td></tr>
+<tr><th>second_workflow.validation.results[27].source_shape</th><td>n27d28923836649148381635edf30d8b6b41</td></tr>
+<tr><th>second_workflow.validation.results[27].message</th><td>El conjunto de datos deber�a contener al menos un dcat:contactPoint.</td></tr>
+<tr><th>second_workflow.validation.results[28].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[28].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>second_workflow.validation.results[28].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>second_workflow.validation.results[28].source_shape</th><td>n27d28923836649148381635edf30d8b6b35</td></tr>
+<tr><th>second_workflow.validation.results[28].message</th><td>Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.</td></tr>
+<tr><th>second_workflow.validation.results[29].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[29].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>second_workflow.validation.results[29].result_path</th><td>http://purl.org/dc/terms/spatial</td></tr>
+<tr><th>second_workflow.validation.results[29].source_shape</th><td>n27d28923836649148381635edf30d8b6b44</td></tr>
+<tr><th>second_workflow.validation.results[29].message</th><td>The dataset must contain at least one value for dct:spatial.</td></tr>
+<tr><th>second_workflow.validation.results[30].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[30].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>second_workflow.validation.results[30].result_path</th><td>http://www.w3.org/ns/dcat#keyword</td></tr>
+<tr><th>second_workflow.validation.results[30].source_shape</th><td>n27d28923836649148381635edf30d8b6b35</td></tr>
+<tr><th>second_workflow.validation.results[30].message</th><td>Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.</td></tr>
+<tr><th>second_workflow.validation.results[31].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[31].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>second_workflow.validation.results[31].result_path</th><td>http://purl.org/dc/terms/spatial</td></tr>
+<tr><th>second_workflow.validation.results[31].source_shape</th><td>n27d28923836649148381635edf30d8b6b44</td></tr>
+<tr><th>second_workflow.validation.results[31].message</th><td>The dataset must contain at least one value for dct:spatial.</td></tr>
+<tr><th>second_workflow.validation.results[32].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[32].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>second_workflow.validation.results[32].result_path</th><td>http://purl.org/dc/terms/spatial</td></tr>
+<tr><th>second_workflow.validation.results[32].source_shape</th><td>n27d28923836649148381635edf30d8b6b44</td></tr>
+<tr><th>second_workflow.validation.results[32].message</th><td>The dataset must contain at least one value for dct:spatial.</td></tr>
+<tr><th>second_workflow.validation.results[33].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[33].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:service</td></tr>
+<tr><th>second_workflow.validation.results[33].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>second_workflow.validation.results[33].source_shape</th><td>n707d54781ee34eccb99745b7b7984760b18</td></tr>
+<tr><th>second_workflow.validation.results[33].message</th><td>The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.</td></tr>
+<tr><th>second_workflow.validation.results[34].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[34].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>second_workflow.validation.results[34].result_path</th><td>http://www.w3.org/ns/dcat#contactPoint</td></tr>
+<tr><th>second_workflow.validation.results[34].source_shape</th><td>n27d28923836649148381635edf30d8b6b41</td></tr>
+<tr><th>second_workflow.validation.results[34].message</th><td>El conjunto de datos deber�a contener al menos un dcat:contactPoint.</td></tr>
+<tr><th>second_workflow.validation.results[35].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[35].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>second_workflow.validation.results[35].result_path</th><td>http://purl.org/dc/terms/publisher</td></tr>
+<tr><th>second_workflow.validation.results[35].source_shape</th><td>n27d28923836649148381635edf30d8b6b17</td></tr>
+<tr><th>second_workflow.validation.results[35].message</th><td>The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.</td></tr>
+<tr><th>second_workflow.validation.results[36].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[36].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>second_workflow.validation.results[36].result_path</th><td>http://purl.org/dc/terms/title</td></tr>
+<tr><th>second_workflow.validation.results[36].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b33</td></tr>
+<tr><th>second_workflow.validation.results[36].message</th><td>La distribuci�n deber�a contener al menos un dct:title.</td></tr>
+<tr><th>second_workflow.validation.results[37].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[37].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>second_workflow.validation.results[37].result_path</th><td>http://purl.org/dc/terms/description</td></tr>
+<tr><th>second_workflow.validation.results[37].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b7</td></tr>
+<tr><th>second_workflow.validation.results[37].message</th><td>The distribution should contain at least one dct:description.</td></tr>
+<tr><th>second_workflow.validation.results[38].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[38].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>second_workflow.validation.results[38].result_path</th><td>http://purl.org/dc/terms/description</td></tr>
+<tr><th>second_workflow.validation.results[38].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b7</td></tr>
+<tr><th>second_workflow.validation.results[38].message</th><td>The distribution should contain at least one dct:description.</td></tr>
+<tr><th>second_workflow.validation.results[39].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[39].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>second_workflow.validation.results[39].result_path</th><td>http://purl.org/dc/terms/format</td></tr>
+<tr><th>second_workflow.validation.results[39].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b16</td></tr>
+<tr><th>second_workflow.validation.results[39].message</th><td>La distribuci�n deber�a contener al menos un dct:format.</td></tr>
+<tr><th>second_workflow.validation.results[40].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[40].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica</td></tr>
+<tr><th>second_workflow.validation.results[40].result_path</th><td>http://purl.org/dc/terms/temporal</td></tr>
+<tr><th>second_workflow.validation.results[40].source_shape</th><td>n27d28923836649148381635edf30d8b6b42</td></tr>
+<tr><th>second_workflow.validation.results[40].message</th><td>El conjunto de datos deber�a contener al menos un dct:temporal.</td></tr>
+<tr><th>second_workflow.validation.results[41].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[41].focus_node</th><td>urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio</td></tr>
+<tr><th>second_workflow.validation.results[41].result_path</th><td>http://purl.org/dc/terms/temporal</td></tr>
+<tr><th>second_workflow.validation.results[41].source_shape</th><td>n27d28923836649148381635edf30d8b6b42</td></tr>
+<tr><th>second_workflow.validation.results[41].message</th><td>El conjunto de datos deber�a contener al menos un dct:temporal.</td></tr>
+<tr><th>second_workflow.validation.results[42].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[42].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution</td></tr>
+<tr><th>second_workflow.validation.results[42].result_path</th><td>http://data.europa.eu/r5r/availability</td></tr>
+<tr><th>second_workflow.validation.results[42].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b13</td></tr>
+<tr><th>second_workflow.validation.results[42].message</th><td>La distribuci�n deber�a contener al menos un dcatap:availability.</td></tr>
+<tr><th>second_workflow.validation.results[43].severity</th><td>Warning</td></tr>
+<tr><th>second_workflow.validation.results[43].focus_node</th><td>urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution</td></tr>
+<tr><th>second_workflow.validation.results[43].result_path</th><td>http://data.europa.eu/r5r/availability</td></tr>
+<tr><th>second_workflow.validation.results[43].source_shape</th><td>na28e1168fc9b4db6af70c99afa54c1d0b13</td></tr>
+<tr><th>second_workflow.validation.results[43].message</th><td>La distribuci�n deber�a contener al menos un dcatap:availability.</td></tr>
+<tr><th>second_workflow.validation.report_text</th><td>Validation Report
+Conforms: True
+Results (44):
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.contactpoint ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dcat:contactPoint.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dcat:contactPoint.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:contactPoint ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dcat:contactPoint
+	Message: El conjunto de datos deber�a contener al menos un dcat:contactPoint.
+	Message: The dataset should contain at least one dcat:contactPoint.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.contactpoint ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dcat:contactPoint.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dcat:contactPoint.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:contactPoint ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dcat:contactPoint
+	Message: El conjunto de datos deber�a contener al menos un dcat:contactPoint.
+	Message: The dataset should contain at least one dcat:contactPoint.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.contactpoint ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dcat:contactPoint.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dcat:contactPoint.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:contactPoint ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dcat:contactPoint
+	Message: El conjunto de datos deber�a contener al menos un dcat:contactPoint.
+	Message: The dataset should contain at least one dcat:contactPoint.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.contactpoint ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dcat:contactPoint.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dcat:contactPoint.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:contactPoint ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dcat:contactPoint
+	Message: El conjunto de datos deber�a contener al menos un dcat:contactPoint.
+	Message: The dataset should contain at least one dcat:contactPoint.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.keyword ; sh:message Literal(&quot;All dcat:Dataset resources must contain at least one instance of dcat:keyword.&quot;, lang=en), Literal(&quot;Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.&quot;, lang=es) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dcat:keyword
+	Message: All dcat:Dataset resources must contain at least one instance of dcat:keyword.
+	Message: Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.keyword ; sh:message Literal(&quot;All dcat:Dataset resources must contain at least one instance of dcat:keyword.&quot;, lang=en), Literal(&quot;Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.&quot;, lang=es) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dcat:keyword
+	Message: All dcat:Dataset resources must contain at least one instance of dcat:keyword.
+	Message: Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.keyword ; sh:message Literal(&quot;All dcat:Dataset resources must contain at least one instance of dcat:keyword.&quot;, lang=en), Literal(&quot;Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.&quot;, lang=es) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dcat:keyword
+	Message: All dcat:Dataset resources must contain at least one instance of dcat:keyword.
+	Message: Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.keyword ; sh:message Literal(&quot;All dcat:Dataset resources must contain at least one instance of dcat:keyword.&quot;, lang=en), Literal(&quot;Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.&quot;, lang=es) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dcat:keyword
+	Message: All dcat:Dataset resources must contain at least one instance of dcat:keyword.
+	Message: Todo recurso de tipo dcat:Dataset deber�a contener al menos una instancia de dcat:keyword.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.spatial ; sh:message Literal(&quot;El conjunto de datos debe contener al menos un valor para dct:spatial.&quot;, lang=es), Literal(&quot;The dataset must contain at least one value for dct:spatial.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:spatial ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dct:spatial
+	Message: El conjunto de datos debe contener al menos un valor para dct:spatial.
+	Message: The dataset must contain at least one value for dct:spatial.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.spatial ; sh:message Literal(&quot;El conjunto de datos debe contener al menos un valor para dct:spatial.&quot;, lang=es), Literal(&quot;The dataset must contain at least one value for dct:spatial.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:spatial ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dct:spatial
+	Message: El conjunto de datos debe contener al menos un valor para dct:spatial.
+	Message: The dataset must contain at least one value for dct:spatial.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.spatial ; sh:message Literal(&quot;El conjunto de datos debe contener al menos un valor para dct:spatial.&quot;, lang=es), Literal(&quot;The dataset must contain at least one value for dct:spatial.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:spatial ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dct:spatial
+	Message: El conjunto de datos debe contener al menos un valor para dct:spatial.
+	Message: The dataset must contain at least one value for dct:spatial.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.spatial ; sh:message Literal(&quot;El conjunto de datos debe contener al menos un valor para dct:spatial.&quot;, lang=es), Literal(&quot;The dataset must contain at least one value for dct:spatial.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:spatial ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dct:spatial
+	Message: El conjunto de datos debe contener al menos un valor para dct:spatial.
+	Message: The dataset must contain at least one value for dct:spatial.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.temporal ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dct:temporal.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dct:temporal.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:temporal ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dct:temporal
+	Message: El conjunto de datos deber�a contener al menos un dct:temporal.
+	Message: The dataset should contain at least one dct:temporal.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.temporal ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dct:temporal.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dct:temporal.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:temporal ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dct:temporal
+	Message: El conjunto de datos deber�a contener al menos un dct:temporal.
+	Message: The dataset should contain at least one dct:temporal.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.temporal ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dct:temporal.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dct:temporal.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:temporal ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Result Path: dct:temporal
+	Message: El conjunto de datos deber�a contener al menos un dct:temporal.
+	Message: The dataset should contain at least one dct:temporal.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.temporal ; sh:message Literal(&quot;El conjunto de datos deber�a contener al menos un dct:temporal.&quot;, lang=es), Literal(&quot;The dataset should contain at least one dct:temporal.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:temporal ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Result Path: dct:temporal
+	Message: El conjunto de datos deber�a contener al menos un dct:temporal.
+	Message: The dataset should contain at least one dct:temporal.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.availability ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dcatap:availability.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dcatap:availability.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcatap:availability ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dcatap:availability
+	Message: La distribuci�n deber�a contener al menos un dcatap:availability.
+	Message: The distribution should contain at least one dcatap:availability.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.availability ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dcatap:availability.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dcatap:availability.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcatap:availability ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dcatap:availability
+	Message: La distribuci�n deber�a contener al menos un dcatap:availability.
+	Message: The distribution should contain at least one dcatap:availability.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.availability ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dcatap:availability.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dcatap:availability.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcatap:availability ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dcatap:availability
+	Message: La distribuci�n deber�a contener al menos un dcatap:availability.
+	Message: The distribution should contain at least one dcatap:availability.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.availability ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dcatap:availability.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dcatap:availability.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcatap:availability ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dcatap:availability
+	Message: La distribuci�n deber�a contener al menos un dcatap:availability.
+	Message: The distribution should contain at least one dcatap:availability.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.description ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:description.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:description.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:description ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dct:description
+	Message: La distribuci�n deber�a contener al menos un dct:description.
+	Message: The distribution should contain at least one dct:description.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.description ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:description.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:description.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:description ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dct:description
+	Message: La distribuci�n deber�a contener al menos un dct:description.
+	Message: The distribution should contain at least one dct:description.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.description ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:description.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:description.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:description ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dct:description
+	Message: La distribuci�n deber�a contener al menos un dct:description.
+	Message: The distribution should contain at least one dct:description.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.description ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:description.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:description.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:description ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dct:description
+	Message: La distribuci�n deber�a contener al menos un dct:description.
+	Message: The distribution should contain at least one dct:description.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.format ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:format.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:format.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:format ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dct:format
+	Message: La distribuci�n deber�a contener al menos un dct:format.
+	Message: The distribution should contain at least one dct:format.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.format ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:format.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:format.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:format ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dct:format
+	Message: La distribuci�n deber�a contener al menos un dct:format.
+	Message: The distribution should contain at least one dct:format.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.format ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:format.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:format.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:format ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dct:format
+	Message: La distribuci�n deber�a contener al menos un dct:format.
+	Message: The distribution should contain at least one dct:format.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.format ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:format.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:format.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:format ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dct:format
+	Message: La distribuci�n deber�a contener al menos un dct:format.
+	Message: The distribution should contain at least one dct:format.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.title ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:title.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:title.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:title ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dct:title
+	Message: La distribuci�n deber�a contener al menos un dct:title.
+	Message: The distribution should contain at least one dct:title.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.title ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:title.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:title.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:title ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dct:title
+	Message: La distribuci�n deber�a contener al menos un dct:title.
+	Message: The distribution should contain at least one dct:title.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.title ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:title.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:title.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:title ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:distribution&gt;
+	Result Path: dct:title
+	Message: La distribuci�n deber�a contener al menos un dct:title.
+	Message: The distribution should contain at least one dct:title.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Distribution.title ; sh:message Literal(&quot;La distribuci�n deber�a contener al menos un dct:title.&quot;, lang=es), Literal(&quot;The distribution should contain at least one dct:title.&quot;, lang=en) ; sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dct:title ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:distribution&gt;
+	Result Path: dct:title
+	Message: La distribuci�n deber�a contener al menos un dct:title.
+	Message: The distribution should contain at least one dct:title.
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service&gt;
+	Result Path: dcat:keyword
+	Message: Less than 1 values on &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service&gt;-&gt;dcat:keyword
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;
+	Result Path: dcat:keyword
+	Message: Less than 1 values on &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;-&gt;dcat:keyword
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:service&gt;
+	Result Path: dcat:keyword
+	Message: Less than 1 values on &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:service&gt;-&gt;dcat:keyword
+Validation Result in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ sh:minCount Literal(&quot;1&quot;, datatype=xsd:integer) ; sh:path dcat:keyword ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;
+	Result Path: dcat:keyword
+	Message: Less than 1 values on &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;-&gt;dcat:keyword
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:DataService.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:DataService.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:DataService.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica:service&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:DataService.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio:service&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.agenda_cultural_publica&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+Validation Result in OrConstraintComponent (http://www.w3.org/ns/shacl#OrConstraintComponent):
+	Severity: sh:Warning
+	Source Shape: [ foaf:page dcatapes:Dataset.publisher ; sh:message Literal(&quot;El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.&quot;, lang=es), Literal(&quot;The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.&quot;, lang=en) ; sh:or ( [ sh:closed Literal(&quot;true&quot; = True, datatype=xsd:boolean) ; sh:nodeKind sh:IRI ] [ sh:node dcatapes:Agent_ShapeRecommended ; sh:nodeKind sh:BlankNodeOrIRI ] ) ; sh:path dct:publisher ; sh:severity sh:Warning ]
+	Focus Node: &lt;urn:openmetadata:table:postgres_validation_service.opendata_demo.gold.movilidad_resumen_municipio&gt;
+	Value Node: &lt;http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001&gt;
+	Result Path: dct:publisher
+	Message: El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente.
+	Message: The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions.
+</td></tr>
+<tr><th>second_workflow.validation.report_output</th><td>.\\tmp_pytest\\validation_suite_shacl_report.ttl</td></tr>
+<tr><th>second_workflow.validation.exported_for_validation</th><td>sí</td></tr>
+<tr><th>second_workflow.validation.export_output</th><td>tmp_pytest\validation_suite_catalog.jsonld</td></tr>
+<tr><th>second_workflow.validation.temporary_export</th><td>no</td></tr>
+</tbody>
+</table>
+<footer>Informe generado automáticamente por <code>om_dcat_sync render-report</code> a partir del JSON de validación. Plataforma de Gobierno del Dato.</footer>
+</body>
+</html>

@@ -55,3 +55,9 @@ state/
 # --- Local agent instructions ---
 AGENTS.md
 CLAUDE.md
+
+# --- Fixtures versionados del modo demo de la consola web (web/demo/) ---
+# Reproducen la estructura del repo para servir la demo solo-lectura en Vercel.
+# Re-incluyen los directorios que los patrones tmp_pytest/ y state/ excluirian.
+!/web/demo/tmp_pytest/
+!/web/demo/state/

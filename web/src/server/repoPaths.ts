@@ -1,9 +1,17 @@
 import path from "node:path";
 
+import { isDemoMode } from "./demo";
+
 export function repoRoot(): string {
-  return process.env.TFM_REPO_ROOT
-    ? path.resolve(process.env.TFM_REPO_ROOT)
-    : path.resolve(process.cwd(), "..");
+  if (process.env.TFM_REPO_ROOT) {
+    return path.resolve(process.env.TFM_REPO_ROOT);
+  }
+  // En modo demo todas las lecturas (`repoPath(...)`) se resuelven contra los
+  // fixtures congelados de `web/demo/`, que reproducen la estructura del repo.
+  if (isDemoMode()) {
+    return path.resolve(process.cwd(), "demo");
+  }
+  return path.resolve(process.cwd(), "..");
 }
 
 export function repoPath(...parts: string[]): string {

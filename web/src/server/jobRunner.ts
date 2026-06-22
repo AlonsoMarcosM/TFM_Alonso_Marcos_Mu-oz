@@ -4,6 +4,7 @@ import fsp from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 
+import { isDemoMode } from "./demo";
 import { jobEnvironment } from "./env";
 import { buildJobResult, type JobResult } from "./jobResult";
 import { displayCommand, findOperation, type Operation, type OperationId } from "./operations";
@@ -39,6 +40,11 @@ function jobPath(id: string): string {
 }
 
 async function ensureJobsDir(): Promise<void> {
+  // En demo el directorio de jobs es de solo lectura (fixtures versionados); no
+  // se crea ni se escribe nada (el FS de Vercel es de solo lectura).
+  if (isDemoMode()) {
+    return;
+  }
   await fsp.mkdir(jobsDir(), { recursive: true });
 }
 
@@ -80,10 +86,38 @@ function artifactsWithExistence(operation: Operation): string[] {
   return operation.artifacts.filter((artifact) => fs.existsSync(repoPath(...artifact.split("/"))));
 }
 
+function demoJob(operation: Operation): JobRecord {
+  const now = new Date().toISOString();
+  const job: JobRecord = {
+    id: randomUUID(),
+    operationId: operation.id,
+    title: operation.title,
+    command: displayCommand(operation),
+    status: "success",
+    createdAt: now,
+    startedAt: now,
+    finishedAt: now,
+    exitCode: 0,
+    log:
+      "Modo demo (solo lectura): la ejecucion real contra OpenMetadata y Kubernetes esta deshabilitada.\n" +
+      "Este resultado reproduce los artefactos congelados de una ejecucion real previa del caso de uso.\n",
+    artifacts: artifactsWithExistence(operation),
+  };
+  job.result = buildJobResult(operation, job);
+  return job;
+}
+
 export async function startJob(operationId: string): Promise<JobRecord> {
   const operation = findOperation(operationId);
   if (!operation) {
     throw new Error(`Operacion no permitida: ${operationId}`);
+  }
+
+  // En demo no se lanza ningun proceso: se devuelve un job ya finalizado que
+  // resume los artefactos congelados. Al entregarse en estado "success" el
+  // cliente no hace polling (solo sondea jobs pending/running).
+  if (isDemoMode()) {
+    return demoJob(operation);
   }
 
   const id = randomUUID();

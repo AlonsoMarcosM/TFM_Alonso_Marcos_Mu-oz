@@ -1,0 +1,283 @@
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcatap: <http://data.europa.eu/r5r/> .
+@prefix dcatapes: <https://datosgobes.github.io/DCAT-AP-ES/#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+[] a sh:ValidationReport ;
+    sh:conforms true ;
+    sh:result [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution> ;
+            sh:resultMessage "The distribution should contain at least one dct:format."@en,
+                "La distribución debería contener al menos un dct:format."@es ;
+            sh:resultPath dct:format ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:nbda59b5b686548e29b0a97bbae74b351b16 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution> ;
+            sh:resultMessage "The distribution should contain at least one dct:title."@en,
+                "La distribución debería contener al menos un dct:title."@es ;
+            sh:resultPath dct:title ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:nbda59b5b686548e29b0a97bbae74b351b33 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio> ;
+            sh:resultMessage "The dataset should contain at least one dcat:contactPoint."@en,
+                "El conjunto de datos debería contener al menos un dcat:contactPoint."@es ;
+            sh:resultPath dcat:contactPoint ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:n09d4a50b986b4f68930b87c4cff08e32b41 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution> ;
+            sh:resultMessage "The distribution should contain at least one dcatap:availability."@en,
+                "La distribución debería contener al menos un dcatap:availability."@es ;
+            sh:resultPath dcatap:availability ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:nbda59b5b686548e29b0a97bbae74b351b13 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica> ;
+            sh:resultMessage "All dcat:Dataset resources must contain at least one instance of dcat:keyword."@en,
+                "Todo recurso de tipo dcat:Dataset debería contener al menos una instancia de dcat:keyword."@es ;
+            sh:resultPath dcat:keyword ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:n09d4a50b986b4f68930b87c4cff08e32b35 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica> ;
+            sh:resultMessage "The dataset must contain at least one value for dct:spatial."@en,
+                "El conjunto de datos debe contener al menos un valor para dct:spatial."@es ;
+            sh:resultPath dct:spatial ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:n09d4a50b986b4f68930b87c4cff08e32b44 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio> ;
+            sh:resultMessage "The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions."@en,
+                "El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente."@es ;
+            sh:resultPath dct:publisher ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:OrConstraintComponent ;
+            sh:sourceShape _:n09d4a50b986b4f68930b87c4cff08e32b17 ;
+            sh:value <http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001> ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio> ;
+            sh:resultMessage "The dataset should contain at least one dct:temporal."@en,
+                "El conjunto de datos debería contener al menos un dct:temporal."@es ;
+            sh:resultPath dct:temporal ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:n09d4a50b986b4f68930b87c4cff08e32b42 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service> ;
+            sh:resultMessage "Less than 1 values on <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service>->dcat:keyword" ;
+            sh:resultPath dcat:keyword ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:n3bafe2e1a47c418ca874f1cf1c2ac74ab57 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica> ;
+            sh:resultMessage "The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions."@en,
+                "El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente."@es ;
+            sh:resultPath dct:publisher ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:OrConstraintComponent ;
+            sh:sourceShape _:n09d4a50b986b4f68930b87c4cff08e32b17 ;
+            sh:value <http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001> ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service> ;
+            sh:resultMessage "Less than 1 values on <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service>->dcat:keyword" ;
+            sh:resultPath dcat:keyword ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:n3bafe2e1a47c418ca874f1cf1c2ac74ab57 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:service> ;
+            sh:resultMessage "The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions."@en,
+                "El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente."@es ;
+            sh:resultPath dct:publisher ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:OrConstraintComponent ;
+            sh:sourceShape _:n3bafe2e1a47c418ca874f1cf1c2ac74ab18 ;
+            sh:value <http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001> ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio> ;
+            sh:resultMessage "All dcat:Dataset resources must contain at least one instance of dcat:keyword."@en,
+                "Todo recurso de tipo dcat:Dataset debería contener al menos una instancia de dcat:keyword."@es ;
+            sh:resultPath dcat:keyword ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:n09d4a50b986b4f68930b87c4cff08e32b35 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution> ;
+            sh:resultMessage "The distribution should contain at least one dcatap:availability."@en,
+                "La distribución debería contener al menos un dcatap:availability."@es ;
+            sh:resultPath dcatap:availability ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:nbda59b5b686548e29b0a97bbae74b351b13 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution> ;
+            sh:resultMessage "The distribution should contain at least one dct:format."@en,
+                "La distribución debería contener al menos un dct:format."@es ;
+            sh:resultPath dct:format ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:nbda59b5b686548e29b0a97bbae74b351b16 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio> ;
+            sh:resultMessage "The dataset must contain at least one value for dct:spatial."@en,
+                "El conjunto de datos debe contener al menos un valor para dct:spatial."@es ;
+            sh:resultPath dct:spatial ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:n09d4a50b986b4f68930b87c4cff08e32b44 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution> ;
+            sh:resultMessage "The distribution should contain at least one dct:description."@en,
+                "La distribución debería contener al menos un dct:description."@es ;
+            sh:resultPath dct:description ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:nbda59b5b686548e29b0a97bbae74b351b7 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica:distribution> ;
+            sh:resultMessage "The distribution should contain at least one dct:title."@en,
+                "La distribución debería contener al menos un dct:title."@es ;
+            sh:resultPath dct:title ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:nbda59b5b686548e29b0a97bbae74b351b33 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica> ;
+            sh:resultMessage "The dataset should contain at least one dct:temporal."@en,
+                "El conjunto de datos debería contener al menos un dct:temporal."@es ;
+            sh:resultPath dct:temporal ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:n09d4a50b986b4f68930b87c4cff08e32b42 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:service> ;
+            sh:resultMessage "The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions."@en,
+                "El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente."@es ;
+            sh:resultPath dct:publisher ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:OrConstraintComponent ;
+            sh:sourceShape _:n3bafe2e1a47c418ca874f1cf1c2ac74ab18 ;
+            sh:value <http://datos.gob.es/recurso/sector-publico/org/Organismo/U03400001> ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.agenda_cultural_publica> ;
+            sh:resultMessage "The dataset should contain at least one dcat:contactPoint."@en,
+                "El conjunto de datos debería contener al menos un dcat:contactPoint."@es ;
+            sh:resultPath dcat:contactPoint ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:n09d4a50b986b4f68930b87c4cff08e32b41 ],
+        [ a sh:ValidationResult ;
+            sh:focusNode <urn:openmetadata:table:postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio:distribution> ;
+            sh:resultMessage "The distribution should contain at least one dct:description."@en,
+                "La distribución debería contener al menos un dct:description."@es ;
+            sh:resultPath dct:description ;
+            sh:resultSeverity sh:Warning ;
+            sh:sourceConstraintComponent sh:MinCountConstraintComponent ;
+            sh:sourceShape _:nbda59b5b686548e29b0a97bbae74b351b7 ] .
+
+_:N2ebd62d8cbb44e8a9d2cce0a8cd21a84 sh:node dcatapes:Agent_ShapeRecommended ;
+    sh:nodeKind sh:BlankNodeOrIRI .
+
+_:N57ce973fc50a4f5391edb59b84117cbe rdf:first _:N2ebd62d8cbb44e8a9d2cce0a8cd21a84 ;
+    rdf:rest () .
+
+_:N8584b3fdddee46bca742c082cce87373 sh:closed true ;
+    sh:nodeKind sh:IRI .
+
+_:N95603adeab654e49b023ad7690b69a79 sh:node dcatapes:Agent_ShapeRecommended ;
+    sh:nodeKind sh:BlankNodeOrIRI .
+
+_:N9f258523d13d4d35a406a68092ff7f05 rdf:first [ sh:closed true ;
+            sh:nodeKind sh:IRI ] ;
+    rdf:rest ( _:N95603adeab654e49b023ad7690b69a79 ) .
+
+_:Nd45363c8dd7b47519ed076c3dd0e55c4 rdf:first _:N8584b3fdddee46bca742c082cce87373 ;
+    rdf:rest _:N57ce973fc50a4f5391edb59b84117cbe .
+
+_:n09d4a50b986b4f68930b87c4cff08e32b17 sh:message "The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions."@en,
+        "El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente."@es ;
+    sh:or _:Nd45363c8dd7b47519ed076c3dd0e55c4 ;
+    sh:path dct:publisher ;
+    sh:severity sh:Warning ;
+    foaf:page dcatapes:Dataset.publisher .
+
+_:n09d4a50b986b4f68930b87c4cff08e32b35 sh:message "All dcat:Dataset resources must contain at least one instance of dcat:keyword."@en,
+        "Todo recurso de tipo dcat:Dataset debería contener al menos una instancia de dcat:keyword."@es ;
+    sh:minCount 1 ;
+    sh:path dcat:keyword ;
+    sh:severity sh:Warning ;
+    foaf:page dcatapes:Dataset.keyword .
+
+_:n09d4a50b986b4f68930b87c4cff08e32b41 sh:message "The dataset should contain at least one dcat:contactPoint."@en,
+        "El conjunto de datos debería contener al menos un dcat:contactPoint."@es ;
+    sh:minCount 1 ;
+    sh:path dcat:contactPoint ;
+    sh:severity sh:Warning ;
+    foaf:page dcatapes:Dataset.contactpoint .
+
+_:n09d4a50b986b4f68930b87c4cff08e32b42 sh:message "The dataset should contain at least one dct:temporal."@en,
+        "El conjunto de datos debería contener al menos un dct:temporal."@es ;
+    sh:minCount 1 ;
+    sh:path dct:temporal ;
+    sh:severity sh:Warning ;
+    foaf:page dcatapes:Dataset.temporal .
+
+_:n09d4a50b986b4f68930b87c4cff08e32b44 sh:message "The dataset must contain at least one value for dct:spatial."@en,
+        "El conjunto de datos debe contener al menos un valor para dct:spatial."@es ;
+    sh:minCount 1 ;
+    sh:path dct:spatial ;
+    sh:severity sh:Warning ;
+    foaf:page dcatapes:Dataset.spatial .
+
+_:n3bafe2e1a47c418ca874f1cf1c2ac74ab18 sh:message "The value of dct:publisher must be an IRI or a blank node that meets the agent shape restrictions."@en,
+        "El valor de dct:publisher debe ser un IRI o un nodo en blanco que cumpla con las restricciones de la forma de agente."@es ;
+    sh:or _:N9f258523d13d4d35a406a68092ff7f05 ;
+    sh:path dct:publisher ;
+    sh:severity sh:Warning ;
+    foaf:page dcatapes:DataService.publisher .
+
+_:n3bafe2e1a47c418ca874f1cf1c2ac74ab57 sh:minCount 1 ;
+    sh:path dcat:keyword ;
+    sh:severity sh:Warning .
+
+_:nbda59b5b686548e29b0a97bbae74b351b13 sh:message "The distribution should contain at least one dcatap:availability."@en,
+        "La distribución debería contener al menos un dcatap:availability."@es ;
+    sh:minCount 1 ;
+    sh:path dcatap:availability ;
+    sh:severity sh:Warning ;
+    foaf:page dcatapes:Distribution.availability .
+
+_:nbda59b5b686548e29b0a97bbae74b351b16 sh:message "The distribution should contain at least one dct:format."@en,
+        "La distribución debería contener al menos un dct:format."@es ;
+    sh:minCount 1 ;
+    sh:path dct:format ;
+    sh:severity sh:Warning ;
+    foaf:page dcatapes:Distribution.format .
+
+_:nbda59b5b686548e29b0a97bbae74b351b33 sh:message "The distribution should contain at least one dct:title."@en,
+        "La distribución debería contener al menos un dct:title."@es ;
+    sh:minCount 1 ;
+    sh:path dct:title ;
+    sh:severity sh:Warning ;
+    foaf:page dcatapes:Distribution.title .
+
+_:nbda59b5b686548e29b0a97bbae74b351b7 sh:message "The distribution should contain at least one dct:description."@en,
+        "La distribución debería contener al menos un dct:description."@es ;
+    sh:minCount 1 ;
+    sh:path dct:description ;
+    sh:severity sh:Warning ;
+    foaf:page dcatapes:Distribution.description .
+

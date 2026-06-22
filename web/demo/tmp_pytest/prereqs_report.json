@@ -1,0 +1,38 @@
+﻿{
+    "commands":  [
+                     {
+                         "path":  "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+                         "name":  "docker",
+                         "version":  "28.5.1",
+                         "available":  true
+                     },
+                     {
+                         "path":  "C:\\Program Files\\Docker\\Docker\\resources\\bin\\kubectl.exe",
+                         "name":  "kubectl",
+                         "version":  "clientVersion:\r\n  buildDate: \"2025-09-09T19:44:50Z\"\r\n  compiler: gc\r\n  gitCommit: 93248f9ae092f571eb870b7664c534bfc7d00f03\r\n  gitTreeState: clean\r\n  gitVersion: v1.34.1\r\n  goVersion: go1.24.6\r\n  major: \"1\"\r\n  minor: \"34\"\r\n  platform: windows/amd64\r\nkustomizeVersion: v5.7.1",
+                         "available":  true
+                     },
+                     {
+                         "path":  "C:\\Users\\Alonso\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Kubernetes.kind_Microsoft.Winget.Source_8wekyb3d8bbwe\\kind.exe",
+                         "name":  "kind",
+                         "version":  "kind version 0.31.0",
+                         "available":  true
+                     },
+                     {
+                         "path":  "C:\\Users\\Alonso\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Helm.Helm_Microsoft.Winget.Source_8wekyb3d8bbwe\\windows-amd64\\helm.exe",
+                         "name":  "helm",
+                         "version":  "v4.1.0+g4553a0a",
+                         "available":  true
+                     },
+                     {
+                         "path":  "C:\\Python312\\python.exe",
+                         "name":  "python",
+                         "version":  "Python 3.12.6",
+                         "available":  true
+                     }
+                 ],
+    "conforms":  true,
+    "missing":  [
+
+                ]
+}

@@ -1,0 +1,11 @@
+schema_to_layer:
+  gold: "Gold"
+
+schema_to_domain: {}
+
+# Tags (OpenMetadata Tag FQN): <classification>.<tag>
+table_tags_by_prefix:
+  bici_: ["dcat_theme.transporte"]
+  eventos_: ["dcat_theme.cultura_ocio"]
+  agenda_: ["dcat_theme.cultura_ocio"]
+  movilidad_: ["dcat_theme.transporte"]

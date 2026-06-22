@@ -1,0 +1,29 @@
+{
+  "id": "05235d25-ba1f-4f70-a243-811ce247054b",
+  "operationId": "check-prereqs",
+  "title": "Comprobar prerrequisitos",
+  "command": "powershell -ExecutionPolicy Bypass -File .\\scripts\\infra\\check_prereqs.ps1 -Strict",
+  "status": "success",
+  "createdAt": "2026-05-31T20:14:52.023Z",
+  "log": "{\r\n    \"commands\":  [\r\n                     {\r\n                         \"path\":  \"C:\\\\Program Files\\\\Docker\\\\Docker\\\\resources\\\\bin\\\\docker.exe\",\r\n                         \"name\":  \"docker\",\r\n                         \"version\":  \"28.5.1\",\r\n                         \"available\":  true\r\n                     },\r\n                     {\r\n                         \"path\":  \"C:\\\\Program Files\\\\Docker\\\\Docker\\\\resources\\\\bin\\\\kubectl.exe\",\r\n                         \"name\":  \"kubectl\",\r\n                         \"version\":  \"clientVersion:\\r\\n  buildDate: \\\"2025-09-09T19:44:50Z\\\"\\r\\n  compiler: gc\\r\\n  gitCommit: 93248f9ae092f571eb870b7664c534bfc7d00f03\\r\\n  gitTreeState: clean\\r\\n  gitVersion: v1.34.1\\r\\n  goVersion: go1.24.6\\r\\n  major: \\\"1\\\"\\r\\n  minor: \\\"34\\\"\\r\\n  platform: windows/amd64\\r\\nkustomizeVersion: v5.7.1\",\r\n                         \"available\":  true\r\n                     },\r\n                     {\r\n                         \"path\":  \"C:\\\\Users\\\\usuario\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\Kubernetes.kind_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\kind.exe\",\r\n                         \"name\":  \"kind\",\r\n                         \"version\":  \"kind version 0.31.0\",\r\n                         \"available\":  true\r\n                     },\r\n                     {\r\n                         \"path\":  \"C:\\\\Users\\\\usuario\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\Helm.Helm_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\windows-amd64\\\\helm.exe\",\r\n                         \"name\":  \"helm\",\r\n                         \"version\":  \"v4.1.0+g4553a0a\",\r\n                         \"available\":  true\r\n                     },\r\n                     {\r\n                         \"path\":  \"C:\\\\Python312\\\\python.exe\",\r\n                         \"name\":  \"python\",\r\n                         \"version\":  \"Python 3.12.6\",\r\n                         \"available\":  true\r\n                     }\r\n                 ],\r\n    \"conforms\":  true,\r\n    \"missing\":  [\r\n\r\n                ],\r\n    \"output\":  \".\\\\\\\\tmp_pytest\\\\\\\\prereqs_report.json\"\r\n}\r\n",
+  "artifacts": [],
+  "startedAt": "2026-05-31T20:14:52.039Z",
+  "exitCode": 0,
+  "finishedAt": "2026-05-31T20:14:54.330Z",
+  "result": {
+    "ok": true,
+    "message": "Comprobar prerrequisitos finalizó correctamente.",
+    "details": [
+      "Salida escrita en .\\\\tmp_pytest\\\\prereqs_report.json.",
+      "Conformidad: sí.",
+      "Prerrequisitos: conformidad=sí.",
+      "Prerrequisitos: comandos disponibles 5/5.",
+      "No faltan comandos obligatorios.",
+      "La operación no declara artefactos persistentes; la evidencia principal es el log.",
+      "Duración: 2.3 s.",
+      "Código de salida: 0."
+    ],
+    "durationMs": 2291,
+    "artifacts": []
+  }
+}

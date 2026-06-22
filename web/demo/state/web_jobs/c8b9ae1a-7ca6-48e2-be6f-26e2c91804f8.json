@@ -1,0 +1,42 @@
+{
+  "id": "c8b9ae1a-7ca6-48e2-be6f-26e2c91804f8",
+  "operationId": "validate-governance-sheet",
+  "title": "Validar hoja gold",
+  "command": "python -m om_dcat_sync validate-governance-sheet --sheet .\\tfm_ingestor\\config\\gold_governance.csv",
+  "status": "success",
+  "createdAt": "2026-04-20T15:17:41.582Z",
+  "log": "{\r\n  \"conforms\": true,\r\n  \"row_count\": 2,\r\n  \"errors\": []\r\n}\r\n",
+  "artifacts": [
+    "tfm_ingestor/config/gold_governance.csv"
+  ],
+  "startedAt": "2026-04-20T15:17:41.590Z",
+  "exitCode": 0,
+  "finishedAt": "2026-04-20T15:17:42.102Z",
+  "result": {
+    "ok": true,
+    "message": "Validar hoja gold finalizó correctamente.",
+    "details": [
+      "Filas validadas: 2.",
+      "Conformidad: sí.",
+      "Artefactos generados: 1/1.",
+      "Duración: 0.5 s.",
+      "Código de salida: 0."
+    ],
+    "durationMs": 512,
+    "artifacts": [
+      {
+        "path": "tfm_ingestor/config/gold_governance.csv",
+        "exists": true,
+        "size": 601,
+        "updatedAt": "2026-04-20T15:17:16.551Z",
+        "viewable": true,
+        "kind": "CSV",
+        "summary": [
+          "CSV: 2 filas de datos.",
+          "Columnas: publicar, schema_name, table_name, table_fqn, titulo_dataset, descripcion_dataset, publicador, tematica_dcat, categoria_hvd, access_url_distribucion."
+        ],
+        "preview": "﻿publicar;schema_name;table_name;table_fqn;titulo_dataset;descripcion_dataset;publicador;tematica_dcat;categoria_hvd;access_url_distribucion\r\nsi;gold;agenda_cultural_publica;postgres_demo_service.opendata_demo.gold.agenda_cultural_publica;agenda_cultural_publica;DAD;UCLM (Demo);cultura_ocio;estadisticas;https://www.uclm.es/datos/poc/gold/agenda-cultural-publica\r\nsi;gold;movilidad_resumen_municipio;postgres_demo_service.opendata_demo.gold.movilidad_resumen_municipio;movilidad_resumen_municipio;DAF;UCLM (Demo);transporte;movilidad;https://www.uclm.es/datos/poc/gold/movilidad-resumen-municipio\r\n"
+      }
+    ]
+  }
+}

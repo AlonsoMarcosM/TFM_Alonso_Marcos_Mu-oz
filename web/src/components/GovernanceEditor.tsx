@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import { DEMO_MODE } from "@/shared/demoFlag";
 import {
   allowedHvdCategoryValues,
   allowedThemeValues,
@@ -100,6 +101,10 @@ export function GovernanceEditor() {
   async function save() {
     setMessage(null);
     setErrors([]);
+    if (DEMO_MODE) {
+      setErrors(["Modo demo (solo lectura): los cambios no se guardan."]);
+      return;
+    }
     const localErrors = validateRows(rows);
     if (localErrors.length > 0) {
       setErrors(localErrors);
@@ -229,11 +234,14 @@ export function GovernanceEditor() {
         <button onClick={fillDefaults} type="button">
           Autorrellenar vacíos
         </button>
-        <button onClick={save}>Guardar hoja</button>
+        <button onClick={save} disabled={DEMO_MODE}>Guardar hoja</button>
         <button onClick={load} type="button">
           Recargar
         </button>
       </div>
+      {DEMO_MODE ? (
+        <p className="demo-note">Solo lectura: en la demo puedes explorar y validar la hoja gold, pero no guardarla.</p>
+      ) : null}
     </section>
   );
 }
