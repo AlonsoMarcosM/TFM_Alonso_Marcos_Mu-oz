@@ -8,6 +8,7 @@ import { isDemoMode } from "./demo";
 import { jobEnvironment } from "./env";
 import { buildJobResult, type JobResult } from "./jobResult";
 import { displayCommand, findOperation, type Operation, type OperationId } from "./operations";
+import { sanitizePublicValue } from "./publicSanitization";
 import { redactSecrets } from "./redactSecrets";
 import { repoPath, repoRoot } from "./repoPaths";
 
@@ -66,7 +67,8 @@ export async function readJob(id: string): Promise<JobRecord | null> {
   if (!safeId || safeId !== id) {
     return null;
   }
-  return readJobFile(jobPath(id));
+  const job = await readJobFile(jobPath(id));
+  return job && isDemoMode() ? sanitizePublicValue(job) : job;
 }
 
 export async function listJobs(): Promise<JobRecord[]> {
@@ -77,9 +79,10 @@ export async function listJobs(): Promise<JobRecord[]> {
       .filter((file) => file.endsWith(".json"))
       .map((file) => readJobFile(path.join(jobsDir(), file))),
   );
-  return jobs
+  const sortedJobs = jobs
     .filter((job): job is JobRecord => Boolean(job))
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  return isDemoMode() ? sanitizePublicValue(sortedJobs) : sortedJobs;
 }
 
 function artifactsWithExistence(operation: Operation): string[] {

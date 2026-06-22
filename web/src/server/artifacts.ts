@@ -2,6 +2,8 @@ import fs from "node:fs";
 import fsp from "node:fs/promises";
 import path from "node:path";
 
+import { isDemoMode } from "./demo";
+import { sanitizePublicText } from "./publicSanitization";
 import { repoPath } from "./repoPaths";
 
 export const artifactFiles = [
@@ -67,7 +69,11 @@ export async function readArtifactRaw(
     throw new Error(`Artefacto no permitido: ${relativePath}`);
   }
   const absolutePath = repoPath(...normalized.split("/"));
-  const buffer = await fsp.readFile(absolutePath);
+  const extension = path.extname(normalized).toLowerCase();
+  let buffer = await fsp.readFile(absolutePath);
+  if (isDemoMode() && extension !== ".pdf") {
+    buffer = Buffer.from(sanitizePublicText(buffer.toString("utf8")), "utf8");
+  }
   return {
     buffer,
     contentType: artifactContentType(normalized),
@@ -91,7 +97,8 @@ export async function readArtifact(relativePath: string) {
       content: `(Documento PDF binario. Ábrelo desde la ruta del repositorio: ${normalized})`,
     };
   }
-  const content = await fsp.readFile(absolutePath, "utf8");
+  const rawContent = await fsp.readFile(absolutePath, "utf8");
+  const content = isDemoMode() ? sanitizePublicText(rawContent) : rawContent;
   return {
     path: normalized,
     extension,
