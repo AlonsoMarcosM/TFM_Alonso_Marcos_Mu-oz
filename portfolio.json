@@ -16,7 +16,7 @@
     "provider": "vercel",
     "mode": "read-only-fixtures",
     "source_branch": "main",
-    "status": "prepared",
-    "url": null
+    "status": "live",
+    "url": "https://tfm-plataforma-gobierno-dato.vercel.app"
   }
 }
