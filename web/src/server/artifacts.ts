@@ -3,7 +3,7 @@ import fsp from "node:fs/promises";
 import path from "node:path";
 
 import { isDemoMode } from "./demo";
-import { sanitizePublicText } from "./publicSanitization";
+import { sanitizePublicText, sanitizePublicValue } from "./publicSanitization";
 import { repoPath } from "./repoPaths";
 
 export const artifactFiles = [
@@ -71,7 +71,10 @@ export async function readArtifactRaw(
   const absolutePath = repoPath(...normalized.split("/"));
   const extension = path.extname(normalized).toLowerCase();
   let buffer = await fsp.readFile(absolutePath);
-  if (isDemoMode() && extension !== ".pdf") {
+  if (isDemoMode() && [".json", ".jsonld"].includes(extension)) {
+    const value = JSON.parse(buffer.toString("utf8").replace(/^\uFEFF/, "")) as unknown;
+    buffer = Buffer.from(JSON.stringify(sanitizePublicValue(value), null, 2), "utf8");
+  } else if (isDemoMode() && extension !== ".pdf") {
     buffer = Buffer.from(sanitizePublicText(buffer.toString("utf8")), "utf8");
   }
   return {
@@ -98,7 +101,12 @@ export async function readArtifact(relativePath: string) {
     };
   }
   const rawContent = await fsp.readFile(absolutePath, "utf8");
-  const content = isDemoMode() ? sanitizePublicText(rawContent) : rawContent;
+  const content =
+    isDemoMode() && [".json", ".jsonld"].includes(extension)
+      ? JSON.stringify(sanitizePublicValue(JSON.parse(rawContent.replace(/^\uFEFF/, ""))), null, 2)
+      : isDemoMode()
+        ? sanitizePublicText(rawContent)
+        : rawContent;
   return {
     path: normalized,
     extension,

@@ -17,10 +17,17 @@ describe("sanitizePublicText", () => {
   });
 
   it("sanea cadenas anidadas sin alterar otros valores", () => {
-    const value = { paths: ["C:\\Users\\Alonso\\repo"], count: 1 };
+    const value = {
+      paths: ["C:\\Users\\Alonso\\repo", "C:\\Program Files\\tool.exe", "F:\\repo\\data.json"],
+      count: 1,
+    };
 
     expect(sanitizePublicValue(value)).toEqual({
-      paths: ["C:\\portfolio-user\\repo"],
+      paths: [
+        "C:\\portfolio-user\\repo",
+        "C:\\portfolio\\Program Files\\tool.exe",
+        "C:\\portfolio\\repo\\data.json",
+      ],
       count: 1,
     });
   });
