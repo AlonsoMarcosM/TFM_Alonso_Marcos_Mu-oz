@@ -6,7 +6,8 @@ describe("sanitizePublicText", () => {
   it("oculta rutas locales del repositorio y del perfil de Windows", () => {
     const input =
       "file:///F:/DISCO%20DURO%20PORTABLE/INGENIERIA/MASTER/TFM/TFM_Alonso_Marcos_Mu-oz " +
-      "C:\\Users\\usuario\\AppData\\Local";
+      "C:\\Users\\usuario\\AppData\\Local " +
+      "C:\\\\Users\\\\usuario\\\\AppData";
 
     const sanitized = sanitizePublicText(input);
 
@@ -14,6 +15,7 @@ describe("sanitizePublicText", () => {
     expect(sanitized).not.toContain("Users\\usuario");
     expect(sanitized).toContain("C:/portfolio/TFM_Alonso_Marcos_Mu-oz");
     expect(sanitized).toContain("C:\\portfolio-user\\AppData\\Local");
+    expect(sanitized).toContain("C:\\\\portfolio-user\\\\AppData");
   });
 
   it("sanea cadenas anidadas sin alterar otros valores", () => {
