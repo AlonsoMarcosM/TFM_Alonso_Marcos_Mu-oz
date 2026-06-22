@@ -9,6 +9,7 @@ La publicación de portfolio permite recorrer la **Plataforma de Gobierno del Da
 - URL pública: <https://tfm-plataforma-gobierno-dato.vercel.app>.
 - Directorio de proyecto: `web/`.
 - Proveedor: Vercel Hobby para uso académico no comercial.
+- Actualización: despliegue automático desde `main`, con `web/` como directorio raíz.
 - Variables de build y runtime: `TFM_DEMO=1` y `NEXT_PUBLIC_TFM_DEMO=1`.
 - Dependencias y comandos: `pnpm install`, `pnpm test`, `pnpm build`.
 
