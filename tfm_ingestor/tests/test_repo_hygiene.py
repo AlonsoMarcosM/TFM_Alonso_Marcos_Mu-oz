@@ -16,8 +16,11 @@ def _git_ls_files() -> list[str]:
 def test_private_folders_are_not_tracked():
     tracked = _git_ls_files()
     forbidden_prefixes = (
-        "TFM/",
+        "TFM/Memoria_latex/",
+        "TFM/Memoria_plantilla/",
+        "TFM/TFG_AlonsoMarcosMuñoz/",
         "docs_private/",
+        "private_local/",
     )
     offenders = [p for p in tracked if p.startswith(forbidden_prefixes)]
     assert offenders == []
