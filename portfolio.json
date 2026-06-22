@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "repository": "AlonsoMarcosM/TFM_Alonso_Marcos_Mu-oz",
+  "repository_url": "https://github.com/AlonsoMarcosM/TFM_Alonso_Marcos_Mu-oz",
+  "title": {
+    "es": "Plataforma de Gobierno del Dato",
+    "en": "Data Governance Platform"
+  },
+  "summary": {
+    "es": "Gobierno de metadatos en OpenMetadata, exportación DCAT-AP-ES y validación SHACL HVD.",
+    "en": "Metadata governance in OpenMetadata, DCAT-AP-ES export and HVD SHACL validation."
+  },
+  "technologies": ["OpenMetadata", "Python", "Next.js", "Kubernetes", "DCAT-AP-ES", "SHACL"],
+  "deployment": {
+    "type": "interactive",
+    "provider": "vercel",
+    "mode": "read-only-fixtures",
+    "source_branch": "main",
+    "status": "prepared",
+    "url": null
+  }
+}
