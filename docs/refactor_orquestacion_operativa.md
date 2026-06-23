@@ -170,7 +170,7 @@ Alternativa aceptable si se quisiera un frontend mínimo y totalmente desacoplad
 
 - `React + Vite + TypeScript`.
 
-No es la opción elegida porque el objetivo aquí no es solo una interfaz visual ligera, sino preparar una interfaz futura mantenible y suficientemente estándar para seguir evolucionando con Codex.
+No es la opción elegida porque el objetivo aquí no es solo una interfaz visual ligera, sino preparar una interfaz futura mantenible y suficientemente estándar para seguir evolucionando.
 
 ## Scripts finos, no inteligentes
 

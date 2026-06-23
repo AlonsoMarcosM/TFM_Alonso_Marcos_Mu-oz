@@ -88,7 +88,7 @@ if ($env:GITHUB_TOKEN -or $env:GH_TOKEN) { "TOKEN_OK" } else { "NO_TOKEN" }
 
 ## Configurar Token Persistente En Windows
 
-Este modo permite que Codex lo use en futuras sesiones sin pedirlo otra vez:
+Este modo permite reutilizarlo en futuras sesiones sin pedirlo otra vez:
 
 ```powershell
 [Environment]::SetEnvironmentVariable("GITHUB_TOKEN", "<TOKEN>", "User")
@@ -97,7 +97,7 @@ Este modo permite que Codex lo use en futuras sesiones sin pedirlo otra vez:
 [Environment]::SetEnvironmentVariable("GITHUB_PROJECT_NUMBER", "6", "User")
 ```
 
-Después cierra y abre una nueva terminal o una nueva sesión de Codex para que herede las variables.
+Después cierra y abre una nueva terminal para que herede las variables.
 
 Comprobar sin exponer el token:
 

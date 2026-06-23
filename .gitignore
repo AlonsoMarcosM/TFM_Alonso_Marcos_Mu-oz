@@ -13,6 +13,7 @@
 /.agents/
 /.codex/
 /skills/
+/HANDOFF*.md
 
 # --- Python ---
 __pycache__/

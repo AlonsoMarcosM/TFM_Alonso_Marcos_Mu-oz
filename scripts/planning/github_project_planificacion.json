@@ -74,8 +74,7 @@
           "fecha_fin": "2026-04-13",
           "descripcion": "Identificar riesgos tecnicos y de calendario con acciones de mitigacion.",
           "evidencias": [
-            "docs/planificacion_kanban.md",
-            "AGENTS.md"
+            "docs/planificacion_kanban.md"
           ]
         }
       ]
@@ -440,8 +439,7 @@
             "tfm_ingestor/tests/test_rules_config.py",
             "tfm_ingestor/tests/test_mapping.py",
             "tfm_ingestor/tests/test_repo_hygiene.py",
-            "scripts/quality/pre_push_checks.ps1",
-            "AGENTS.md"
+            "scripts/quality/pre_push_checks.ps1"
           ]
         },
         {
