@@ -1,4 +1,4 @@
-﻿{
+{
     "runtime_validation":  {
                                "technical":  {
                                                  "conforms":  true,
@@ -375,7 +375,7 @@
                             "git":  {
                                         "diff_check_ok":  true,
                                         "diff_check_output":  "warning: in the working copy of \u0027tfm_ingestor/config/gold_governance.csv\u0027, CRLF will be replaced by LF the next time Git touches it",
-                                        "status_ignored_short":  "M scripts/infra/ingest_postgres_double.ps1\r\n M tfm_ingestor/config/gold_governance.csv\r\n?? TFM/Memoria/figs/fig_web_pantalla_ejecuciones.png\r\n!! .env\r\n!! .pytest_cache/\r\n!! .tools/\r\n!! AGENTS.md\r\n!! CLAUDE.md\r\n!! TFM/Memoria/TFM.log\r\n!! TFM/Memoria_plantilla/\r\n!! \"TFM/TFG_AlonsoMarcosMu\\303\\261oz/\"\r\n!! TFM/redaccion_tfm_instrucciones.local.md\r\n!! data_local/\r\n!! scripts/infra/__pycache__/\r\n!! scripts/planning/__pycache__/\r\n!! state/\r\n!! tfm_ingestor/.pytest_cache/\r\n!! tfm_ingestor/src/om_dcat_sync/__pycache__/\r\n!! tfm_ingestor/src/tfm_ingestor.egg-info/\r\n!! tfm_ingestor/src/tfm_ingestor/__pycache__/\r\n!! tfm_ingestor/tests/__pycache__/\r\n!! tfm_ingestor/tmp_pytest/\r\n!! tmp_pytest/\r\n!! web/.next/\r\n!! web/node_modules/\r\n!! web/tsconfig.tsbuildinfo",
+                                        "status_ignored_short":  "M scripts/infra/ingest_postgres_double.ps1\r\n M tfm_ingestor/config/gold_governance.csv\r\n?? TFM/Memoria/figs/fig_web_pantalla_ejecuciones.png\r\n!! .env\r\n!! .pytest_cache/\r\n!! .tools/\r\n!! TFM/Memoria/TFM.log\r\n!! TFM/Memoria_plantilla/\r\n!! \"TFM/TFG_AlonsoMarcosMu\\303\\261oz/\"\r\n!! TFM/redaccion_tfm_instrucciones.local.md\r\n!! data_local/\r\n!! scripts/infra/__pycache__/\r\n!! scripts/planning/__pycache__/\r\n!! state/\r\n!! tfm_ingestor/.pytest_cache/\r\n!! tfm_ingestor/src/om_dcat_sync/__pycache__/\r\n!! tfm_ingestor/src/tfm_ingestor.egg-info/\r\n!! tfm_ingestor/src/tfm_ingestor/__pycache__/\r\n!! tfm_ingestor/tests/__pycache__/\r\n!! tfm_ingestor/tmp_pytest/\r\n!! tmp_pytest/\r\n!! web/.next/\r\n!! web/node_modules/\r\n!! web/tsconfig.tsbuildinfo",
                                         "status_short":  "M scripts/infra/ingest_postgres_double.ps1\r\n M tfm_ingestor/config/gold_governance.csv\r\n?? TFM/Memoria/figs/fig_web_pantalla_ejecuciones.png"
                                     }
                         },
