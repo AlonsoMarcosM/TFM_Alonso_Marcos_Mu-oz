@@ -84,7 +84,7 @@ El resto de obligatorios se cubre por configuración global y derivación autom�
 - `dcat:Distribution`: licencia HVD y legislación aplicable salen de `hvd_defaults`.
 - `dcat:DataService`: `title`, `endpointURL`, `endpointDescription`, `publisher`, `theme`, `hvdCategory`, `applicableLegislation`, `contactPoint`, `foaf:page`, `servesDataset`, `license` y `accessRights` se derivan en `tfm_ingestor/src/tfm_ingestor/dcat_export.py`.
 
-En el perfil actual, `governance_defaults.yaml` fija UCLM como organismo publicador del catálogo y de los servicios derivados. La hoja permite cambiar el nombre funcional del publicador por dataset, pero el URI institucional del agente se mantiene centralizado para evitar inconsistencias.
+En el perfil actual, `governance_defaults.yaml` fija UCLM como organismo publicador del catálogo y de los servicios derivados. La hoja permite cambiar el nombre funcional del publicador por dataset, pero el URI institucional del publicador se mantiene centralizado para evitar inconsistencias.
 
 Por tanto, la afirmación defendible es: **la hoja cubre los obligatorios funcionales por dataset; el sistema completo, hoja más configuración global más exportador, cubre el perfil HVD validado en la plataforma**.
 

@@ -147,7 +147,7 @@ Framework elegido: `Next.js + React + TypeScript`.
 Motivos:
 
 - es la opción más conocida y extendida para interfaces web React;
-- tiene una estructura muy convencional, favorable para desarrollo asistido por agentes;
+- tiene una estructura muy convencional y fácil de mantener;
 - permite empezar con una interfaz sencilla y crecer después sin rehacer la base;
 - soporta bien despliegue en servidor, SPA o exportación estática;
 - encaja con la idea de una UI que no reimplementa reglas, sino que usa el mismo núcleo canónico del sistema.

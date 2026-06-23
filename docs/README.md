@@ -17,5 +17,4 @@
 - `github_projects_planificacion.md`: automatización reproducible para llevar fases y avance del TFM en GitHub Projects.
 - `app_web.md`: consola web operativa para lanzar scripts, editar la hoja funcional y revisar resultados/evidencias desde navegador.
 - `anexos_instalacion/README.md`: evidencias paso a paso para la memoria.
-- `../AGENTS.md`: principios para mantener el repo simple, reproducible y desplegable.
 - `../scripts/infra/`: scripts para levantar y verificar infraestructura desde la raíz del repo.

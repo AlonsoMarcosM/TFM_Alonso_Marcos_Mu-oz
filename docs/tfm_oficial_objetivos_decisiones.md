@@ -88,7 +88,7 @@ Lectura correcta:
 
 ### 10. Validación integrada en el sistema
 
-- Justificación: las comprobaciones no deben quedar como ejecución manual aislada del agente.
+- Justificación: las comprobaciones no deben quedar como ejecución manual aislada de la plataforma.
 - Decisión: se mantienen tests versionados, CLI `validate-dcat`, CLI `validate-runtime`, scripts reproducibles y shapes oficiales vendorizadas dentro del paquete, sin descarga en ejecución.
 - Evidencia: `tfm_ingestor/tests`, `scripts/infra/validate_live_dcat.ps1`, `scripts/infra/run_validation_suite.ps1`, `tfm_ingestor/src/tfm_ingestor/resources/shacl/`, `tfm_ingestor/src/tfm_ingestor/resources/shacl/manifest.json`.
 - Congelación SHACL: árbol oficial `datosgobes/DCAT-AP-ES/shacl/1.0.0` del commit `f2c8a88868b89239c9f54bffdf621cded2401b9f`, fijado localmente el `2026-04-13`.

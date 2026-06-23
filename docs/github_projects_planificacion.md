@@ -25,10 +25,10 @@ El roadmap se toma del orden canónico definido en:
 
 ## Seguridad Y Tokens
 
-Codex no debe pedir tu contraseña de GitHub ni guardar tokens en archivos del repositorio. Hay dos formas válidas de operar:
+La herramienta local no debe pedir tu contraseña de GitHub ni guardar tokens en archivos del repositorio. Hay dos formas válidas de operar:
 
-- Token temporal de sesión: tú defines `GITHUB_TOKEN` o `GH_TOKEN` en la terminal actual y Codex puede usarlo mientras dure esa sesión.
-- Token persistente de usuario: tú defines `GITHUB_TOKEN` como variable de entorno de Windows a nivel de usuario; así futuras sesiones de terminal y de agente pueden usarlo sin que el token esté en el repositorio.
+- Token temporal de sesión: tú defines `GITHUB_TOKEN` o `GH_TOKEN` en la terminal actual y la herramienta puede usarlo mientras dure esa sesión.
+- Token persistente de usuario: tú defines `GITHUB_TOKEN` como variable de entorno de Windows a nivel de usuario; así futuras sesiones de terminal pueden usarlo sin que el token esté en el repositorio.
 - Archivo `.env` local: rellenas `.env` a partir de `.env.example` y lo cargas con `scripts/load_env.ps1`. Este archivo está ignorado por Git y no debe versionarse.
 
 No uses `.env` versionados para tokens. La plantilla versionable es `.env.example`.

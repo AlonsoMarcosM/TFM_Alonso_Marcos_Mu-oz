@@ -16,7 +16,7 @@ Tipo `string` sobre entidad `table`:
 
 Uso:
 
-- `dcat_publisher_name`: nombre del agente publicador exportado en `dct:publisher`.
+- `dcat_publisher_name`: nombre del publicador institucional exportado en `dct:publisher`.
 - `dcat_hvd_category`: URI o alias normalizado de `dcatap:hvdCategory`.
 - `dcat_access_url`: `dcat:accessURL` de la distribución.
 

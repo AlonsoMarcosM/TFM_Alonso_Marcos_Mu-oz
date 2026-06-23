@@ -7,9 +7,12 @@
 /private_local/
 /docs_private/
 
-# --- Agent / assistant instructions (local only) ---
+# --- Local private files ---
 /CLAUDE.md
 /AGENTS.md
+/.agents/
+/.codex/
+/skills/
 
 # --- Python ---
 __pycache__/
@@ -51,10 +54,6 @@ state/
 
 # --- Local tooling / downloads ---
 .tools/
-
-# --- Local agent instructions ---
-AGENTS.md
-CLAUDE.md
 
 # --- Fixtures versionados del modo demo de la consola web (web/demo/) ---
 # Reproducen la estructura del repo para servir la demo solo-lectura en Vercel.
