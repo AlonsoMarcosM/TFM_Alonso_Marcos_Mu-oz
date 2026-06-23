@@ -1,5 +1,7 @@
 # Plataforma de Gobierno del Dato · OpenMetadata + DCAT-AP-ES (TFM UCLM 2026)
 
+> **Despliegue público:** [Abrir consola](https://tfm-plataforma-gobierno-dato.vercel.app)
+
 > Trabajo Fin de Máster del *Máster Universitario en Big Data y Computación en la Nube* (UCLM). Plataforma **end-to-end** que toma activos técnicos descubiertos en **OpenMetadata** sobre **Kubernetes**, los gobierna desde una hoja funcional versionable, exporta el catálogo en **DCAT-AP-ES (JSON-LD)** y lo **valida con SHACL** contra el perfil oficial **HVD** del Gobierno de España. La salida es un archivo RDF listo para federarse en `datos.gob.es`, `data.europa.eu` o cualquier portal CKAN compatible.
 
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
