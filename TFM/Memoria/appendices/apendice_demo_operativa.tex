@@ -46,7 +46,7 @@ Esta pantalla es el centro del recorrido. Concentra toda la curación funcional 
 
 \figuraAnexo{fig_web_pantalla_gobierno.png}{Pantalla \emph{Gobierno}: edición de la hoja \fqn{gold_governance.csv} con listas controladas para temática y categoría \ac{HVD}. Elaboración propia.}{fig:demo-gobierno}
 
-\section{Aplicación del workflow}\label{sec:demo-workflow}
+\section{Aplicación del \emph{workflow}}\label{sec:demo-workflow}
 
 La pantalla \emph{Workflow} ofrece dos botones equivalentes al listado~\ref{code:workflow-run}. La demostración los ejecuta en secuencia para mostrar el comportamiento idempotente.
 
@@ -70,7 +70,20 @@ La pantalla \emph{Validación} ejecuta la suite reproducible completa (\fqn{run_
 
 \figuraAnexo{fig_web_pantalla_validacion.png}{Pantalla \emph{Validación}: ejecución de la suite reproducible y resumen consolidado. Elaboración propia.}{fig:demo-validacion}
 
-La pantalla \emph{SHACL}, complementaria, muestra el \emph{manifiesto de las shapes \ac{DCATAPES} congeladas} en el repositorio (\fqn{resources/shacl/manifest.json}): origen, versión y \emph{commit} de las \emph{shapes}. Su función es evidenciar que la validación no descarga \emph{shapes} en tiempo de ejecución, sino que usa exclusivamente las locales. El informe \ac{SHACL} propiamente dicho, el Turtle con severidades (\texttt{sh:Violation}, \texttt{sh:Warning}, \texttt{sh:Info}), nodo afectado y mensaje, se genera como artefacto \fqn{*_shacl_report.ttl} y se consulta desde la pantalla \emph{Artefactos}. En la demostración no presenta violaciones bloqueantes, en línea con la sección~\ref{cap:validacion}.
+Como complemento, la pantalla \emph{SHACL} muestra el manifiesto de las
+\emph{shapes} \ac{DCATAPES} congeladas en \fqn{resources/shacl/manifest.json}:
+origen, versión y \emph{commit}. Su función es evidenciar que la validación usa
+recursos locales y no descarga \emph{shapes} en tiempo de ejecución.
+
+\begingroup
+\hbadness=3000
+El informe \ac{SHACL}, en formato Turtle, incluye severidad
+(\texttt{sh:Violation}, \texttt{sh:Warning}, \texttt{sh:Info}), nodo afectado y
+mensaje. Se genera como artefacto \fqn{*_shacl_report.ttl} y se consulta desde
+la pantalla \emph{Artefactos}. En la demostración no presenta violaciones
+bloqueantes, en línea con la sección~\ref{cap:validacion}.
+\par
+\endgroup
 
 \figuraAnexo{fig_web_pantalla_shacl.png}{Pantalla \emph{SHACL}: manifiesto de las \emph{shapes} DCAT-AP-ES congeladas (sin descarga en tiempo de ejecución). Elaboración propia.}{fig:demo-shacl}
 
@@ -110,7 +123,7 @@ La plataforma, por tanto, no se limita a producir un \ac{JSONLD} formalmente vá
 
 \section{Resumen del recorrido}\label{sec:demo-resumen}
 
-\begin{table}[h]
+\begin{table}[ht]
 \footnotesize
 \centering
 \renewcommand{\arraystretch}{1.15}

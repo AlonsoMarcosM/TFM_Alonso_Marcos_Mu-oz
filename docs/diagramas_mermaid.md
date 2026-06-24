@@ -31,14 +31,20 @@ flowchart LR
 ## 2) Flujo operativo real
 
 ```mermaid
-flowchart LR
-  A[1. Despliegue infra] --> B[2. Ingesta técnica]
-  B --> C[3. Bootstrap mínimo]
-  C --> D[4. Workflow dry-run]
-  D --> E[5. Curación funcional]
-  E --> F[6. Workflow apply]
-  F --> G[7. Exportación JSON-LD]
-  G --> H[8. Validación SHACL HVD]
+flowchart TB
+  subgraph F1["1 · Preparación"]
+    direction LR
+    A[Despliegue de<br/>infraestructura] --> B[Doble ingesta<br/>técnica]
+  end
+  subgraph F2["2 · Gobierno"]
+    direction LR
+    C[Refresco y curación<br/>de la hoja] --> D[Aplicación idempotente<br/>del gobierno]
+  end
+  subgraph F3["3 · Publicación"]
+    direction LR
+    E[Exportación<br/>JSON-LD] --> G[Validación<br/>SHACL HVD]
+  end
+  F1 --> F2 --> F3
 ```
 
 ## 3) Pipeline de metadatos
@@ -214,13 +220,20 @@ Los diagramas 10 y 11 se reutilizan en el capítulo de arquitectura de la memori
 ## 12) Visión funcional de la solución
 
 ```mermaid
-flowchart LR
-  PG[(PostgreSQL<br/>bronze/silver/gold)] -->|ingesta| OM[OpenMetadata<br/>catálogo técnico]
-  OM -->|activos gold| SHEET[(Hoja de gobierno<br/>curación funcional)]
-  SHEET --> CORE[Núcleo<br/>om_dcat_sync]
-  CORE -->|exporta| CAT[Catálogo<br/>DCAT-AP-ES JSON-LD]
-  CAT -->|valida| SHACL{SHACL<br/>caso HVD}
-  SHACL -->|conforme| OK([Catálogo validado])
+flowchart TB
+  subgraph ORIGEN["Origen y captura"]
+    direction LR
+    PG[(PostgreSQL<br/>bronze · silver · gold)] -->|ingesta| OM[OpenMetadata<br/>catálogo técnico]
+  end
+  subgraph GOBIERNO["Gobierno funcional"]
+    direction LR
+    SHEET[(Hoja de gobierno<br/>curación funcional)] --> CORE["Núcleo om_dcat_sync<br/>gobierna · exporta · valida"]
+  end
+  subgraph SALIDA["Catálogo interoperable"]
+    direction LR
+    CAT[Catálogo DCAT-AP-ES<br/>JSON-LD] -->|SHACL · HVD| OK([Catálogo<br/>validado])
+  end
+  ORIGEN --> GOBIERNO --> SALIDA
 ```
 
 El diagrama 12 ofrece la visión funcional de conjunto que precede a la vista lógica por capas en la introducción de la memoria (figura `fig_vision_funcional_solucion.png`).

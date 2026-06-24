@@ -1,6 +1,6 @@
 \chapter{Metodología de trabajo}\label{cap:metodologia}
 
-Este capítulo describe cómo se ha organizado y ejecutado el trabajo: el enfoque de gestión del proyecto, el tablero y las fases del \emph{roadmap}, el stack tecnológico elegido y la organización del repositorio. La descripción de la arquitectura, la implementación y la validación de la solución se reserva para el capítulo de resultados.
+Este capítulo describe cómo se ha organizado y ejecutado el trabajo: el enfoque de gestión del proyecto, el tablero y las fases del \emph{roadmap}, el stack tecnológico elegido y la organización del repositorio. La descripción de la arquitectura, la implementación y la validación de la solución se reserva para el \hyperref[cap:resultados]{capítulo de resultados}.
 
 \section{Enfoque general}
 
@@ -26,7 +26,7 @@ La sincronización no es manual: el archivo declarativo \fqn{scripts/planning/gi
 
 El trabajo se ha organizado en seis fases secuenciales con superposición controlada. La tabla~\ref{tab:fases-metodologia} resume cada fase con su ventana temporal real, las áreas \ac{DMBOK}~\cite{damaDmbok} implicadas y el estado al cierre del cuerpo de la memoria.
 
-\begin{table}[h]
+\begin{table}[ht]
 \footnotesize
 \centering
 \renewcommand{\arraystretch}{1.15}
@@ -41,7 +41,7 @@ El trabajo se ha organizado en seis fases secuenciales con superposición contro
 05 Validación                 & may 2026     & Calidad, gobierno          \\ \hline
 06 Memoria y defensa          & may–jul 2026 & Documentación              \\ \hline
 \end{tabular}
-\caption{Fases del roadmap del TFM con su área DAMA-DMBOK predominante. Elaboración propia, sincronizada con \fqn{scripts/planning/github_project_planificacion.json}.}
+\caption{Fases del roadmap del TFM y área DAMA-DMBOK predominante. Elaboración propia.}
 \label{tab:fases-metodologia}
 \end{table}
 
@@ -51,11 +51,11 @@ El diagrama de Gantt derivado del Project (figura~\ref{fig:gantt-metodologia} de
 
 \section{Stack tecnológico}\label{sec:stack-tecnologico}
 
-El stack tecnológico de la plataforma se ha elegido priorizando reproducibilidad, portabilidad y el uso de estándares abiertos. Esta sección justifica las tecnologías de la fuente de datos, del despliegue y de la consola web; su uso concreto en la solución se detalla en el capítulo de resultados.
+El stack tecnológico de la plataforma se ha elegido priorizando reproducibilidad, portabilidad y el uso de estándares abiertos. Esta sección justifica las tecnologías de la fuente de datos, del despliegue y de la consola web; su uso concreto en la solución se detalla en el \hyperref[cap:resultados]{capítulo de resultados}.
 
 \subsection{PostgreSQL como fuente técnica reproducible}
 
-PostgreSQL es una base de datos relacional ampliamente utilizada y adecuada para construir un caso de uso reproducible. En el mundo real, los catálogos técnicos suelen ingerir metadatos desde múltiples motores: PostgreSQL, MySQL, sistemas cloud, data lakes o almacenes analíticos. Para el TFM, una única tecnología de origen es suficiente siempre que permita demostrar estructura técnica real: servicio, base de datos, esquemas, tablas y columnas.
+PostgreSQL es una base de datos relacional ampliamente utilizada y adecuada para construir un caso de uso reproducible. En el mundo real, los catálogos técnicos suelen ingerir metadatos desde múltiples motores: PostgreSQL, MySQL, sistemas cloud, \emph{data lakes} o almacenes analíticos. Para el TFM, una única tecnología de origen es suficiente siempre que permita demostrar estructura técnica real: servicio, base de datos, esquemas, tablas y columnas.
 
 La doble ingesta usada en el caso de uso de validación no pretende simular dos organizaciones distintas, sino evidenciar que la lógica de gobierno opera por identificadores completos de OpenMetadata. Dos servicios pueden contener tablas con el mismo nombre. Si el sistema mezclara filas por \texttt{schema.table}, el resultado sería incorrecto. Por eso el FQN del activo técnico se convierte en un identificador esencial.
 
@@ -77,7 +77,7 @@ En esta plataforma, la consola web representa una forma habitual de operar flujo
 
 Todo el código, la configuración y la documentación del TFM están disponibles en el repositorio público del autor en GitHub.\footnote{\url{https://github.com/AlonsoMarcosM/TFM_Alonso_Marcos_Mu-oz}} El repositorio sigue una organización deliberada para que cada bloque sea identificable y reproducible. El árbol de directorios canónico se recoge en la figura~\ref{code:arbol-repositorio} del Anexo~\ref{ap:capturas}, y la tabla~\ref{tab:bloques-repositorio} resume la responsabilidad funcional de cada bloque.
 
-\begin{table}[h]
+\begin{table}[ht]
 \footnotesize
 \centering
 \renewcommand{\arraystretch}{1.1}

@@ -10,24 +10,26 @@ La aportación central es la separación de tres responsabilidades: OpenMetadata
 
 \section{Cumplimiento de los objetivos}
 
-Los objetivos específicos propuestos para el TFE se han cubierto en su totalidad, en los bloques que recoge la tabla~\ref{tab:cumplimiento-objetivos}.
+Los ocho objetivos específicos formulados en el capítulo~\ref{cap:objetivos} se han cubierto en su totalidad. La tabla~\ref{tab:cumplimiento-objetivos} los recoge con el mismo orden y enunciado que allí, e indica cómo se ha satisfecho cada uno y en qué bloque se evidencia.
 
-\begin{table}[h]
+\begin{table}[ht]
 \footnotesize
 \centering
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{|L{5.4cm}|L{4.0cm}|L{3.0cm}|}
 \hline
 \rowcolor{tema!10}
-\bft{Objetivo} & \bft{Cómo se ha cubierto} & \bft{Dónde} \\ \hline
-Analizar DCAT-AP y sus extensiones & Análisis de DCAT, DCAT-AP, DCAT-AP-ES y HVD, RDF/JSON-LD y SHACL & Estado del arte \\ \hline
-Mapear clases y propiedades de DCAT-AP con OpenMetadata & Mapeo activo de \ident{dcat:Catalog}, \ident{dcat:Dataset}, \ident{dcat:Distribution}, \ident{dcat:DataService} y \ident{foaf:Agent} & Resultados (arquitectura) y Anexo de mapeo \\ \hline
-Configurar taxonomías y \emph{custom metadata} en OpenMetadata & Custom properties DCAT y etiquetas \texttt{dcat\_theme.*} gobernadas de forma repetible & Resultados (implementación) \\ \hline
-Implementar un pipeline de ingestión/sincronización & Doble ingesta PostgreSQL y workflow \texttt{om\_dcat\_sync} de sincronización & Resultados (implementación) \\ \hline
-Validar mediante exportación/federación del catálogo & Exportación JSON-LD y validación SHACL HVD (local y validador europeo) & Resultados (validación) \\ \hline
-Evaluar beneficios y limitaciones & Discusión de beneficios, limitaciones y amenazas a la validez & Resultados (discusión) \\ \hline
+\bft{Objetivo específico} & \bft{Cómo se ha cubierto} & \bft{Dónde} \\ \hline
+Analizar DCAT-AP y su concreción DCAT-AP-ES (clases, propiedades, vocabularios y SHACL) & Análisis de DCAT, DCAT-AP, DCAT-AP-ES y HVD, con RDF/JSON-LD y SHACL & \hyperref[cap:estado-arte]{Estado del arte} \\ \hline
+Mapear las entidades de OpenMetadata con las clases de DCAT-AP-ES & Mapeo activo de \ident{dcat:Catalog}, \ident{dcat:Dataset}, \ident{dcat:Distribution}, \ident{dcat:DataService} y \ident{foaf:Agent} & Resultados (\hyperref[cap:arquitectura]{arquitectura}) y \hyperref[ap:mapeo-dcat]{Anexo de mapeo} \\ \hline
+Configurar los metadatos mínimos para datasets publicables & \emph{Custom properties} DCAT y etiquetas \texttt{dcat\_theme.*} gobernadas de forma repetible & Resultados (\hyperref[cap:implementacion]{implementación}) \\ \hline
+Implementar un \emph{workflow} reproducible de sincronización & Núcleo \texttt{om\_dcat\_sync} que sincroniza el gobierno de forma idempotente & Resultados (\hyperref[cap:implementacion]{implementación}) \\ \hline
+Ejecutar doble ingesta PostgreSQL para validar gobierno multi-fuente con tablas homónimas & Doble ingesta bajo dos servicios e identificación unívoca por \ac{FQN} & Resultados (\hyperref[cap:implementacion]{implementación} y \hyperref[cap:validacion]{validación}) \\ \hline
+Exportar el catálogo gobernado en JSON-LD compatible con DCAT-AP-ES & Exportador \texttt{dcat\_export.py} y artefacto \texttt{dcat\_catalog.jsonld} & Resultados (\hyperref[cap:validacion]{validación}) \\ \hline
+Validar la salida con SHACL y evaluar beneficios, limitaciones, idempotencia y mantenibilidad & Validación SHACL HVD (local y validador europeo) y discusión de beneficios, limitaciones y amenazas & Resultados (\hyperref[cap:validacion]{validación} y \hyperref[sec:discusion-resultados]{discusión}) \\ \hline
+Proporcionar una consola web operativa que ejecute el mismo flujo sin duplicar reglas & Consola Next.js que invoca el mismo núcleo desde una lista cerrada de operaciones & Resultados (\hyperref[cap:implementacion]{implementación}) \\ \hline
 \end{tabular}
-\caption{Cumplimiento de los objetivos del TFE y bloque donde se evidencian. Elaboración propia.}
+\caption{Cumplimiento de los objetivos específicos del TFE y bloque donde se evidencian. Elaboración propia.}
 \label{tab:cumplimiento-objetivos}
 \end{table}
 
@@ -36,7 +38,7 @@ Evaluar beneficios y limitaciones & Discusión de beneficios, limitaciones y ame
 El trabajo desarrolla las dos competencias oficialmente asociadas al TFE:
 
 \begin{itemize}
-  \item \textbf{CN02} (conocer las arquitecturas para el tratamiento masivo de datos y las técnicas de almacenamiento, orquestación y gestión de pipelines): se evidencia en el despliegue reproducible sobre Kubernetes y Helm, en la fuente PostgreSQL organizada en capas \emph{medallion}, en la doble ingesta y en el workflow orquestado de extremo a extremo.
+  \item \textbf{CN02} (conocer las arquitecturas para el tratamiento masivo de datos y las técnicas de almacenamiento, orquestación y gestión de \emph{pipelines}): se evidencia en el despliegue reproducible sobre Kubernetes y Helm, en la fuente PostgreSQL organizada en capas \emph{medallion}, en la doble ingesta y en el \emph{workflow} orquestado de extremo a extremo.
   \item \textbf{CP03} (implementar marcos de trabajo de gobierno de datos y estrategias de aseguramiento de la calidad para gestionar la integridad, la seguridad y la accesibilidad de los datos masivos): se evidencia en el gobierno centralizado y declarativo de metadatos, la curación funcional bajo responsabilidad humana, la conformidad verificable con DCAT-AP-ES y el perfil HVD mediante SHACL, y la trazabilidad entre la fuente técnica, el catálogo técnico, la hoja funcional, el JSON-LD y el informe de validación.
 \end{itemize}
 
@@ -50,6 +52,6 @@ Las líneas de evolución más razonables son:
   \item publicar automáticamente el JSON-LD en un CKAN o portal compatible cuando exista un destino real;
   \item ampliar la cobertura de metadatos recomendados y opcionales de DCAT-AP-ES;
   \item incorporar aprobaciones editoriales y roles si la web pasa a uso multiusuario;
-  \item automatizar ejecuciones periódicas mediante Airflow, CI/CD o un scheduler, entendidas como automatización de la reproducibilidad y no como delegación de la decisión de publicar;
+  \item automatizar ejecuciones periódicas mediante Airflow, CI/CD o un \emph{scheduler}, entendidas como automatización de la reproducibilidad y no como delegación de la decisión de publicar;
   \item validar el comportamiento con más fuentes técnicas y más datasets \texttt{gold}, por ejemplo mediante ingesta desde APIs o bases de datos públicas.
 \end{itemize}

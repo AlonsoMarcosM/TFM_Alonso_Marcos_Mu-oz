@@ -4,13 +4,13 @@ Este anexo amplía la sección~\ref{sec:implementacion-k8s} con los detalles de 
 
 \section{Versión de OpenMetadata}\label{sec:version-openmetadata}
 
-El despliegue de referencia del caso de uso de validación utiliza \textbf{OpenMetadata 1.12.9}, instalado mediante los \emph{charts} oficiales de Helm \cite{openmetadataKubernetes}. La versión exacta puede consultarse en cualquier momento contra la instancia viva mediante el endpoint \fqn{/api/v1/system/version} de la \ac{API} \ac{REST}. Las dependencias gestionadas por el \emph{chart} \fqn{openmetadata-dependencies} son MySQL como almacén de metadatos y OpenSearch como motor de búsqueda. Las entidades de la \ac{API} empleadas por la plataforma (servicios, bases de datos, esquemas, tablas, columnas, \emph{custom properties} y \emph{tags}) son estables en la rama 1.12.x, por lo que la lógica de gobierno no depende de detalles internos de una versión concreta.
+El despliegue de referencia del caso de uso de validación utiliza \textbf{OpenMetadata 1.12.9}, instalado mediante los \emph{charts} oficiales de Helm \cite{openmetadataKubernetes}. La versión exacta puede consultarse en cualquier momento contra la instancia viva mediante el \emph{endpoint} \fqn{/api/v1/system/version} de la \ac{API} \ac{REST}. Las dependencias gestionadas por el \emph{chart} \fqn{openmetadata-dependencies} son MySQL como almacén de metadatos y OpenSearch como motor de búsqueda. Las entidades de la \ac{API} empleadas por la plataforma (servicios, bases de datos, esquemas, tablas, columnas, \emph{custom properties} y \emph{tags}) son estables en la rama 1.12.x, por lo que la lógica de gobierno no depende de detalles internos de una versión concreta.
 
 \section{Matriz de versiones del sistema}\label{sec:matriz-versiones}
 
 La reproducibilidad exige que todas las versiones del sistema estén fijadas y documentadas. La tabla~\ref{tab:matriz-versiones} recoge las versiones empleadas en el caso de uso de validación y el punto del repositorio donde quedan ancladas. El detalle operativo se mantiene actualizado en \fqn{docs/versiones.md}.
 
-\begin{table}[h]
+\begin{table}[ht]
 \footnotesize
 \centering
 \renewcommand{\arraystretch}{1.15}

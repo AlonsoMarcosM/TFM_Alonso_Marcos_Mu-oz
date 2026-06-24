@@ -1,10 +1,13 @@
 \chapter{Mapeo DCAT-AP-ES y entregables}\label{ap:mapeo-dcat}
 
+\begingroup
+\hbadness=3000
 Este anexo resume el mapeo entre el catálogo técnico de \ac{OM} y el perfil
-\ac{DCATAPES}, y enumera los entregables del caso de uso de validación. La
-referencia completa y canónica del mapeo, con la matriz íntegra de propiedades,
-cardinalidades y elevaciones de obligatoriedad respecto a \ac{DCATAP}, se
-mantiene en \fqn{docs/dcat_mapping.md}.
+\ac{DCATAPES}, junto con los entregables del caso de uso de validación. La matriz
+completa de propiedades, cardinalidades y obligatoriedades respecto a
+\ac{DCATAP} se mantiene en \fqn{docs/dcat_mapping.md}.
+\par
+\endgroup
 
 \section{Correspondencia OpenMetadata \texorpdfstring{$\rightarrow$}{->} DCAT-AP-ES}
 
@@ -12,7 +15,7 @@ El exportador traduce un subconjunto deliberadamente mínimo de elementos de
 \ac{OM} a clases y propiedades \ac{DCATAPES}, completando el resto por
 configuración (tabla~\ref{tab:correspondencia-mapeo}).
 
-\begin{table}[h]
+\begin{table}[ht]
 \footnotesize
 \centering
 \renewcommand{\arraystretch}{1.15}
@@ -60,7 +63,7 @@ El flujo produce un conjunto cerrado de entregables reproducibles, todos
 regenerables en \fqn{tmp_pytest/} y visualizados a lo largo de la memoria
 (tabla~\ref{tab:entregables}).
 
-\begin{table}[h]
+\begin{table}[ht]
 \footnotesize
 \centering
 \renewcommand{\arraystretch}{1.15}
