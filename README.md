@@ -391,7 +391,7 @@ Documentación operativa complementaria en [`docs/`](docs/): mapeo DCAT-AP-ES, g
 
 **Alonso Marcos Muñoz** — alonso.marcos@alu.uclm.es
 *Máster Universitario en Big Data y Computación en la Nube* — Universidad de Castilla-La Mancha (UCLM).
-Trabajo Fin de Máster (TFM), curso 2025-2026. Defensa prevista: junio de 2026.
+Trabajo Fin de Máster (TFM), curso 2025-2026, finalizado y defendido con una calificación de 9,2/10.
 
 - **Tutor:** Fernando Gualo Cejudo.
 - **Codirector:** Antonio Labian Moya.
