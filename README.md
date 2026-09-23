@@ -13,6 +13,8 @@
 ![pnpm](https://img.shields.io/badge/pnpm-canonical-F69220?logo=pnpm&logoColor=white)
 ![License](https://img.shields.io/badge/License-Academic-blue)
 
+![Consola operativa del TFM con la suite de validación y la validación DCAT live completadas, exportación JSON-LD y resultados SHACL](docs/portada.png)
+
 ---
 
 ## Tabla de contenidos
